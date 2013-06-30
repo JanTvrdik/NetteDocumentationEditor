@@ -1,0 +1,20 @@
+language: php
+php:
+    - 5.3.3
+    - 5.4
+    - 5.5
+
+script: VERBOSE=true ./tests/run-tests.sh -s tests/
+
+#services:
+#    - memcached
+
+before_script:
+    # Install Nette Tester
+    - composer install --no-interaction --dev
+
+    # Create databases.ini
+    - cp ./tests/Nette/Database/databases.sample.ini ./tests/Nette/Database/databases.ini
+
+    # Create Postgre database
+    - psql -c 'CREATE DATABASE nette_test' -U postgres

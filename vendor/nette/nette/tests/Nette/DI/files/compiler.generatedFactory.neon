@@ -1,0 +1,17 @@
+services:
+	ipsum: Ipsum
+	bar: Bar
+	baz: Baz
+
+factories:
+	lorem: \ILoremFactory(Lorem)
+
+	article:
+		create: Article(%title%)
+		implement: IArticleFactory
+		parameters: [title]
+
+	foo:
+		create: Foo(..., %baz%)
+		implement: IFooFactory
+		parameters: [Baz baz]

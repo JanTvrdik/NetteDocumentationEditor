@@ -1,0 +1,16 @@
+{
+	"license": ["MIT"],
+	"authors": [
+		{
+			"name": "Jan Tvrdík",
+			"homepage": "http://merxes.cz"
+		}
+	],
+	"require": {
+		"php": ">= 5.4.0",
+		"nette/nette": "@dev"
+	},
+	"require-dev": {
+		"nette/tester": "@dev"
+	}
+}

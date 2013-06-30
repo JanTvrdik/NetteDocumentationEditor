@@ -1,0 +1,7 @@
+/app/config/config.local.neon
+/log/*
+/temp/*
+
+!.gitignore
+!.htaccess
+
