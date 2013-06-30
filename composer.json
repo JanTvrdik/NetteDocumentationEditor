@@ -8,7 +8,8 @@
 	],
 	"require": {
 		"php": ">= 5.4.0",
-		"nette/nette": "@dev"
+		"nette/nette": "@dev",
+		"knplabs/github-api": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"

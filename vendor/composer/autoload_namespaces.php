@@ -6,4 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Github\\' => array($vendorDir . '/knplabs/github-api/lib'),
+    'Buzz' => array($vendorDir . '/kriswallsmith/buzz/lib'),
 );
