@@ -7,6 +7,8 @@ use Nette\Application\UI;
 
 class LiveTexyEditorControl extends UI\Control
 {
+	/** @var string */
+	public $content;
 
 	/** @var ITexyFactory */
 	private $texyFactory;
@@ -19,6 +21,7 @@ class LiveTexyEditorControl extends UI\Control
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/LiveTexyEditorControl.latte');
+		$this->template->content = $this->content;
 		$this->template->render();
 	}
 
