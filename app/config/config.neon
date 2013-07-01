@@ -13,6 +13,7 @@ nette:
 
 services:
 	- App\RouterFactory
+	- App\EditorModel
 
 	router: @App\RouterFactory::createRouter
 	texyFactory: App\TexyFactory
