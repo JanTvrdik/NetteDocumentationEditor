@@ -20,43 +20,49 @@
   /* from nette.org */
 
 }
-.live-texy-editor .controls {
+.live-texy-editor .header {
   -webkit-box-flex: 0;
   -moz-box-flex: 0;
   -webkit-flex: 0 0 auto;
   -moz-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  padding: 10px;
-  height: 24px;
-  line-height: 1.0;
   background-color: #1d5183;
   color: #fff;
+  line-height: 1.0;
 }
-.live-texy-editor .controls input,
-.live-texy-editor .controls select {
+.live-texy-editor .header .controls {
+  padding: 10px;
+}
+.live-texy-editor .header .controls input,
+.live-texy-editor .header .controls select {
   line-height: 1.0;
   margin: 0;
   outline: none;
 }
-.live-texy-editor .controls input[type=text] {
+.live-texy-editor .header .controls input[type=text] {
   height: 18px;
   border: none;
   padding: 3px 5px;
 }
-.live-texy-editor .controls input[type=text]::-webkit-input-placeholder {
+.live-texy-editor .header .controls input[type=text]::-webkit-input-placeholder {
   padding: 2px 0px;
   /* WebKit hot fix */
 
 }
-.live-texy-editor .controls select {
+.live-texy-editor .header .controls select {
   height: 24px;
   padding: 3px;
   border: none;
   width: 150px;
 }
-.live-texy-editor .controls input[type=submit] {
+.live-texy-editor .header .controls input[type=submit] {
   width: 60px;
+}
+.live-texy-editor .header .form-errors {
+  padding: 10px;
+  margin-bottom: 12px;
+  background-color: #BE0404;
 }
 .live-texy-editor .main {
   display: -moz-box;
@@ -109,6 +115,7 @@
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   margin: 0;
+  padding: 5px;
   border: none;
   outline: none;
   resize: none;

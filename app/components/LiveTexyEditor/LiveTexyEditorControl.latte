@@ -5,21 +5,24 @@
 
 {form form, style => "height: 100%"}
 	<div class="live-texy-editor">
-		<div class="controls">
-			{label page}Page:{/label}&nbsp;
-			{input page, size => 40, placeholder => "doc.nette.org/en/components"}
-			{input open, value => "Open"}
+		<div class="header">
+			<div class="controls">
+				{label page}Page:{/label}&nbsp;
+				{input page, size => 40, placeholder => "doc.nette.org/en/components"}
+				{input open, value => "Open"}
+				<select name="panels">
+					<option value="code">Code</option>
+					<option value="preview">Preview</option>
+					<!--<option value="diff">Diff</option>-->
+					<option value="code preview" selected>Code + Preview</option>
+					<!--<option value="code diff">Code + Diff</option>-->
+				</select>
+				{input save, value => "Save"}
+			</div>
 
-
-			<select name="panels">
-				<option value="code">Code</option>
-				<option value="preview">Preview</option>
-				<!--<option value="diff">Diff</option>-->
-				<option value="code preview" selected>Code + Preview</option>
-				<!--<option value="code diff">Code + Diff</option>-->
-			</select>
-
-			{input save, value => "Save"}
+			<div n:if="$form->hasErrors()" class="form-errors">
+				{foreach $form->allErrors as $error}{$error}{/foreach}
+			</div>
 		</div>
 
 		<div class="main">

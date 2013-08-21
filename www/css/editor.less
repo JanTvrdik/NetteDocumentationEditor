@@ -10,40 +10,48 @@
 	background-color: @nette-blue;
 	font-family: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif; /* from nette.org */
 
-	.controls {
+	.header {
 		.flex(0, 0, auto);
-		padding: 10px;
-		height: 24px;
-		line-height: 1.0;
 
 		background-color: darken(@nette-blue, 20%);
 		color: #fff;
+		line-height: 1.0;
 
-		input, select {
-			line-height: 1.0;
-			margin: 0;
-			outline: none;
-		}
+		.controls {
+			padding: 10px;
 
-		input[type=text] {
-			height: 18px;
-			border: none;
-			padding: 3px 5px;
+			input, select {
+				line-height: 1.0;
+				margin: 0;
+				outline: none;
+			}
 
-			&::-webkit-input-placeholder {
-				padding: 2px 0px; /* WebKit hot fix */
+			input[type=text] {
+				height: 18px;
+				border: none;
+				padding: 3px 5px;
+
+				&::-webkit-input-placeholder {
+					padding: 2px 0px; /* WebKit hot fix */
+				}
+			}
+
+			select {
+				height: 24px;
+				padding: 3px;
+				border: none;
+				width: 150px;
+			}
+
+			input[type=submit] {
+				width: 60px;
 			}
 		}
 
-		select {
-			height: 24px;
-			padding: 3px;
-			border: none;
-			width: 150px;
-		}
-
-		input[type=submit] {
-			width: 60px;
+		.form-errors {
+			padding: 10px;
+			margin-bottom: 12px;
+			background-color: #BE0404;
 		}
 	}
 
@@ -77,6 +85,7 @@
 			textarea {
 				.flex(1, 1, auto);
 				margin: 0;
+				padding: 5px;
 				border: none;
 				outline: none;
 				resize: none;

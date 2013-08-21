@@ -4,6 +4,7 @@ namespace App;
 use Github;
 use Nette;
 use Nette\Application\UI;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 
 
@@ -29,6 +30,7 @@ final class EditorPresenter extends BasePresenter
 				$file = $this->editorModel->loadPage($branch, $path);
 				if ($file['encoding'] !== 'base64') throw new NotSupportedException();
 				$form = $this['editor-form']->setDefaults([
+					'page' => "$branch:$path",
 					'branch' => $branch,
 					'path' => $path,
 					'prevBlogHash' => $file['sha'],
@@ -36,8 +38,11 @@ final class EditorPresenter extends BasePresenter
 				]);
 
 			} catch (\Github\Exception\RuntimeException $e) {
-				if ($e->getCode() === 404) $this->error();
-				throw $e;
+				if ($e->getCode() === 404) {
+					$this['editor-form']->addError('Page not found.');
+				} else {
+					throw $e;
+				}
 			}
 		}
 	}
@@ -48,9 +53,39 @@ final class EditorPresenter extends BasePresenter
 	protected function createComponentEditor()
 	{
 		$control = new LiveTexyEditorControl();
-		$control['form']->onSuccess[] = $this->processEditorSave;
+		$control['form-open']->onClick[] = $this->processEditorOpen;
+		$control['form-save']->onClick[] = $this->processEditorSave;
 
 		return $control;
+	}
+
+	public function processEditorOpen(SubmitButton $button)
+	{
+		// TODO: persist potentially unsaved page
+
+		$form = $button->form;
+		$page = $form['page']->value;
+		if ($m = Strings::match($page, '#^([a-z0-9.-]+):([a-z0-9._/-]+)\z#')) {
+			list(, $branch, $path) = $m;
+		} else {
+			if (!Strings::startsWith($page, 'http://')) $page = "http://$page";
+			try {
+				list($branch, $path) = $this->editorModel->urlToRepoPath($page);
+			} catch (InvalidArgumentException $e) {
+				$form->addError('Invalid page identifier.');
+				return;
+			}
+		}
+
+		if (!$this->editorModel->pageExists($branch, $path)) {
+			$form->addError('Page not found.');
+			return;
+		}
+
+		$this->redirect('this', array(
+			'branch' => $branch,
+			'path' => $path,
+		));
 	}
 
 	public function processEditorSave(UI\Form $form)
