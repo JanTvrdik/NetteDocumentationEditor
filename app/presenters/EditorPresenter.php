@@ -33,7 +33,7 @@ final class EditorPresenter extends BasePresenter
 					'page' => "$branch:$path",
 					'branch' => $branch,
 					'path' => $path,
-					'prevBlogHash' => $file['sha'],
+					'prevBlobHash' => $file['sha'],
 					'texyContent' => base64_decode($file['content']),
 				]);
 
