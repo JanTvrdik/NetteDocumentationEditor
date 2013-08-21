@@ -12,9 +12,17 @@ class EditorModel extends Nette\Object
 	/** @var Github\Client */
 	private $ghClient;
 
-	public function __construct(Github\Client $ghClient)
+	/** @var string */
+	private $repoOwner;
+
+	/** @var string */
+	private $repoName;
+
+	public function __construct(Github\Client $ghClient, $repoOwner, $repoName)
 	{
 		$this->ghClient = $ghClient;
+		$this->repoOwner = $repoOwner;
+		$this->repoName = $repoName;
 	}
 
 	/**
@@ -28,7 +36,10 @@ class EditorModel extends Nette\Object
 	{
 		try {
 			$httpClient = $this->ghClient->getHttpClient();
-			$apiPath = 'repos/nette/web-content/contents/' . urlencode($path);
+			$apiPath = sprintf(
+				'repos/%s/%s/contents/%s?ref=%s',
+				urlencode($this->repoOwner), urlencode($this->repoName), urlencode($path), urlencode($branch)
+			);
 			$response = $httpClient->request($apiPath, [], 'HEAD');
 
 		} catch (Github\Exception\RuntimeException $e) {
@@ -50,8 +61,7 @@ class EditorModel extends Nette\Object
 	 */
 	public function loadPage($branch, $path)
 	{
-		// TODO: use values form config
-		return $this->ghClient->api('repos')->contents()->show('nette', 'web-content', $path, $branch);
+		return $this->ghClient->api('repos')->contents()->show($this->repoOwner, $this->repoName, $path, $branch);
 	}
 
 	/**
