@@ -47,7 +47,7 @@ final class EditorPresenter extends BasePresenter
 	 */
 	protected function createComponentEditor()
 	{
-		$control = new LiveTexyEditorControl($this->context->texyFactory);
+		$control = new LiveTexyEditorControl();
 		$control['form']->onSuccess[] = $this->processEditorSave;
 
 		return $control;

@@ -19,7 +19,6 @@ services:
 	- Github\Client
 
 	router: @App\RouterFactory::createRouter
-	texyFactory: App\TexyFactory
 
 
 factories:
