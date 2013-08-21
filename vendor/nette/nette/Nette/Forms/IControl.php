@@ -14,7 +14,6 @@ namespace Nette\Forms;
 use Nette;
 
 
-
 /**
  * Defines method that must be implemented to allow a component to act like a form control.
  *
@@ -46,12 +45,6 @@ interface IControl
 	 * @return array
 	 */
 	function getErrors();
-
-	/**
-	 * Is control disabled?
-	 * @return bool
-	 */
-	function isDisabled();
 
 	/**
 	 * Is control value excluded from $form->getValues() result?

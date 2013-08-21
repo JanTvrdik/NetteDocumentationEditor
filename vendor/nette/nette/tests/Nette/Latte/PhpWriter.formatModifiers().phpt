@@ -11,7 +11,6 @@ use Nette\Latte\PhpWriter,
 	Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -28,20 +27,15 @@ test(function() { // special
 		formatModifiers('@', ':');
 	}, 'Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%');
 	Assert::exception(function() {
-		formatModifiers('@', 'mod::||:|');
-	}, 'Nette\InvalidStateException', 'Modifier name must be alphanumeric string%a%');
-	Assert::exception(function() {
 		Assert::same( '$template->mod(@, \'\\\\\', "a", "b", "c", "arg2")',  formatModifiers('@', "mod:'\\\\':a:b:c':arg2") );
 	}, 'Nette\Utils\TokenizerException', 'Unexpected %a% on line 1, column 15.');
 });
-
 
 
 test(function() { // common
 	Assert::same( '$template->mod(@)',  formatModifiers('@', 'mod') );
 	Assert::same( '$template->mod3($template->mod2($template->mod1(@)))',  formatModifiers('@', 'mod1|mod2|mod3') );
 });
-
 
 
 test(function() { // arguments

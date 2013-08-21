@@ -58,7 +58,7 @@
 		return this.elem.hasClass(mode);
 	};
 
-	Panel.prototype.focus = function() {
+	Panel.prototype.focus = function(callback) {
 		var elem = this.elem;
 		if (this.is(Panel.WINDOW)) {
 			elem.data().win.focus();
@@ -67,6 +67,9 @@
 			elem.data().displayTimeout = setTimeout(function() {
 				elem.addClass(Panel.FOCUSED).show();
 				elem[0].style.zIndex = Panel.zIndex++;
+				if (callback) {
+					callback();
+				}
 			}, 50);
 		}
 	};
@@ -112,7 +115,7 @@
 		doc.write('<!DOCTYPE html><meta charset="utf-8"><style>' + $('#nette-debug-style').dom().innerHTML + '<\/style><script>' + $('#nette-debug-script').dom().innerHTML + '<\/script><body id="nette-debug">');
 		doc.body.innerHTML = '<div class="nette-panel nette-mode-window" id="' + this.id + '">' + this.elem.dom().innerHTML + '<\/div>';
 		var winPanel = win.Nette.Debug.getPanel(this.id);
-		win.Nette.Debug.initToggle();
+		win.Nette.Dumper.init();
 		winPanel.reposition();
 		doc.title = this.elem.find('h1').dom().innerHTML;
 
@@ -169,7 +172,6 @@
 	};
 
 
-
 	var Bar = Nette.DebugBar = function() {
 	};
 
@@ -210,6 +212,7 @@
 						right: panel.elem.position().right + Math.round(Math.random() * 100) + 20,
 						bottom: panel.elem.position().bottom + Math.round(Math.random() * 100) + 20
 					});
+					panel.reposition();
 				}
 			}
 			e.preventDefault();
@@ -217,13 +220,14 @@
 		}).bind('mouseenter', function(e) {
 			if (this.rel && this.rel !== 'close' && !elem.hasClass('nette-dragged')) {
 				var panel = Debug.getPanel(this.rel), link = $(this);
-				panel.focus();
-				if (panel.is(Panel.PEEK)) {
-					panel.elem.position({
-						right: panel.elem.position().right - link.offset().left + panel.elem.position().width - link.position().width - 4 + panel.elem.offset().left,
-						bottom: panel.elem.position().bottom - elem.offset().top + panel.elem.position().height + 4 + panel.elem.offset().top
-					});
-				}
+				panel.focus(function() {
+					if (panel.is(Panel.PEEK)) {
+						panel.elem.position({
+							right: panel.elem.position().right - link.offset().left + panel.elem.position().width - link.position().width - 4 + panel.elem.offset().left,
+							bottom: panel.elem.position().bottom - elem.offset().top + panel.elem.position().height + 4 + panel.elem.offset().top
+						});
+					}
+				});
 			}
 
 		}).bind('mouseleave', function(e) {
@@ -260,7 +264,6 @@
 			$('#' + this.id).position({right: m[1], bottom: m[2]});
 		}
 	};
-
 
 
 	var Debug = Nette.Debug = {};

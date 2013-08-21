@@ -5,14 +5,15 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @exitCode   255
+ * @httpCode   500
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
-
 
 
 Debugger::$productionMode = FALSE;
@@ -20,7 +21,10 @@ header('Content-Type: text/plain');
 
 Debugger::enable();
 
-Debugger::$onFatalError[] = function() {
+$onFatalErrorCalled = FALSE;
+
+register_shutdown_function(function() use (& $onFatalErrorCalled) {
+	Assert::true($onFatalErrorCalled);
 	Assert::match(extension_loaded('xdebug') ? "
 Fatal error: Call to undefined function missing_funcion() in %a%
 exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
@@ -33,10 +37,15 @@ Stack trace:
 Fatal error: Call to undefined function missing_funcion() in %a%
 exception 'Nette\\FatalErrorException' with message 'Call to undefined function missing_funcion()' in %a%
 Stack trace:
-#0 [internal function]: %ns%Debugger::_shutdownHandler()
+#0 [internal function]: Nette\\Diagnostics\\Debugger::_shutdownHandler()
 #1 {main}
 ", ob_get_clean());
-	die(0);
+	echo 'OK!'; // prevents PHP bug #62725
+});
+
+
+Debugger::$onFatalError[] = function() use (& $onFatalErrorCalled) {
+	$onFatalErrorCalled = TRUE;
 };
 ob_start();
 

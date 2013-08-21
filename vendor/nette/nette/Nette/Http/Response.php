@@ -14,7 +14,6 @@ namespace Nette\Http;
 use Nette;
 
 
-
 /**
  * HttpResponse class.
  *
@@ -45,7 +44,6 @@ final class Response extends Nette\Object implements IResponse
 	private $code = self::S200_OK;
 
 
-
 	public function __construct()
 	{
 		if (PHP_VERSION_ID >= 50400) {
@@ -55,11 +53,10 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Sets HTTP response code.
 	 * @param  int
-	 * @return Response  provides a fluent interface
+	 * @return self
 	 * @throws Nette\InvalidArgumentException  if code is invalid
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
@@ -67,14 +64,7 @@ final class Response extends Nette\Object implements IResponse
 	{
 		$code = (int) $code;
 
-		static $allowed = array(
-			200=>1, 201=>1, 202=>1, 203=>1, 204=>1, 205=>1, 206=>1,
-			300=>1, 301=>1, 302=>1, 303=>1, 304=>1, 307=>1,
-			400=>1, 401=>1, 403=>1, 404=>1, 405=>1, 406=>1, 408=>1, 410=>1, 412=>1, 415=>1, 416=>1,
-			500=>1, 501=>1, 503=>1, 505=>1
-		);
-
-		if (!isset($allowed[$code])) {
+		if ($code < 100 || $code > 599) {
 			throw new Nette\InvalidArgumentException("Bad HTTP response '$code'.");
 
 		} elseif (headers_sent($file, $line)) {
@@ -89,7 +79,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Returns HTTP response code.
 	 * @return int
@@ -100,12 +89,11 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Sends a HTTP header and replaces a previous one.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return Response  provides a fluent interface
+	 * @return self
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setHeader($name, $value)
@@ -125,12 +113,11 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Adds HTTP header.
 	 * @param  string  header name
 	 * @param  string  header value
-	 * @return Response  provides a fluent interface
+	 * @return self
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function addHeader($name, $value)
@@ -144,12 +131,11 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Sends a Content-type HTTP header.
 	 * @param  string  mime-type
 	 * @param  string  charset
-	 * @return Response  provides a fluent interface
+	 * @return self
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setContentType($type, $charset = NULL)
@@ -157,7 +143,6 @@ final class Response extends Nette\Object implements IResponse
 		$this->setHeader('Content-Type', $type . ($charset ? '; charset=' . $charset : ''));
 		return $this;
 	}
-
 
 
 	/**
@@ -169,24 +154,16 @@ final class Response extends Nette\Object implements IResponse
 	 */
 	public function redirect($url, $code = self::S302_FOUND)
 	{
-		if (isset($_SERVER['SERVER_SOFTWARE']) && preg_match('#^Microsoft-IIS/[1-5]#', $_SERVER['SERVER_SOFTWARE'])
-			&& $this->getHeader('Set-Cookie') !== NULL
-		) {
-			$this->setHeader('Refresh', "0;url=$url");
-			return;
-		}
-
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
 		echo "<h1>Redirect</h1>\n\n<p><a href=\"" . htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES) . "\">Please click here to continue</a>.</p>";
 	}
 
 
-
 	/**
 	 * Sets the number of seconds before a page cached on a browser expires.
 	 * @param  string|int|DateTime  time, value 0 means "until the browser is closed"
-	 * @return Response  provides a fluent interface
+	 * @return self
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setExpiration($time)
@@ -204,7 +181,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Checks if headers have been sent.
 	 * @return bool
@@ -213,7 +189,6 @@ final class Response extends Nette\Object implements IResponse
 	{
 		return headers_sent();
 	}
-
 
 
 	/**
@@ -235,7 +210,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Returns a list of headers to sent.
 	 * @return array
@@ -251,7 +225,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Returns HTTP valid date format.
 	 * @param  string|int|DateTime
@@ -263,7 +236,6 @@ final class Response extends Nette\Object implements IResponse
 		$time->setTimezone(new \DateTimeZone('GMT'));
 		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
-
 
 
 	/**
@@ -281,7 +253,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Sends a cookie.
 	 * @param  string name of the cookie
@@ -291,7 +262,7 @@ final class Response extends Nette\Object implements IResponse
 	 * @param  string
 	 * @param  bool
 	 * @param  bool
-	 * @return Response  provides a fluent interface
+	 * @return self
 	 * @throws Nette\InvalidStateException  if HTTP headers have been sent
 	 */
 	public function setCookie($name, $value, $time, $path = NULL, $domain = NULL, $secure = NULL, $httpOnly = NULL)
@@ -319,7 +290,6 @@ final class Response extends Nette\Object implements IResponse
 	}
 
 
-
 	/**
 	 * Removes duplicate cookies from response.
 	 * @return void
@@ -341,7 +311,6 @@ final class Response extends Nette\Object implements IResponse
 			header($header, $key === 0);
 		}
 	}
-
 
 
 	/**

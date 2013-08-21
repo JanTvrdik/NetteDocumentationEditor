@@ -5,14 +5,17 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip('Debugger Bar is not rendered in CLI mode');
+}
 
 
 Debugger::$productionMode = FALSE;
@@ -20,9 +23,10 @@ header('Content-Type: text/html');
 
 Debugger::enable();
 
-register_shutdown_function(function(){
+register_shutdown_function(function() {
 	preg_match('#debug.innerHTML = (".*");#', ob_get_clean(), $m);
-	Assert::match(file_get_contents(__DIR__ . '/Debugger.barDump().expect'), json_decode($m[1]));
+	Assert::matchFile(__DIR__ . '/Debugger.barDump().expect', json_decode($m[1]));
+	echo 'OK!'; // prevents PHP bug #62725
 });
 ob_start();
 

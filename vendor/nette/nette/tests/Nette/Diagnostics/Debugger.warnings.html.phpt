@@ -5,14 +5,17 @@
  *
  * @author     David Grudl
  * @package    Nette\Diagnostics
+ * @outputMatch OK!
  */
 
 use Nette\Diagnostics\Debugger;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
+if (PHP_SAPI === 'cli') {
+	Tester\Environment::skip('Debugger Bar is not rendered in CLI mode');
+}
 
 
 Debugger::$productionMode = FALSE;
@@ -20,7 +23,7 @@ header('Content-Type: text/html');
 
 Debugger::enable();
 
-register_shutdown_function(function(){
+register_shutdown_function(function() {
 	preg_match('#debug.innerHTML = (".*");#', $output = ob_get_clean(), $m);
 	Assert::match('
 Warning: Unsupported declare \'foo\' in %a% on line %d%%A%', $output);
@@ -44,6 +47,7 @@ Warning: Unsupported declare \'foo\' in %a% on line %d%%A%', $output);
 </tr>
 </table>
 </div>%A%', json_decode($m[1]));
+	echo 'OK!'; // prevents PHP bug #62725
 });
 ob_start();
 

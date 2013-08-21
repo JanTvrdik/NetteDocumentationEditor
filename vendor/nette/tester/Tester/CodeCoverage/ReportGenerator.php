@@ -7,10 +7,9 @@
  *
  * For the full copyright and license information, please view
  * the file license.txt that was distributed with this source code.
- *
- * @package    Nette\Test
  */
 
+namespace Tester\CodeCoverage;
 
 
 /**
@@ -51,7 +50,6 @@ class ReportGenerator
 	);
 
 
-
 	/**
 	 * @param string  path to coverage.dat file
 	 * @param string  path to source files
@@ -88,7 +86,6 @@ class ReportGenerator
 	}
 
 
-
 	public function render($file = NULL)
 	{
 		$this->setupHighlight();
@@ -110,7 +107,6 @@ class ReportGenerator
 	}
 
 
-
 	private function setupHighlight()
 	{
 		ini_set('highlight.comment', '#999; font-style: italic');
@@ -121,7 +117,6 @@ class ReportGenerator
 	}
 
 
-
 	private function parse()
 	{
 		if (count($this->files) > 0) {
@@ -129,7 +124,7 @@ class ReportGenerator
 		}
 
 		$this->files = array();
-		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->sourceDir)) as $entry) {
+		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->sourceDir)) as $entry) {
 			if (substr($entry->getBasename(), 0, 1) === '.'  // . or .. or .gitignore
 				|| !in_array(pathinfo($entry, PATHINFO_EXTENSION), $this->acceptFiles))
 			{

@@ -10,6 +10,11 @@
 	display: none;
 }
 
+body#nette-debug {
+	margin: 5px 5px 0;
+	display: block;
+}
+
 body #nette-debug {
 	position: absolute;
 	bottom: 0;
@@ -293,7 +298,7 @@ body #nette-debug {
 	color: #850;
 }
 
-#nette-debug .nette-dump-visibility {
+#nette-debug .nette-dump-visibility, #nette-debug .nette-dump-hash {
 	font-size: 85%; color: #999;
 }
 

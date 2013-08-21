@@ -1,0 +1,99 @@
+@import "flex/flex";
+
+@nette-blue: #3484d2;
+
+.live-texy-editor {
+	.display(flex);
+	.flex-direction(column);
+
+	height: 100%;
+	background-color: @nette-blue;
+	font-family: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif; /* from nette.org */
+
+	.controls {
+		.flex(0, 0, auto);
+		padding: 10px;
+		height: 24px;
+		line-height: 1.0;
+
+		background-color: darken(@nette-blue, 20%);
+		color: #fff;
+
+		input, select {
+			line-height: 1.0;
+			margin: 0;
+			outline: none;
+		}
+
+		input[type=text] {
+			height: 18px;
+			border: none;
+			padding: 3px 5px;
+
+			&::-webkit-input-placeholder {
+				padding: 2px 0px; /* WebKit hot fix */
+			}
+		}
+
+		select {
+			height: 24px;
+			padding: 3px;
+			border: none;
+			width: 150px;
+		}
+
+		input[type=submit] {
+			width: 60px;
+		}
+	}
+
+	.main {
+		.display(flex);
+		.flex(1, 1, auto);
+
+		> .left, > .right {
+			.display(flex);
+			.flex(1, 1, auto);
+			width: 400px; /* normalize width */
+		}
+
+		&.left-only {
+			> .right {
+				display: none;
+			}
+		}
+
+		&.right-only {
+			> .left {
+				display: none;
+			}
+
+			.right {
+				max-width: none;
+			}
+		}
+
+		.left {
+			textarea {
+				.flex(1, 1, auto);
+				margin: 0;
+				border: none;
+				outline: none;
+				resize: none;
+				overflow-y: scroll;
+				font-family: Consolas, monospace;
+			}
+		}
+
+		.right {
+			max-width: 1000px;
+
+			iframe.output {
+				.flex(1, 1, auto);
+				min-height: 100%; /* for IE */
+				border: none;
+			}
+		}
+	}
+}
+

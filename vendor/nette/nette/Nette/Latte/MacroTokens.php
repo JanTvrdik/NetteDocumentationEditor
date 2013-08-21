@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * Macro tag tokenizer.
  *
@@ -39,13 +38,11 @@ class MacroTokens extends Nette\Utils\TokenIterator
 	public $depth = 0;
 
 
-
 	public function __construct($input = NULL)
 	{
 		parent::__construct(is_array($input) ? $input : $this->parse($input));
 		$this->ignored = array(self::T_COMMENT, self::T_WHITESPACE);
 	}
-
 
 
 	public function parse($s)
@@ -59,11 +56,10 @@ class MacroTokens extends Nette\Utils\TokenIterator
 			self::T_VARIABLE => '\$[\w\pL_]+',
 			self::T_NUMBER => '[+-]?[0-9]+(?:\.[0-9]+)?(?:e[0-9]+)?',
 			self::T_SYMBOL => '[\w\pL_]+(?:-[\w\pL_]+)*',
-			self::T_CHAR => '::|=>|[^"\']', // =>, any char except quotes
+			self::T_CHAR => '::|=>|->|\+\+|--|<<|>>|<=|>=|===|!==|==|!=|<>|&&|\|\||[^"\']', // =>, any char except quotes
 		), 'u');
 		return self::$tokenizer->tokenize($s);
 	}
-
 
 
 	/**
@@ -83,7 +79,6 @@ class MacroTokens extends Nette\Utils\TokenIterator
 	}
 
 
-
 	/**
 	 * Prepends simple token or string (will be parsed).
 	 * @return MacroTokens
@@ -97,7 +92,6 @@ class MacroTokens extends Nette\Utils\TokenIterator
 	}
 
 
-
 	/**
 	 * Reads single token (optionally delimited by comma) from string.
 	 * @param  string
@@ -108,7 +102,6 @@ class MacroTokens extends Nette\Utils\TokenIterator
 		$words = $this->fetchWords();
 		return $words ? implode(':', $words) : FALSE;
 	}
-
 
 
 	/**
@@ -127,13 +120,11 @@ class MacroTokens extends Nette\Utils\TokenIterator
 	}
 
 
-
 	public function reset()
 	{
 		$this->depth = 0;
 		return parent::reset();
 	}
-
 
 
 	protected function next()

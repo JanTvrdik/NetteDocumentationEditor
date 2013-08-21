@@ -38,7 +38,7 @@ Nette.getValue = function(elem) {
 		return null;
 
 	} else if (elem.nodeName.toLowerCase() === 'select') {
-		var index = elem.selectedIndex, options = elem.options;
+		var index = elem.selectedIndex, options = elem.options, values = [];
 
 		if (index < 0) {
 			return null;
@@ -47,7 +47,7 @@ Nette.getValue = function(elem) {
 			return options[index].value;
 		}
 
-		for (i = 0, values = [], len = options.length; i < len; i++) {
+		for (i = 0, len = options.length; i < len; i++) {
 			if (options[i].selected) {
 				values.push(options[i].value);
 			}
@@ -116,7 +116,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
  */
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender, scope = false;
-	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
+	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate')) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
 			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
@@ -262,8 +262,8 @@ Nette.validators = {
 					return false;
 				}
 			}
-			return true;
 		}
+		return true;
 	}
 };
 

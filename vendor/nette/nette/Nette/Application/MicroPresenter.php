@@ -17,7 +17,6 @@ use Nette,
 	Nette\Http;
 
 
-
 /**
  * Micro presenter.
  *
@@ -34,12 +33,10 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	private $request;
 
 
-
 	public function __construct(Nette\DI\Container $context)
 	{
 		$this->context = $context;
 	}
-
 
 
 	/**
@@ -50,7 +47,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		return $this->context;
 	}
-
 
 
 	/**
@@ -74,17 +70,18 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			throw new Application\BadRequestException("Parameter callback is missing.");
 		}
 		$params['presenter'] = $this;
-		$callback = new Nette\Callback($params['callback']);
-		$params = Application\UI\PresenterComponentReflection::combineArgs($callback->toReflection(), $params);
+		$callback = $params['callback'];
+		$reflection = Nette\Utils\Callback::toReflection(Nette\Utils\Callback::check($callback));
+		$params = Application\UI\PresenterComponentReflection::combineArgs($reflection, $params);
 
-		foreach ($callback->toReflection()->getParameters() as $param) {
+		foreach ($reflection->getParameters() as $param) {
 			if ($param->getClassName()) {
 				unset($params[$param->getPosition()]);
 			}
 		}
-		$params = Nette\DI\Helpers::autowireArguments($callback->toReflection(), $params, $this->context);
+		$params = Nette\DI\Helpers::autowireArguments($reflection, $params, $this->context);
 
-		$response = $callback->invokeArgs($params);
+		$response = call_user_func_array($callback, $params);
 
 		if (is_string($response)) {
 			$response = array($response, array());
@@ -104,7 +101,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 			return $response;
 		}
 	}
-
 
 
 	/**
@@ -133,7 +129,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	}
 
 
-
 	/**
 	 * Redirects to another URL.
 	 * @param  string
@@ -144,7 +139,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		return new Responses\RedirectResponse($url, $code);
 	}
-
 
 
 	/**
@@ -158,7 +152,6 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 	{
 		throw new Application\BadRequestException($message, $code);
 	}
-
 
 
 	/**

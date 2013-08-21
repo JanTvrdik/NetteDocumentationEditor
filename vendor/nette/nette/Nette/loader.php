@@ -10,7 +10,6 @@
  */
 
 
-
 /**
  * Check and reset PHP configuration.
  */
@@ -21,7 +20,6 @@ if (PHP_VERSION_ID < 50301) {
 @header('Content-Type: text/html; charset=utf-8'); // @ - headers may be sent
 
 
-
 /**
  * Load and configure Nette Framework.
  */
@@ -30,10 +28,8 @@ define('NETTE_DIR', __DIR__);
 define('NETTE_VERSION_ID', 20100); // v2.1.0
 
 
-
 require_once __DIR__ . '/common/exceptions.php';
 require_once __DIR__ . '/common/Object.php';
-require_once __DIR__ . '/Utils/LimitedScope.php';
 require_once __DIR__ . '/Loaders/AutoLoader.php';
 require_once __DIR__ . '/Loaders/NetteLoader.php';
 
@@ -44,7 +40,6 @@ require_once __DIR__ . '/Diagnostics/shortcuts.php';
 
 Nette\Utils\SafeStream::register();
 class_alias('Nette\Configurator', 'Nette\Config\Configurator');
-
 
 
 /**

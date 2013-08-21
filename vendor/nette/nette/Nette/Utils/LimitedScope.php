@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Limited scope for PHP code evaluation and script including.
  *
@@ -22,7 +21,6 @@ use Nette;
  */
 final class LimitedScope
 {
-	private static $vars;
 
 	/**
 	 * Static class - cannot be instantiated.
@@ -31,7 +29,6 @@ final class LimitedScope
 	{
 		throw new Nette\StaticClassException;
 	}
-
 
 
 	/**
@@ -43,8 +40,7 @@ final class LimitedScope
 	public static function evaluate(/*$code, array $vars = NULL*/)
 	{
 		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			extract(self::$vars);
+			extract(func_get_arg(1));
 		}
 		$res = eval('?>' . func_get_arg(0));
 		if ($res === FALSE && ($error = error_get_last()) && $error['type'] === E_PARSE) {
@@ -54,21 +50,16 @@ final class LimitedScope
 	}
 
 
-
 	/**
 	 * Includes script in a limited scope.
 	 * @param  string  file to include
-	 * @param  array   local variables or TRUE meaning include once
+	 * @param  array   local variables
 	 * @return mixed   the return value of the included file
 	 */
 	public static function load(/*$file, array $vars = NULL*/)
 	{
-		if (func_num_args() > 1) {
-			self::$vars = func_get_arg(1);
-			if (self::$vars === TRUE) {
-				return include_once func_get_arg(0);
-			}
-			extract(self::$vars);
+		if (func_num_args() > 1 && is_array(func_get_arg(1))) {
+			extract(func_get_arg(1));
 		}
 		return include func_get_arg(0);
 	}

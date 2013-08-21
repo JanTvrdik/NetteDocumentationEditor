@@ -5,38 +5,42 @@ use Tester\Assert;
 require __DIR__ . '/bootstrap.php';
 
 
-Assert::contains('1', '1');
-Assert::contains('1', 'a1');
-Assert::contains('1', array('1'));
+$contains = array(
+	array('1', '1'),
+	array('1', 'a1'),
+	array('1', array('1')),
+);
 
-Assert::exception(function(){
+$notContains = array(
+	array('2', 'a1'),
+	array('1', array(TRUE)),
+);
+
+foreach ($contains as $case) {
+	list($expected, $value) = $case;
+
+	Assert::contains($expected, $value);
+
+	Assert::exception(function() use ($expected, $value) {
+		Assert::notContains($expected, $value);
+	}, 'Tester\AssertException', "%1 should not contain %2");
+}
+
+foreach ($notContains as $case) {
+	list($expected, $value) = $case;
+
+	Assert::notContains($case[0], $case[1]);
+
+	Assert::exception(function() use ($expected, $value) {
+		Assert::contains($expected, $value);
+	}, 'Tester\AssertException', "%1 should contain %2");
+}
+
+
+Assert::exception(function() {
 	Assert::contains(1, 1);
-}, 'Tester\AssertException', 'Failed asserting that 1 is string or array');
+}, 'Tester\AssertException', '%1 should be string or array');
 
-Assert::exception(function(){
-	Assert::contains('2', 'a1');
-}, 'Tester\AssertException', 'Failed asserting that "a1" contains "2"');
-
-Assert::exception(function(){
-	Assert::contains('1', array(TRUE));
-}, 'Tester\AssertException', 'Failed asserting that array(1) contains "1"');
-
-
-Assert::notContains('2', 'a1');
-Assert::notContains('1', array(TRUE));
-
-Assert::exception(function(){
-	Assert::notContains('1', '1');
-}, 'Tester\AssertException', 'Failed asserting that "1" not contains "1"');
-
-Assert::exception(function(){
-	Assert::notContains('1', 'a1');
-}, 'Tester\AssertException', 'Failed asserting that "a1" not contains "1"');
-
-Assert::exception(function(){
-	Assert::notContains('1', array('1'));
-}, 'Tester\AssertException', 'Failed asserting that array(1) not contains "1"');
-
-Assert::exception(function(){
+Assert::exception(function() {
 	Assert::notContains(1, 1);
-}, 'Tester\AssertException', 'Failed asserting that 1 is string or array');
+}, 'Tester\AssertException', '%1 should be string or array');

@@ -12,9 +12,7 @@
 namespace Nette\Database\Diagnostics;
 
 use Nette,
-	Nette\Database\Helpers,
-	Nette\Diagnostics\Debugger;
-
+	Nette\Database\Helpers;
 
 
 /**
@@ -43,12 +41,10 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	public $disabled = FALSE;
 
 
-
 	public function __construct(Nette\Database\Connection $connection)
 	{
 		$connection->onQuery[] = array($this, 'logQuery');
 	}
-
 
 
 	public function logQuery(Nette\Database\Connection $connection, $result)
@@ -59,9 +55,12 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 		$source = NULL;
 		$trace = $result instanceof \PDOException ? $result->getTrace() : debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE);
 		foreach ($trace as $row) {
-			if (isset($row['file']) && is_file($row['file']) && strpos($row['file'], NETTE_DIR . DIRECTORY_SEPARATOR) !== 0) {
-				if (isset($row['function']) && strpos($row['function'], 'call_user_func') === 0) continue;
-				if (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection')) continue;
+			if (isset($row['file']) && is_file($row['file']) && !Nette\Diagnostics\Debugger::getBluescreen()->isCollapsed($row['file'])) {
+				if ((isset($row['function']) && strpos($row['function'], 'call_user_func') === 0)
+					|| (isset($row['class']) && is_subclass_of($row['class'], '\\Nette\\Database\\Connection'))
+				) {
+					continue;
+				}
 				$source = array($row['file'], (int) $row['line']);
 				break;
 			}
@@ -74,7 +73,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			$this->queries[] = array($connection, $result->queryString, NULL, $source, NULL, NULL, $result->getMessage());
 		}
 	}
-
 
 
 	public static function renderException($e)
@@ -95,7 +93,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 	}
 
 
-
 	public function getTab()
 	{
 		return '<span title="Nette\\Database ' . htmlSpecialChars($this->name) . '">'
@@ -104,7 +101,6 @@ class ConnectionPanel extends Nette\Object implements Nette\Diagnostics\IBarPane
 			. ($this->totalTime ? ' / ' . sprintf('%0.1f', $this->totalTime * 1000) . 'ms' : '')
 			. '</span>';
 	}
-
 
 
 	public function getPanel()

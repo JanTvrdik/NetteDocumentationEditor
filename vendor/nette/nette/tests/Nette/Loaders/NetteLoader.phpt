@@ -7,15 +7,23 @@
  * @package    Nette\Loaders
  */
 
-use Nette\Loaders\NetteLoader;
+use Tester\Assert;
 
 
+require __DIR__ . '/../../../vendor/nette/tester/Tester/bootstrap.php';
+require __DIR__ . '/../../../Nette/common/Object.php';
+require __DIR__ . '/../../../Nette/Loaders/AutoLoader.php';
+require __DIR__ . '/../../../Nette/Loaders/NetteLoader.php';
 
-require __DIR__ . '/../bootstrap.php';
 
+Assert::false( class_exists('Nette\ArrayHash') );
+Assert::false( class_exists('Nette\Diagnostics\Debugger') );
 
+Nette\Loaders\NetteLoader::getInstance()->register();
 
-$loader = NetteLoader::getInstance();
-$loader->register();
+Assert::true( class_exists('Nette\ArrayHash') );
+Assert::true( class_exists('Nette\Diagnostics\Debugger') );
 
-Assert::true( class_exists('Nette\Diagnostics\Debugger') ); // Class Nette\Diagnostics\Debugger loaded?
+Assert::error(function() {
+	class_exists('Nette\Http\User');
+}, E_USER_WARNING, 'Class Nette\Http\User has been renamed to Nette\Security\User.');

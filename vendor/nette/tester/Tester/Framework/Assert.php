@@ -12,7 +12,6 @@
 namespace Tester;
 
 
-
 /**
  * Assertion test helpers.
  *
@@ -20,8 +19,31 @@ namespace Tester;
  */
 class Assert
 {
-	/** @var callable  function($message, $expected, $actual) */
-	public static $onFailure = array(__CLASS__, 'assertionFailed');
+	/** used by equal() for comparing floats */
+	const EPSILON = 1e-10;
+
+	/** used by match(); in values, each $ followed by number is backreference */
+	static public $patterns = array(
+		'%a%' => '[^\r\n]+',    // one or more of anything except the end of line characters
+		'%a\?%'=> '[^\r\n]*',   // zero or more of anything except the end of line characters
+		'%A%' => '.+',          // one or more of anything including the end of line characters
+		'%A\?%'=> '.*',         // zero or more of anything including the end of line characters
+		'%s%' => '[\t ]+',      // one or more white space characters except the end of line characters
+		'%s\?%'=> '[\t ]*',     // zero or more white space characters except the end of line characters
+		'%S%' => '\S+',         // one or more of characters except the white space
+		'%S\?%'=> '\S*',        // zero or more of characters except the white space
+		'%c%' => '[^\r\n]',     // a single character of any sort (except the end of line)
+		'%d%' => '[0-9]+',      // one or more digits
+		'%d\?%'=> '[0-9]*',     // zero or more digits
+		'%i%' => '[+-]?[0-9]+', // signed integer value
+		'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
+		'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
+		'%ds%'=> '[\\\\/]', // directory separator
+		'%(\[.*\].*)%'=> '$1',  // range
+	);
+
+	/** @var callable  function(AssertException $exception) */
+	public static $onFailure;
 
 
 	/**
@@ -31,10 +53,9 @@ class Assert
 	public static function same($expected, $actual)
 	{
 		if ($actual !== $expected) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is identical to expected ' . Dumper::toLine($expected), $expected, $actual);
+			self::fail('%1 should be %2', $actual, $expected);
 		}
 	}
-
 
 
 	/**
@@ -44,10 +65,9 @@ class Assert
 	public static function notSame($expected, $actual)
 	{
 		if ($actual === $expected) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is not identical to expected ' . Dumper::toLine($expected), $expected, $actual);
+			self::fail('%1 should not be %2', $actual, $expected);
 		}
 	}
-
 
 
 	/**
@@ -56,11 +76,10 @@ class Assert
 	 */
 	public static function equal($expected, $actual)
 	{
-		if (!self::compare($expected, $actual)) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is equal to expected ' . Dumper::toLine($expected), $expected, $actual);
+		if (!self::isEqual($expected, $actual)) {
+			self::fail('%1 should be equal to %2', $actual, $expected);
 		}
 	}
-
 
 
 	/**
@@ -69,11 +88,10 @@ class Assert
 	 */
 	public static function notEqual($expected, $actual)
 	{
-		if (self::compare($expected, $actual)) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is not equal to expected ' . Dumper::toLine($expected), $expected, $actual);
+		if (self::isEqual($expected, $actual)) {
+			self::fail('%1 should not be equal to %2', $actual, $expected);
 		}
 	}
-
 
 
 	/**
@@ -84,17 +102,16 @@ class Assert
 	{
 		if (is_array($actual)) {
 			if (!in_array($needle, $actual, TRUE)) {
-				self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' contains ' . Dumper::toLine($needle), $needle, $actual);
+				self::fail('%1 should contain %2', $actual, $needle);
 			}
 		} elseif (is_string($actual)) {
 			if (strpos($actual, $needle) === FALSE) {
-				self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' contains ' . Dumper::toLine($needle), $needle, $actual);
+				self::fail('%1 should contain %2', $actual, $needle);
 			}
 		} else {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is string or array', $needle, $actual);
+			self::fail('%1 should be string or array', $actual);
 		}
 	}
-
 
 
 	/**
@@ -105,17 +122,16 @@ class Assert
 	{
 		if (is_array($actual)) {
 			if (in_array($needle, $actual, TRUE)) {
-				self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' not contains ' . Dumper::toLine($needle), $needle, $actual);
+				self::fail('%1 should not contain %2', $actual, $needle);
 			}
 		} elseif (is_string($actual)) {
 			if (strpos($actual, $needle) !== FALSE) {
-				self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' not contains ' . Dumper::toLine($needle), $needle, $actual);
+				self::fail('%1 should not contain %2', $actual, $needle);
 			}
 		} else {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is string or array', $needle, $actual);
+			self::fail('%1 should be string or array', $actual);
 		}
 	}
-
 
 
 	/**
@@ -126,10 +142,9 @@ class Assert
 	public static function true($actual)
 	{
 		if ($actual !== TRUE) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is TRUE', TRUE, $actual);
+			self::fail('%1 should be TRUE', $actual);
 		}
 	}
-
 
 
 	/**
@@ -140,10 +155,9 @@ class Assert
 	public static function false($actual)
 	{
 		if ($actual !== FALSE) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is FALSE', FALSE, $actual);
+			self::fail('%1 should be FALSE', $actual);
 		}
 	}
-
 
 
 	/**
@@ -154,26 +168,62 @@ class Assert
 	public static function null($actual)
 	{
 		if ($actual !== NULL) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' is NULL', NULL, $actual);
+			self::fail('%1 should be NULL', $actual);
 		}
 	}
 
+
+	/**
+	 * Checks truthy assertion.
+	 * @param  mixed  actual
+	 * @return void
+	 */
+	public static function truthy($actual)
+	{
+		if (!$actual) {
+			self::fail('%1 should be truthy', $actual);
+		}
+	}
+
+
+	/**
+	 * Checks falsey (empty) assertion.
+	 * @param  mixed  actual
+	 * @return void
+	 */
+	public static function falsey($actual)
+	{
+		if ($actual) {
+			self::fail('%1 should be falsey', $actual);
+		}
+	}
 
 
 	/**
 	 * Checks assertion.
 	 * @return void
 	 */
-	public static function type($type, $object)
+	public static function type($type, $value)
 	{
 		if (!is_object($type) && !is_string($type)) {
 			throw new \Exception('Type must be a object or a string.');
-		}
-		if (!$object instanceof $type) {
-			self::fail('Failed asserting that ' . Dumper::toLine($object) . " is instance of $type.", $type, $object);
+
+		} elseif ($type === 'list') {
+			if (!is_array($value) || ($value && array_keys($value) !== range(0, count($value) - 1))) {
+				self::fail("%1 should be $type", $value);
+			}
+
+		} elseif (in_array($type, array('array', 'bool', 'callable', 'float',
+			'int', 'integer', 'null', 'object', 'resource', 'scalar', 'string'), TRUE)
+		) {
+			if (!call_user_func("is_$type", $value)) {
+				self::fail("%1 should be $type", $value);
+			}
+
+		} elseif (!$value instanceof $type) {
+			self::fail("%1 should be instance of $type", $value);
 		}
 	}
-
 
 
 	/**
@@ -190,22 +240,20 @@ class Assert
 		} catch (\Exception $e) {
 		}
 		if (!isset($e)) {
-			self::fail("Expected exception $class");
+			self::fail("$class was expected, but none was thrown");
+
 		} elseif (!$e instanceof $class) {
-			self::fail('Failed asserting that ' . get_class($e) . " is an instance of class $class", $class, get_class($e));
-		} elseif ($message) {
-			self::match($message, $e->getMessage());
+			self::fail("$class was expected but got " . get_class($e) . ($e->getMessage() ? " ({$e->getMessage()})" : ''));
+
+		} elseif ($message && !self::isMatching($message, $e->getMessage())) {
+			self::fail("$class with a message matching %2 was expected but got %1", $e->getMessage(), $message);
 		}
 		return $e;
 	}
 
 
-
 	/**
-	 * Checks if the function throws exception.
-	 * @param  callable
-	 * @param  string class
-	 * @param  string message
+	 * Checks if the function throws exception, alias for exception().
 	 * @return Exception
 	 */
 	public static function throws($function, $class, $message = NULL)
@@ -214,100 +262,54 @@ class Assert
 	}
 
 
-
 	/**
-	 * Checks if the function throws exception.
+	 * Checks if the function generates PHP error or throws exception.
 	 * @param  callable
-	 * @param  int
+	 * @param  int|string
 	 * @param  string message
 	 * @return void
 	 */
-	public static function error($function, $level, $message = NULL)
+	public static function error($function, $expectedType, $expectedMessage = NULL)
 	{
-		$catched = NULL;
-		set_error_handler(function($severity, $message, $file, $line) use (& $catched) {
-			if (($severity & error_reporting()) === $severity) {
-				if ($catched) {
-					echo "\nUnexpected error $message in $file:$line";
-					exit(\Tester\Runner\Job::CODE_FAIL);
-				}
-				$catched = array($severity, $message);
+		if (is_int($expectedType)) {
+			$expectedTypeStr = self::errorTypeToString($expectedType);
+
+		} elseif (!is_string($expectedType)) {
+			throw new \Exception('Error type must be E_* constant or Exception class name.');
+
+		} elseif (preg_match('#^E_[A-Z_]+\z#', $expectedType)) {
+			$expectedType = constant($expectedTypeStr = $expectedType);
+		} else {
+			return static::exception($function, $expectedType, $expectedMessage);
+		}
+
+		$catched = FALSE;
+		set_error_handler(function($severity, $message, $file, $line) use (& $catched, $expectedType, $expectedMessage, $expectedTypeStr) {
+			$errorStr = Assert::errorTypeToString($severity) . ($message ? " ($message)" : '');
+			if (($severity & error_reporting()) !== $severity) {
+				return;
+
+			} elseif ($catched) {
+				Assert::fail("Expected one $expectedTypeStr, but another $errorStr was generated in file $file on line $line");
+
+			} elseif ($severity !== $expectedType) {
+				Assert::fail("$expectedTypeStr was expected, but $errorStr was generated in file $file on line $line");
+
+			} elseif ($expectedMessage && !Assert::isMatching($expectedMessage, $message)) {
+				Assert::fail("$expectedTypeStr with a message matching %2 was expected but got %1", $message, $expectedMessage);
 			}
+			$catched = TRUE;
 		});
 		call_user_func($function);
 		restore_error_handler();
-
 		if (!$catched) {
-			self::fail('Expected error');
-		}
-		if ($catched[0] !== $level) {
-			$consts = get_defined_constants(TRUE);
-			foreach ($consts['Core'] as $name => $val) {
-				if ($catched[0] === $val && substr($name, 0, 2) === 'E_') {
-					$catched[0] = $name;
-				}
-				if ($level === $val && substr($name, 0, 2) === 'E_') {
-					$level = $name;
-				}
-			}
-			self::fail('Failed asserting that ' . $catched[0] . ' is ' . $level, $level, $catched[0]);
-		}
-		if ($message) {
-			self::match($message, $catched[1]);
+			self::fail("$expectedTypeStr was expected, but none was generated");
 		}
 	}
 
 
-
 	/**
-	 * Failed assertion
-	 * @return void
-	 */
-	public static function fail($message, $expected = NULL, $actual = NULL)
-	{
-		call_user_func(self::$onFailure, $message, $expected, $actual);
-	}
-
-
-
-	/**
-	 * Compares two structures. Ignores the identity of objects and the order of keys in the arrays.
-	 * @return bool
-	 */
-	public static function compare($expected, $actual, $level = 0)
-	{
-		if ($level > 10) {
-			throw new \Exception('Nesting level too deep or recursive dependency.');
-		}
-
-		if (is_object($expected) && is_object($actual) && get_class($expected) === get_class($actual)) {
-			$expected = (array) $expected;
-			$actual = (array) $actual;
-		}
-
-		if (is_array($expected) && is_array($actual)) {
-			$arr1 = array_keys($expected);
-			sort($arr1);
-			$arr2 = array_keys($actual);
-			sort($arr2);
-			if ($arr1 !== $arr2) {
-				return FALSE;
-			}
-
-			foreach ($expected as $key => $value) {
-				if (!self::compare($value, $actual[$key], $level + 1)) {
-					return FALSE;
-				}
-			}
-			return TRUE;
-		}
-		return $expected === $actual;
-	}
-
-
-
-	/**
-	 * Compares results using mask:
+	 * Compares result using regular expression or mask:
 	 *   %a%    one or more of anything except the end of line characters
 	 *   %a?%   zero or more of anything except the end of line characters
 	 *   %A%    one or more of anything including the end of line characters
@@ -322,87 +324,155 @@ class Assert
 	 *   %i%    signed integer value
 	 *   %f%    floating point number
 	 *   %h%    one or more HEX digits
-	 *   %ns%   PHP namespace
+	 * @param  string  mask|regexp; only delimiters ~ and # are supported for regexp
 	 * @param  string
-	 * @param  string
-	 * @return bool
+	 * @return void
 	 */
-	public static function match($expected, $actual)
+	public static function match($pattern, $actual)
 	{
-		$expected = rtrim(preg_replace("#[\t ]+\n#", "\n", str_replace("\r\n", "\n", $expected)));
-		$actual = rtrim(preg_replace("#[\t ]+\n#", "\n", str_replace("\r\n", "\n", $actual)));
+		if (!is_string($pattern)) {
+			throw new \Exception('Pattern must be a string.');
 
-		$re = strtr($expected, array(
-			'%a%' => '[^\r\n]+',    // one or more of anything except the end of line characters
-			'%a?%'=> '[^\r\n]*',    // zero or more of anything except the end of line characters
-			'%A%' => '.+',          // one or more of anything including the end of line characters
-			'%A?%'=> '.*',          // zero or more of anything including the end of line characters
-			'%s%' => '[\t ]+',      // one or more white space characters except the end of line characters
-			'%s?%'=> '[\t ]*',      // zero or more white space characters except the end of line characters
-			'%S%' => '\S+',         // one or more of characters except the white space
-			'%S?%'=> '\S*',         // zero or more of characters except the white space
-			'%c%' => '[^\r\n]',     // a single character of any sort (except the end of line)
-			'%d%' => '[0-9]+',      // one or more digits
-			'%d?%'=> '[0-9]*',      // zero or more digits
-			'%i%' => '[+-]?[0-9]+', // signed integer value
-			'%f%' => '[+-]?\.?\d+\.?\d*(?:[Ee][+-]?\d+)?', // floating point number
-			'%h%' => '[0-9a-fA-F]+',// one or more HEX digits
-			'%ns%'=> '(?:[_0-9a-zA-Z\\\\]+\\\\|N)?',// PHP namespace
-			'%ds%'=> '[\\\\/]',     // directory separator
-
-			'.' => '\.', '\\' => '\\\\', '+' => '\+', '*' => '\*', '?' => '\?', '[' => '\[', '^' => '\^', // preg quote
-			']' => '\]', '$' => '\$', '(' => '\(', ')' => '\)', '{' => '\{', '}' => '\}', '=' => '\=', '!' => '\!',
-			'>' => '\>', '<' => '\<', '|' => '\|', ':' => '\:', '-' => '\-', "\x00" => '\000', '#' => '\#',
-		));
-
-		$old = ini_set('pcre.backtrack_limit', '10000000');
-		$res = preg_match("#^$re$#sU", $actual);
-		ini_set('pcre.backtrack_limit', $old);
-		if ($res === FALSE || preg_last_error()) {
-			throw new \Exception("Error while executing regular expression. (PREG Error Code " . preg_last_error() . ")");
-		}
-		if (!$res) {
-			self::fail('Failed asserting that ' . Dumper::toLine($actual) . ' matches expected ' . Dumper::toLine($expected), $expected, $actual);
+		} elseif (!is_scalar($actual) || !self::isMatching($pattern, $actual)) {
+			self::fail('%1 should match %2', $actual, rtrim($pattern));
 		}
 	}
-
 
 
 	/**
-	 * Logs big variables to file and throws exception.
+	 * Compares results using mask sorted in file.
 	 * @return void
 	 */
-	private static function assertionFailed($message, $expected, $actual)
+	public static function matchFile($file, $actual)
 	{
-		$exception = new AssertException($message);
-		$path = NULL;
-		foreach ($exception->getTrace() as $item) {
-			// in case of shutdown handler, we want to skip inner-code blocks and debugging calls
-			$path = isset($item['file']) && substr($item['file'], -5) === '.phpt' ? $item['file'] : $path;
+		$pattern = @file_get_contents($file);
+		if ($pattern === FALSE) {
+			throw new \Exception("Unable to read file '$file'.");
+
+		} elseif (!is_scalar($actual) || !self::isMatching($pattern, $actual)) {
+			self::fail('%1 should match %2', $actual, rtrim($pattern));
+		}
+	}
+
+
+	/**
+	 * Failed assertion
+	 * @return void
+	 */
+	public static function fail($message, $actual = NULL, $expected = NULL)
+	{
+		$e = new AssertException($message);
+		$e->actual = $actual;
+		$e->expected = $expected;
+		if (self::$onFailure) {
+			call_user_func(self::$onFailure, $e);
+		} else {
+			throw $e;
+		}
+	}
+
+
+	public static function with($obj, \Closure $closure)
+	{
+		return $closure->bindTo($obj, $obj)->__invoke();
+	}
+
+
+	/********************* helpers ****************d*g**/
+
+
+	/**
+	 * Compares using mask.
+	 * @return bool
+	 * @internal
+	 */
+	public static function isMatching($pattern, $actual)
+	{
+		if (!is_string($pattern) && !is_scalar($actual)) {
+			throw new \Exception('Value and pattern must be strings.');
 		}
 
-		if ($path) {
-			$path = dirname($path) . '/output/' . basename($path, '.phpt');
-			if (isset($_SERVER['argv'][1])) {
-				$path .= '.[' . preg_replace('#[^a-z0-9-. ]+#i', '_', $_SERVER['argv'][1]) . ']';
-			}
+		$old = ini_set('pcre.backtrack_limit', '10000000');
 
-			if (is_object($expected) || is_array($expected) || (is_string($expected) && strlen($expected) > 80)) {
-				@mkdir(dirname($path)); // @ - directory may already exist
-				file_put_contents($path . '.expected', is_string($expected) ? $expected : Dumper::toPhp($expected));
-			}
-
-			if (is_object($actual) || is_array($actual) || (is_string($actual) && strlen($actual) > 80)) {
-				@mkdir(dirname($path)); // @ - directory may already exist
-				file_put_contents($path . '.actual', is_string($actual) ? $actual : Dumper::toPhp($actual));
-			}
+		if (!preg_match('/^([~#]).+(\1)[imsxUu]*\z/s', $pattern)) {
+			$utf8 = preg_match('#\x80-\x{10FFFF}]#u', $pattern) ? 'u' : '';
+			$patterns = static::$patterns + array(
+				'[.\\\\+*?[^$(){|\x00\#]' => '\$0', // preg quoting
+				'[\t ]*\r?\n' => "[\\t ]*\n", // right trim
+			);
+			$pattern = '#^' . preg_replace_callback('#' . implode('|', array_keys($patterns)) . '#U' . $utf8, function($m) use ($patterns) {
+				foreach ($patterns as $re => $replacement) {
+					$s = preg_replace("#^$re\\z#", str_replace('\\', '\\\\', $replacement), $m[0], 1, $count);
+					if ($count) {
+						return $s;
+					}
+				}
+			}, rtrim($pattern)) . '\s*$#sU' . $utf8;
+			$actual = str_replace("\r\n", "\n", $actual);
 		}
 
-		throw $exception;
+		$res = preg_match($pattern, $actual);
+		ini_set('pcre.backtrack_limit', $old);
+		if ($res === FALSE || preg_last_error()) {
+			throw new \Exception('Error while executing regular expression. (PREG Error Code ' . preg_last_error() . ')');
+		}
+		return (bool) $res;
+	}
+
+
+	/**
+	 * Compares two structures. Ignores the identity of objects and the order of keys in the arrays.
+	 * @return bool
+	 * @internal
+	 */
+	public static function isEqual($expected, $actual, $level = 0)
+	{
+		if ($level > 10) {
+			throw new \Exception('Nesting level too deep or recursive dependency.');
+		}
+
+		if (is_float($expected) && is_float($actual)) {
+			return abs($expected - $actual) < self::EPSILON;
+		}
+
+		if (is_object($expected) && is_object($actual) && get_class($expected) === get_class($actual)) {
+			$expected = (array) $expected;
+			$actual = (array) $actual;
+		}
+
+		if (is_array($expected) && is_array($actual)) {
+			ksort($expected);
+			ksort($actual);
+			if (array_keys($expected) !== array_keys($actual)) {
+				return FALSE;
+			}
+
+			foreach ($expected as $value) {
+				if (!self::isEqual($value, current($actual), $level + 1)) {
+					return FALSE;
+				}
+				next($actual);
+			}
+			return TRUE;
+		}
+		return $expected === $actual;
+	}
+
+
+	/**
+	 * @internal
+	 */
+	/*private*/ static function errorTypeToString($type)
+	{
+		$consts = get_defined_constants(TRUE);
+		foreach ($consts['Core'] as $name => $val) {
+			if ($type === $val && substr($name, 0, 2) === 'E_') {
+				return $name;
+			}
+		}
 	}
 
 }
-
 
 
 /**
@@ -412,4 +482,10 @@ class Assert
  */
 class AssertException extends \Exception
 {
+	public $message;
+
+	public $actual;
+
+	public $expected;
+
 }

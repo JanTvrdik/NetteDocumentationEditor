@@ -18,7 +18,6 @@ use Nette,
 	Nette\Latte\PhpWriter;
 
 
-
 /**
  * Basic macros for Latte.
  *
@@ -89,7 +88,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * Finishes template parsing.
 	 * @return array(prolog, epilog)
@@ -101,9 +99,7 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/********************* macros ****************d*g**/
-
 
 
 	/**
@@ -119,7 +115,6 @@ class CoreMacros extends MacroSet
 		}
 		return $writer->write('if (%node.args):');
 	}
-
 
 
 	/**
@@ -141,7 +136,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {else}
 	 */
@@ -159,7 +153,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * n:ifcontent
 	 */
@@ -175,7 +168,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * n:ifcontent
 	 */
@@ -189,7 +181,6 @@ class CoreMacros extends MacroSet
 			. $parts[3];
 		return '$_ifcontent ? ob_end_flush() : ob_end_clean()';
 	}
-
 
 
 	/**
@@ -209,7 +200,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {include "file" [,] [params]}
 	 */
@@ -226,17 +216,14 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {use class MacroSet}
 	 */
 	public function macroUse(MacroNode $node, PhpWriter $writer)
 	{
-		Nette\Callback::create($node->tokenizer->fetchWord(), 'install')
-			->invoke($this->getCompiler())
+		Nette\Utils\Callback::invoke(array($node->tokenizer->fetchWord(), 'install'), $this->getCompiler())
 			->initialize();
 	}
-
 
 
 	/**
@@ -253,7 +240,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {/capture}
 	 */
@@ -261,7 +247,6 @@ class CoreMacros extends MacroSet
 	{
 		return $node->data->variable . $writer->write(" = %modify(ob_get_clean())");
 	}
-
 
 
 	/**
@@ -280,7 +265,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {breakIf ...}
 	 * {continueIf ...}
@@ -295,7 +279,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * n:class="..."
 	 */
@@ -305,7 +288,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * n:attr="..."
 	 */
@@ -313,7 +295,6 @@ class CoreMacros extends MacroSet
 	{
 		return $writer->write('echo Nette\Utils\Html::el(NULL, %node.array)->attributes()');
 	}
-
 
 
 	/**
@@ -327,7 +308,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {dump ...}
 	 */
@@ -339,7 +319,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {debugbreak ...}
 	 */
@@ -348,7 +327,6 @@ class CoreMacros extends MacroSet
 		return $writer->write(($node->args == NULL ? '' : 'if (!(%node.args)); else')
 			. 'if (function_exists("debugbreak")) debugbreak(); elseif (function_exists("xdebug_break")) xdebug_break()');
 	}
-
 
 
 	/**
@@ -393,7 +371,6 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/**
 	 * {= ...}
 	 * {? ...}
@@ -404,9 +381,7 @@ class CoreMacros extends MacroSet
 	}
 
 
-
 	/********************* run-time helpers ****************d*g**/
-
 
 
 	/**
@@ -438,7 +413,6 @@ class CoreMacros extends MacroSet
 		$tpl->setParameters($params); // interface?
 		return $tpl;
 	}
-
 
 
 	/**

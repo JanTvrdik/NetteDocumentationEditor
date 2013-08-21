@@ -3,20 +3,62 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "406a654b7dfab3d380137e12f9805541",
+    "hash": "4f08f2f271590f8e00e68cc2c7a7f453",
     "packages": [
+        {
+            "name": "jantvrdik/nette-doc-convertor",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JanTvrdik/NetteDocumentationConvertor.git",
+                "reference": "9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConvertor/zipball/9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9",
+                "reference": "9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9",
+                "shasum": ""
+            },
+            "require": {
+                "kukulich/fshl": "~2.1",
+                "texy/texy": "~2.3"
+            },
+            "require-dev": {
+                "nette/tester": "~0.9"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "http://davidgrudl.com"
+                },
+                {
+                    "name": "Jan Tvrdik"
+                }
+            ],
+            "time": "2013-08-20 17:32:31"
+        },
         {
             "name": "knplabs/github-api",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "8a9ccca56e5a6901c7bd44ea645548a14569fac5"
+                "reference": "8a8f304e91a5dbd5ca86fb703675dd060cc5d560"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/8a9ccca56e5a6901c7bd44ea645548a14569fac5",
-                "reference": "8a9ccca56e5a6901c7bd44ea645548a14569fac5",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/8a8f304e91a5dbd5ca86fb703675dd060cc5d560",
+                "reference": "8a8f304e91a5dbd5ca86fb703675dd060cc5d560",
                 "shasum": ""
             },
             "require": {
@@ -58,7 +100,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2013-06-05 08:21:12"
+            "time": "2013-07-31 13:28:53"
         },
         {
             "name": "kriswallsmith/buzz",
@@ -109,17 +151,59 @@
             "time": "2013-05-19 03:41:15"
         },
         {
+            "name": "kukulich/fshl",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kukulich/fshl",
+                "reference": "2.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/kukulich/fshl/zipball/2.1.0",
+                "reference": "2.1.0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "FSHL": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Jaroslav Hanslík",
+                    "homepage": "https://github.com/kukulich"
+                }
+            ],
+            "description": "FSHL is a free, open source, universal, fast syntax highlighter written in PHP.",
+            "homepage": "http://fshl.kukulich.cz/",
+            "keywords": [
+                "highlight",
+                "library",
+                "syntax"
+            ],
+            "time": "2012-09-08 12:00:07"
+        },
+        {
             "name": "nette/nette",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "70d2022c145aeadd66e625d2f3b5aa703d451e9e"
+                "reference": "f36f5daab168925ccd1b4f7f35faa434be076dc6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/70d2022c145aeadd66e625d2f3b5aa703d451e9e",
-                "reference": "70d2022c145aeadd66e625d2f3b5aa703d451e9e",
+                "url": "https://api.github.com/repos/nette/nette/zipball/f36f5daab168925ccd1b4f7f35faa434be076dc6",
+                "reference": "f36f5daab168925ccd1b4f7f35faa434be076dc6",
                 "shasum": ""
             },
             "require": {
@@ -180,33 +264,39 @@
                 "neon",
                 "templating"
             ],
-            "time": "2013-06-28 09:45:44"
+            "time": "2013-08-20 15:31:16"
         },
         {
             "name": "texy/texy",
-            "version": "v2.2.0",
+            "version": "v2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "v2.2.0"
+                "reference": "v2.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/v2.2.0",
-                "reference": "v2.2.0",
+                "url": "https://api.github.com/repos/dg/texy/zipball/v2.3",
+                "reference": "v2.3",
                 "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "nette/tester": "0.9.*"
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "Texy/"
+                "files": [
+                    "src/texy.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3",
-                "GPLv2",
-                "GPLv3"
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
             ],
             "authors": [
                 {
@@ -227,7 +317,7 @@
                 "wiki",
                 "xhtml"
             ],
-            "time": "2012-03-30 21:57:36"
+            "time": "2013-07-19 22:05:37"
         }
     ],
     "packages-dev": [
@@ -237,12 +327,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "99dfe7a8ec2e8a6ca18b9ca0cb2ce63536b466f7"
+                "reference": "v0.9.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/99dfe7a8ec2e8a6ca18b9ca0cb2ce63536b466f7",
-                "reference": "99dfe7a8ec2e8a6ca18b9ca0cb2ce63536b466f7",
+                "url": "https://api.github.com/repos/nette/tester/zipball/v0.9.3",
+                "reference": "v0.9.3",
                 "shasum": ""
             },
             "require": {
@@ -280,7 +370,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2013-06-24 23:00:16"
+            "time": "2013-08-07 08:59:53"
         }
     ],
     "aliases": [
@@ -290,6 +380,7 @@
     "stability-flags": {
         "nette/nette": 20,
         "knplabs/github-api": 20,
+        "jantvrdik/nette-doc-convertor": 20,
         "nette/tester": 20
     },
     "platform": {

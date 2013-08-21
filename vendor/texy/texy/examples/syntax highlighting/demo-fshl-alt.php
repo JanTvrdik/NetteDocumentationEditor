@@ -7,7 +7,7 @@
 
 
 // include libs
-require_once dirname(__FILE__).'/../../Texy/Texy.php';
+require_once dirname(__FILE__) . '/../../src/texy.php';
 
 $fshlPath = dirname(__FILE__).'/fshl/';
 @include_once $fshlPath . 'fshl.php';
@@ -16,7 +16,6 @@ $fshlPath = dirname(__FILE__).'/fshl/';
 if (!class_exists('fshlParser')) {
 	die('DOWNLOAD <a href="http://hvge.sk/scripts/fshl/">FSHL</a> AND UNPACK TO FSHL FOLDER FIRST!');
 }
-
 
 
 /**
@@ -58,7 +57,6 @@ function blockHandler($invocation, $blocktype, $content, $lang, $modifier)
 }
 
 
-
 /**
  * Pattern handler for PHP & JavaScript block syntaxes
  *
@@ -84,7 +82,6 @@ function codeBlockHandler($parser, $matches, $name)
 
 	return $elPre;
 }
-
 
 
 $texy = new Texy();

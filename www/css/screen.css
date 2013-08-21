@@ -1,54 +1,185 @@
+html,
 body {
-	font-size: 15px;
-	line-height: 1.6;
-	color: #333;
-	background: white;
+  margin: 0;
+  padding: 0;
+  border: none;
+  height: 100%;
 }
-
+body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  background: white;
+}
 h1 {
-	color: #3484D2;
+  color: #3484D2;
 }
-
 #ajax-spinner {
-	margin: 15px 0 0 15px;
-	padding: 13px;
-	background: white url('../images/spinner.gif') no-repeat 50% 50%;
-	font-size: 0;
-	z-index: 123456;
-	display: none;
+  margin: 15px 0 0 15px;
+  padding: 13px;
+  background: #ffffff url('../images/spinner.gif') no-repeat 50% 50%;
+  font-size: 0;
+  z-index: 123456;
+  display: none;
 }
-
 div.flash {
-	color: black;
-	background: #FFF9D7;
-	border: 1px solid #E2C822;
-	padding: 1em;
-	margin: 1em 0;
+  color: black;
+  background: #FFF9D7;
+  border: 1px solid #E2C822;
+  padding: 1em;
+  margin: 1em 0;
 }
-
 a[href^="error:"] {
-	background: red;
-	color: white;
+  background: red;
+  color: white;
 }
-
-form th, form td {
-	vertical-align: top;
-	font-weight: normal;
+form th,
+form td {
+  vertical-align: top;
+  font-weight: normal;
 }
-
 form th {
-	text-align: right;
+  text-align: right;
 }
-
 form .required label {
-	font-weight: bold;
+  font-weight: bold;
 }
-
 form .error {
-	color: #D00;
-	font-weight: bold;
+  color: #D00;
+  font-weight: bold;
 }
-
 html.js .jshidden {
-	display: none;
+  display: none;
+}
+.live-texy-editor {
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 100%;
+  background-color: #3484d2;
+  font-family: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif;
+  /* from nette.org */
+
+}
+.live-texy-editor .controls {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -moz-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  padding: 10px;
+  height: 24px;
+  line-height: 1.0;
+  background-color: #1d5183;
+  color: #fff;
+}
+.live-texy-editor .controls input,
+.live-texy-editor .controls select {
+  line-height: 1.0;
+  margin: 0;
+  outline: none;
+}
+.live-texy-editor .controls input[type=text] {
+  height: 18px;
+  border: none;
+  padding: 3px 5px;
+}
+.live-texy-editor .controls input[type=text]::-webkit-input-placeholder {
+  padding: 2px 0px;
+  /* WebKit hot fix */
+
+}
+.live-texy-editor .controls select {
+  height: 24px;
+  padding: 3px;
+  border: none;
+  width: 150px;
+}
+.live-texy-editor .controls input[type=submit] {
+  width: 60px;
+}
+.live-texy-editor .main {
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+.live-texy-editor .main > .left,
+.live-texy-editor .main > .right {
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 400px;
+  /* normalize width */
+
+}
+.live-texy-editor .main.left-only > .right {
+  display: none;
+}
+.live-texy-editor .main.right-only > .left {
+  display: none;
+}
+.live-texy-editor .main.right-only .right {
+  max-width: none;
+}
+.live-texy-editor .main .left textarea {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  margin: 0;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow-y: scroll;
+  font-family: Consolas, monospace;
+}
+.live-texy-editor .main .right {
+  max-width: 1000px;
+}
+.live-texy-editor .main .right iframe.output {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-height: 100%;
+  /* for IE */
+
+  border: none;
 }

@@ -5,12 +5,12 @@ use Tester\Assert;
 require __DIR__ . '/bootstrap.php';
 
 
-Assert::null(null);
+Assert::null(NULL);
 
-Assert::exception(function(){
-	Assert::null(false);
-}, 'Tester\AssertException', 'Failed asserting that FALSE is NULL');
+$notNull = array(FALSE, 0, ''. 'NULL');
 
-Assert::exception(function(){
-	Assert::null(0);
-}, 'Tester\AssertException', 'Failed asserting that 0 is NULL');
+foreach ($notNull as $value) {
+	Assert::exception(function() use ($value) {
+		Assert::null($value);
+	}, 'Tester\AssertException', '%1 should be NULL');
+}

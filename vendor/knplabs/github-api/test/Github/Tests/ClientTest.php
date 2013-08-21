@@ -33,7 +33,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAuthenticateUsingAllGivenParameters($login, $password, $method)
     {
-        $httpClient = $this->getHttpClientMock(array('authenticate'));
+        $httpClient = $this->getHttpClientMock();
         $httpClient->expects($this->once())
             ->method('authenticate')
             ->with($login, $password, $method);
@@ -58,7 +58,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldAuthenticateUsingGivenParameters($token, $method)
     {
-        $httpClient = $this->getHttpClientMock(array('authenticate'));
+        $httpClient = $this->getHttpClientMock();
         $httpClient->expects($this->once())
             ->method('authenticate')
             ->with($token, null, $method);
@@ -165,13 +165,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             array('pr', 'Github\Api\PullRequest'),
             array('pull_request', 'Github\Api\PullRequest'),
             array('pull_requests', 'Github\Api\PullRequest'),
+
+            array('authorization', 'Github\Api\Authorizations'),
+            array('authorizations', 'Github\Api\Authorizations'),
         );
     }
 
     public function getHttpClientMock(array $methods = array())
     {
         $methods = array_merge(
-            array('get', 'post', 'patch', 'put', 'delete', 'request', 'setOption', 'setHeaders'),
+            array('get', 'post', 'patch', 'put', 'delete', 'request', 'setOption', 'setHeaders', 'authenticate'),
             $methods
         );
 

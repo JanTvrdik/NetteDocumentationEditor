@@ -67,6 +67,8 @@ module LiveTexyEditor
 
 	class EditorView
 	{
+		private panels: JQuery;
+		private flexContainer: JQuery;
 		private textarea: JQuery;
 		private output: JQuery;
 
@@ -74,23 +76,48 @@ module LiveTexyEditor
 		{
 			this.initElements();
 			this.initEvents();
+			this.initPanels();
 		}
 
 		private initElements()
 		{
-			this.textarea = this.container.find('textarea.input');
-			this.output = this.container.find('div.output');
+			this.panels = this.container.find('select[name=panels]');
+			this.flexContainer = this.container.find('.main');
+			this.textarea = this.container.find('textarea');
+			this.output = this.container.find('.output');
 		}
 
 		private initEvents()
 		{
+			this.panels.on('change', (e) => {
+				console.log('X');
+				var panels = this.panels.val().split(' ');
+				this.flexContainer.removeClass('left-only right-only');
+				if (panels.length === 1) {
+					var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
+					this.flexContainer.addClass(className);
+				}
+			});
+
 			this.textarea.on('keyup', () => {
 				this.model.Input = this.textarea.val();
 			});
 
 			this.model.on('output:change', () => {
-				this.output.html(this.model.Output);
+				var iframe = this.output.get(0);
+				var iframeWin = iframe.contentWindow;
+				var iframeDoc = iframe.contentDocument;
+				var scrollY = iframeWin.scrollY;
+				iframeDoc.open('text/html', 'replace');
+				iframeDoc.write(this.model.Output);
+				iframeDoc.close();
+				iframeWin.scrollTo(0, scrollY);
 			});
+		}
+
+		private initPanels()
+		{
+			this.model.Input = this.textarea.val();
 		}
 	}
 

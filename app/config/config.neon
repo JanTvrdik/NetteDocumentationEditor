@@ -9,11 +9,14 @@ nette:
 	application:
 		mapping:
 			*: App\*Module\*Presenter
+	session:
+		autoStart: true
 
 
 services:
 	- App\RouterFactory
 	- App\EditorModel
+	- Github\Client
 
 	router: @App\RouterFactory::createRouter
 	texyFactory: App\TexyFactory

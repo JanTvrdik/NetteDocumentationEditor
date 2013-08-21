@@ -25,6 +25,6 @@ test(function () {
 
 test(function () {
 	$model = new EditorModel();
-	Assert::true( gettype($model->loadPageContent('doc-2.0', 'cs/components.texy')) === 'string' );
+	Assert::true( gettype($model->loadPage('doc-2.0', 'cs/components.texy')) === 'string' );
 });
 

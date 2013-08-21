@@ -3,8 +3,7 @@ var LiveTexyEditor;
     var Model = (function () {
         function Model(processUrl) {
             this.processUrl = processUrl;
-            this.handlers = {
-            };
+            this.handlers = {};
         }
         Object.defineProperty(Model.prototype, "Input", {
             get: function () {
@@ -12,10 +11,11 @@ var LiveTexyEditor;
             },
             set: function (val) {
                 var _this = this;
-                if(val !== this.input) {
+                if (val !== this.input) {
                     var xhr = $.post(this.processUrl, {
                         "editor-texyContent": val
                     });
+
                     xhr.done(function (payload) {
                         _this.input = val;
                         _this.output = payload.htmlContent;
@@ -26,6 +26,8 @@ var LiveTexyEditor;
             enumerable: true,
             configurable: true
         });
+
+
         Object.defineProperty(Model.prototype, "Output", {
             get: function () {
                 return this.output;
@@ -33,43 +35,72 @@ var LiveTexyEditor;
             enumerable: true,
             configurable: true
         });
+
         Model.prototype.on = function (eventName, callback) {
-            if(typeof this.handlers[eventName] === 'undefined') {
+            if (typeof this.handlers[eventName] === 'undefined')
                 this.handlers[eventName] = [];
-            }
             this.handlers[eventName].push(callback);
         };
+
         Model.prototype.trigger = function (eventName) {
-            if(eventName in this.handlers) {
-                for(var i = 0; i < this.handlers[eventName].length; i++) {
+            if (eventName in this.handlers) {
+                for (var i = 0; i < this.handlers[eventName].length; i++) {
                     this.handlers[eventName][i]();
                 }
             }
         };
         return Model;
-    })();    
+    })();
+
     var EditorView = (function () {
         function EditorView(container, model) {
             this.container = container;
             this.model = model;
             this.initElements();
             this.initEvents();
+            this.initPanels();
         }
         EditorView.prototype.initElements = function () {
-            this.textarea = this.container.find('textarea.input');
-            this.output = this.container.find('div.output');
+            this.panels = this.container.find('select[name=panels]');
+            this.flexContainer = this.container.find('.main');
+            this.textarea = this.container.find('textarea');
+            this.output = this.container.find('.output');
         };
+
         EditorView.prototype.initEvents = function () {
             var _this = this;
+            this.panels.on('change', function (e) {
+                console.log('X');
+                var panels = _this.panels.val().split(' ');
+                _this.flexContainer.removeClass('left-only right-only');
+                if (panels.length === 1) {
+                    var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
+                    _this.flexContainer.addClass(className);
+                }
+            });
+
             this.textarea.on('keyup', function () {
                 _this.model.Input = _this.textarea.val();
             });
+
             this.model.on('output:change', function () {
-                _this.output.html(_this.model.Output);
+                var iframe = _this.output.get(0);
+                var iframeWin = iframe.contentWindow;
+                var iframeDoc = iframe.contentDocument;
+                var scrollY = iframeWin.scrollY;
+                iframeDoc.open('text/html', 'replace');
+                iframeDoc.write(_this.model.Output);
+                iframeDoc.close();
+                iframeWin.scrollTo(0, scrollY);
             });
         };
+
+        EditorView.prototype.initPanels = function () {
+            this.model.Input = this.textarea.val();
+        };
         return EditorView;
-    })();    
+    })();
+
     $(function () {
         var container = $('.live-texy-editor');
         var model = new Model(processUrl);

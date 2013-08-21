@@ -10,11 +10,9 @@
 use Nette\Mail\Message;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
-
 
 
 $mail = new Message();
@@ -40,7 +38,7 @@ To: Lady Jane <jane@example.foo>,williams@example.foo,=?UTF-8?B?xZg=?=
 	=?UTF-8?B?ZWhvxZkgxZjDrXplaw==?= <rizek@example.foo>,
 	=?UTF-8?B?THVib8WhIFNtYcW+w6Fr?= <smazak@example.foo>
 Subject: Hello Jane!
-Message-ID: <%S%@localhost>
+Message-ID: <%S%@%S%>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 

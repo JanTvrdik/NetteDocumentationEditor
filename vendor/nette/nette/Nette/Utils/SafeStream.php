@@ -14,7 +14,6 @@ namespace Nette\Utils;
 use Nette;
 
 
-
 /**
  * Provides atomicity and isolation for thread safe file manipulation using stream safe://
  *
@@ -53,7 +52,6 @@ final class SafeStream
 	private $writeError = FALSE;
 
 
-
 	/**
 	 * Registers protocol 'safe://'.
 	 * @return bool
@@ -62,7 +60,6 @@ final class SafeStream
 	{
 		return stream_wrapper_register(self::PROTOCOL, __CLASS__);
 	}
-
 
 
 	/**
@@ -136,7 +133,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Checks handle and locks file.
 	 * @return bool
@@ -155,7 +151,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Error destructor.
 	 */
@@ -171,7 +166,6 @@ final class SafeStream
 			unlink($this->tempFile);
 		}
 	}
-
 
 
 	/**
@@ -199,7 +193,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Reads up to length bytes from the file.
 	 * @param  int    length
@@ -209,7 +202,6 @@ final class SafeStream
 	{
 		return fread($this->tempHandle, $length);
 	}
-
 
 
 	/**
@@ -230,6 +222,16 @@ final class SafeStream
 	}
 
 
+	/**
+	 * Truncates a file to a given length.
+	 * @param  int    The size to truncate to.
+	 * @return bool
+	 */
+	public function stream_truncate($size)
+	{
+		return ftruncate($this->tempHandle, $size);
+	}
+
 
 	/**
 	 * Returns the position of the file.
@@ -241,7 +243,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Returns TRUE if the file pointer is at end-of-file.
 	 * @return bool
@@ -250,7 +251,6 @@ final class SafeStream
 	{
 		return feof($this->tempHandle);
 	}
-
 
 
 	/**
@@ -265,7 +265,6 @@ final class SafeStream
 	}
 
 
-
 	/**
 	 * Gets information about a file referenced by $this->tempHandle.
 	 * @return array
@@ -274,7 +273,6 @@ final class SafeStream
 	{
 		return fstat($this->tempHandle);
 	}
-
 
 
 	/**
@@ -289,7 +287,6 @@ final class SafeStream
 		$path = substr($path, strlen(self::PROTOCOL)+3);
 		return ($flags & STREAM_URL_STAT_LINK) ? @lstat($path) : @stat($path); // intentionally @
 	}
-
 
 
 	/**

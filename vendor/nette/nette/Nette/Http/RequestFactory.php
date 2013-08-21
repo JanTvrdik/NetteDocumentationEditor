@@ -15,7 +15,6 @@ use Nette,
 	Nette\Utils\Strings;
 
 
-
 /**
  * Current HTTP request factory.
  *
@@ -32,21 +31,33 @@ class RequestFactory extends Nette\Object
 		'url' => array(), // '#[.,)]\z#' => ''
 	);
 
-	/** @var string */
-	private $encoding;
+	/** @var bool */
+	private $binary = FALSE;
 
+	/** @var array */
+	private $proxies = array();
 
 
 	/**
-	 * @param  string
-	 * @return RequestFactory  provides a fluent interface
+	 * @param  bool
+	 * @return self
 	 */
-	public function setEncoding($encoding)
+	public function setBinary($binary = TRUE)
 	{
-		$this->encoding = $encoding;
+		$this->binary = (bool) $binary;
 		return $this;
 	}
 
+
+	/**
+	 * @param  array|string
+	 * @return self
+	 */
+	public function setProxy($proxy)
+	{
+		$this->proxies = (array) $proxy;
+		return $this;
+	}
 
 
 	/**
@@ -62,23 +73,15 @@ class RequestFactory extends Nette\Object
 		$url->password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : '';
 
 		// host & port
-		if (isset($_SERVER['HTTP_HOST'])) {
-			$pair = explode(':', $_SERVER['HTTP_HOST']);
-
-		} elseif (isset($_SERVER['SERVER_NAME'])) {
-			$pair = explode(':', $_SERVER['SERVER_NAME']);
-
-		} else {
-			$pair = array('');
-		}
-
-		$url->host = preg_match('#^[-._a-z0-9]+\z#', $pair[0]) ? $pair[0] : '';
-
-		if (isset($pair[1])) {
-			$url->port = (int) $pair[1];
-
-		} elseif (isset($_SERVER['SERVER_PORT'])) {
-			$url->port = (int) $_SERVER['SERVER_PORT'];
+		if ((isset($_SERVER[$tmp = 'HTTP_HOST']) || isset($_SERVER[$tmp = 'SERVER_NAME']))
+			&& preg_match('#^([a-z0-9_.-]+|\[[a-f0-9:]+\])(:\d+)?\z#i', $_SERVER[$tmp], $pair)
+		) {
+			$url->host = strtolower($pair[1]);
+			if (isset($pair[2])) {
+				$url->port = (int) substr($pair[2], 1);
+			} elseif (isset($_SERVER['SERVER_PORT'])) {
+				$url->port = (int) $_SERVER['SERVER_PORT'];
+			}
 		}
 
 		// path & query
@@ -136,11 +139,9 @@ class RequestFactory extends Nette\Object
 		$cookies = $useFilter ? filter_input_array(INPUT_COOKIE, FILTER_UNSAFE_RAW) : (empty($_COOKIE) ? array() : $_COOKIE);
 
 		$gpc = (bool) get_magic_quotes_gpc();
-		$old = error_reporting(error_reporting() ^ E_NOTICE);
 
-		// remove fucking quotes and check (and optionally convert) encoding
-		if ($gpc || $this->encoding) {
-			$utf = strcasecmp($this->encoding, 'UTF-8') === 0;
+		// remove fucking quotes, control characters and check encoding
+		if ($gpc || !$this->binary) {
 			$list = array(& $query, & $post, & $cookies);
 			while (list($key, $val) = each($list)) {
 				foreach ($val as $k => $v) {
@@ -150,7 +151,7 @@ class RequestFactory extends Nette\Object
 						$k = stripslashes($k);
 					}
 
-					if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+					if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
 						// invalid key -> ignore
 
 					} elseif (is_array($v)) {
@@ -161,17 +162,8 @@ class RequestFactory extends Nette\Object
 						if ($gpc && !$useFilter) {
 							$v = stripSlashes($v);
 						}
-						if ($this->encoding) {
-							if ($utf) {
-								$v = Strings::fixEncoding($v);
-
-							} else {
-								if (!Strings::checkEncoding($v)) {
-									$v = iconv($this->encoding, 'UTF-8//IGNORE', $v);
-								}
-								$v = html_entity_decode($v, ENT_QUOTES, 'UTF-8');
-							}
-							$v = preg_replace(self::NONCHARS, '', $v);
+						if (!$this->binary && (preg_match(self::NONCHARS, $v) || preg_last_error())) {
+							$v = '';
 						}
 						$list[$key][$k] = $v;
 					}
@@ -186,7 +178,7 @@ class RequestFactory extends Nette\Object
 		$list = array();
 		if (!empty($_FILES)) {
 			foreach ($_FILES as $k => $v) {
-				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
 					continue;
 				}
 				$v['@'] = & $files[$k];
@@ -202,15 +194,17 @@ class RequestFactory extends Nette\Object
 				if ($gpc) {
 					$v['name'] = stripSlashes($v['name']);
 				}
-				if ($this->encoding) {
-					$v['name'] = preg_replace(self::NONCHARS, '', Strings::fixEncoding($v['name']));
+				if (!$this->binary && (preg_match(self::NONCHARS, $v['name']) || preg_last_error())) {
+					$v['name'] = '';
 				}
-				$v['@'] = new FileUpload($v);
+				if ($v['error'] !== UPLOAD_ERR_NO_FILE) {
+					$v['@'] = new FileUpload($v);
+				}
 				continue;
 			}
 
 			foreach ($v['name'] as $k => $foo) {
-				if ($this->encoding && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
+				if (!$this->binary && is_string($k) && (preg_match(self::NONCHARS, $k) || preg_last_error())) {
 					continue;
 				}
 				$list[] = array(
@@ -223,8 +217,6 @@ class RequestFactory extends Nette\Object
 				);
 			}
 		}
-
-		error_reporting($old);
 
 
 		// HEADERS
@@ -242,11 +234,32 @@ class RequestFactory extends Nette\Object
 			}
 		}
 
-		return new Request($url, $query, $post, $files, $cookies, $headers,
-			isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL,
-			isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL,
-			isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL
-		);
+
+		$remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : NULL;
+		$remoteHost = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : NULL;
+
+		// proxy
+		foreach ($this->proxies as $proxy) {
+			if (Helpers::ipMatch($remoteAddr, $proxy)) {
+				if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+					$remoteAddr = trim(current(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+				}
+				if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+					$remoteHost = trim(current(explode(',', $_SERVER['HTTP_X_FORWARDED_HOST'])));
+				}
+				break;
+			}
+		}
+
+
+		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : NULL;
+		if ($method === 'POST' && isset($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])
+			&& preg_match('#^[A-Z]+\z#', $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'])
+		) {
+			$method = $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'];
+		}
+
+		return new Request($url, $query, $post, $files, $cookies, $headers, $method, $remoteAddr, $remoteHost);
 	}
 
 }

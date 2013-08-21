@@ -11,7 +11,6 @@ use Nette\Latte\PhpWriter,
 	Nette\Latte\MacroTokens;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 
@@ -28,7 +27,7 @@ Assert::same( '"symbol$var"',  $writer->formatWord('symbol$var') );
 Assert::same( "'var'",  $writer->formatWord("'var'") );
 Assert::same( '"var"',  $writer->formatWord('"var"') );
 Assert::same( '"v\\"ar"',  $writer->formatWord('"v\\"ar"') );
-Assert::same( "var.'var'",  $writer->formatWord("var.'var'") );
+Assert::same( "'var'.'var'",  $writer->formatWord("var.'var'") );
 Assert::same( "\$var['var']",  $writer->formatWord('$var[var]') );
 Assert::same( '$x["[x]"]',  $writer->formatWord('$x["[x]"]') );
 

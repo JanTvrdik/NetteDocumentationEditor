@@ -6,8 +6,7 @@
 
 
 // include Texy!
-require_once dirname(__FILE__).'/../../Texy/Texy.php';
-
+require_once dirname(__FILE__) . '/../../src/texy.php';
 
 
 $texy = new Texy();
@@ -25,14 +24,14 @@ $texy->allowed['phrase/em-alt2'] = FALSE;
 // add new syntax: *bold*
 $texy->registerLinePattern(
 	'userInlineHandler',  // callback function or method
-	'#(?<!\*)\*(?!\ |\*)(.+)'.TEXY_MODIFIER.'?(?<!\ |\*)\*(?!\*)()#U', // regular expression
+	'#(?<!\*)\*(?!\ |\*)(.+)'.TexyPatterns::MODIFIER.'?(?<!\ |\*)\*(?!\*)()#U', // regular expression
 	'myInlineSyntax1' // any syntax name
 );
 
 // add new syntax: _italic_
 $texy->registerLinePattern(
 	'userInlineHandler',
-	'#(?<!_)_(?!\ |_)(.+)'.TEXY_MODIFIER.'?(?<!\ |_)_(?!_)()#U',
+	'#(?<!_)_(?!\ |_)(.+)'.TexyPatterns::MODIFIER.'?(?<!\ |_)_(?!_)()#U',
 	'myInlineSyntax2'
 );
 
@@ -43,8 +42,6 @@ $texy->registerBlockPattern(
 	'#^\.([a-z0-9]+)\n(.+)$#m', // block patterns must be multiline and line-anchored
 	'myBlockSyntax1'
 );
-
-
 
 
 /**
@@ -79,8 +76,6 @@ function userInlineHandler($parser, $matches, $name)
 }
 
 
-
-
 /**
  * Pattern handler for block syntaxes
  *
@@ -109,10 +104,6 @@ function userBlockHandler($parser, $matches, $name)
 
 	return $el;
 }
-
-
-
-
 
 
 // processing

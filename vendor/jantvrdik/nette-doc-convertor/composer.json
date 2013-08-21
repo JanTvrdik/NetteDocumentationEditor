@@ -1,0 +1,23 @@
+{
+	"name": "jantvrdik/nette-doc-convertor",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "David Grudl",
+			"homepage": "http://davidgrudl.com"
+		},
+		{
+			"name": "Jan Tvrdik"
+		}
+	],
+	"autoload": {
+		"classmap": ["src/"]
+	},
+	"require": {
+		"texy/texy": "~2.3",
+		"kukulich/fshl": "~2.1"
+	},
+	"require-dev": {
+		"nette/tester": "~0.9"
+	}
+}

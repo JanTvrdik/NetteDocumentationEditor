@@ -9,8 +9,8 @@
 	"require": {
 		"php": ">= 5.4.0",
 		"nette/nette": "@dev",
-		"texy/texy": "~2.0",
-		"knplabs/github-api": "@dev"
+		"knplabs/github-api": "@dev",
+		"jantvrdik/nette-doc-convertor": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "@dev"

@@ -1,12 +1,22 @@
 <?php
 namespace App;
 
+use Github;
 use Nette;
 use Nette\Utils\Strings;
 
 
 class EditorModel extends Nette\Object
 {
+
+	/** @var Github\Client */
+	private $ghClient;
+
+	public function __construct(Github\Client $ghClient)
+	{
+		$this->ghClient = $ghClient;
+	}
+
 
 	/**
 	 * Returns content of given page in Texy! formatting.
@@ -17,12 +27,10 @@ class EditorModel extends Nette\Object
 	 * @throws NotSupportedException
 	 * @throws InvalidArgumentException if URL is not on nette.org domain
 	 */
-	public function loadPageContent($branch, $path)
+	public function loadPage($branch, $path)
 	{
-		$client = new \Github\Client();
-		$file = $client->api('repos')->contents()->show('nette', 'web-content', $path, $branch);
-		if ($file['encoding'] !== 'base64') throw new NotSupportedException();
-		return base64_decode($file['content']);
+		// TODO: use values form config
+		return $this->ghClient->api('repos')->contents()->show('nette', 'web-content', $path, $branch);
 	}
 
 	/**

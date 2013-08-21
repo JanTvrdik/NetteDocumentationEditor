@@ -10,11 +10,9 @@
 use Nette\Mail\Message;
 
 
-
 require __DIR__ . '/../bootstrap.php';
 
 require __DIR__ . '/Mail.inc';
-
 
 
 $mail = new Message();
@@ -35,7 +33,7 @@ Date: %a%
 From: John Doe <doe@example.com>
 To: Lady Jane <jane@example.com>
 Subject: Hello Jane!
-Message-ID: <%S%@localhost>
+Message-ID: <%S%@%S%>
 Content-Type: multipart/alternative;
 	boundary="--------%S%"
 

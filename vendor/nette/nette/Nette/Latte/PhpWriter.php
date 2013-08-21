@@ -14,7 +14,6 @@ namespace Nette\Latte;
 use Nette;
 
 
-
 /**
  * PHP code generator helpers.
  *
@@ -32,12 +31,10 @@ class PhpWriter extends Nette\Object
 	private $compiler;
 
 
-
 	public static function using(MacroNode $node, Compiler $compiler = NULL)
 	{
 		return new static($node->tokenizer, $node->modifiers, $compiler);
 	}
-
 
 
 	public function __construct(MacroTokens $tokens, $modifiers = NULL, Compiler $compiler = NULL)
@@ -48,7 +45,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Expands %node.word, %node.array, %node.args, %escape(), %modify(), %var, %raw, %word in code.
 	 * @param  string
@@ -56,6 +52,7 @@ class PhpWriter extends Nette\Object
 	 */
 	public function write($mask)
 	{
+		$mask = preg_replace('#%(node|\d+)\.#', '%$1_', $mask);
 		$me = $this;
 		$mask = Nette\Utils\Strings::replace($mask, '#%escape(\(([^()]*+|(?1))+\))#', function($m) use ($me) {
 			return $me->escapeFilter(new MacroTokens(substr($m[1], 1, -1)))->joinAll();
@@ -66,33 +63,33 @@ class PhpWriter extends Nette\Object
 
 		$args = func_get_args();
 		$pos = $this->tokens->position;
-		$word = strpos($mask, '%node.word') === FALSE ? NULL : $this->tokens->fetchWord();
+		$word = strpos($mask, '%node_word') === FALSE ? NULL : $this->tokens->fetchWord();
 
-		$code = Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node\.|\d+\.|)(word|var|raw|array|args)(\?)?(\s*\+\s*)?()#',
+		$code = Nette\Utils\Strings::replace($mask, '#([,+]\s*)?%(node_|\d+_|)(word|var|raw|array|args)(\?)?(\s*\+\s*)?()#',
 		function($m) use ($me, $word, & $args) {
 			list(, $l, $source, $format, $cond, $r) = $m;
 
 			switch ($source) {
-			case 'node.':
-				$arg = $word; break;
-			case '':
-				$arg = next($args); break;
-			default:
-				$arg = $args[$source + 1]; break;
+				case 'node_':
+					$arg = $word; break;
+				case '':
+					$arg = next($args); break;
+				default:
+					$arg = $args[$source + 1]; break;
 			}
 
 			switch ($format) {
-			case 'word':
-				$code = $me->formatWord($arg); break;
-			case 'args':
-				$code = $me->formatArgs(); break; // TODO: only as node.args
-			case 'array':
-				$code = $me->formatArray(); // TODO: only as node.array
-				$code = $cond && $code === 'array()' ? '' : $code; break;
-			case 'var':
-				$code = var_export($arg, TRUE); break;
-			case 'raw':
-				$code = (string) $arg; break;
+				case 'word':
+					$code = $me->formatWord($arg); break;
+				case 'args':
+					$code = $me->formatArgs(); break; // TODO: only as node.args
+				case 'array':
+					$code = $me->formatArray(); // TODO: only as node.array
+					$code = $cond && $code === 'array()' ? '' : $code; break;
+				case 'var':
+					$code = var_export($arg, TRUE); break;
+				case 'raw':
+					$code = (string) $arg; break;
 			}
 
 			if ($cond && $code === '') {
@@ -105,7 +102,6 @@ class PhpWriter extends Nette\Object
 		$this->tokens->position = $pos;
 		return $code;
 	}
-
 
 
 	/**
@@ -123,7 +119,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats macro arguments to PHP code. (It advances tokenizer to the end as a side effect.)
 	 * @return string
@@ -134,7 +129,6 @@ class PhpWriter extends Nette\Object
 		$tokens = $this->quoteFilter($tokens);
 		return $tokens->joinAll();
 	}
-
 
 
 	/**
@@ -150,7 +144,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Formats parameter to PHP string.
 	 * @param  string
@@ -162,7 +155,6 @@ class PhpWriter extends Nette\Object
 			? $this->formatArgs(new MacroTokens($s))
 			: '"' . $s . '"';
 	}
-
 
 
 	/**
@@ -179,7 +171,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Removes PHP comments.
 	 * @return MacroTokens
@@ -194,7 +185,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -226,7 +216,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Simplified array syntax [...]
 	 * @return MacroTokens
@@ -252,7 +241,6 @@ class PhpWriter extends Nette\Object
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -281,7 +269,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Quotes symbols to strings.
 	 * @return MacroTokens
@@ -291,15 +278,14 @@ class PhpWriter extends Nette\Object
 		$res = new MacroTokens;
 		while ($tokens->nextToken()) {
 			$res->append($tokens->isCurrent(MacroTokens::T_SYMBOL)
-				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=', '=>', ':', '?'))
-				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=', '=>', ':', '?'))
+				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', '='))
+				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||'))
 				? "'" . $tokens->currentValue() . "'"
 				: $tokens->currentToken()
 			);
 		}
 		return $res;
 	}
-
 
 
 	/**
@@ -347,7 +333,6 @@ class PhpWriter extends Nette\Object
 	}
 
 
-
 	/**
 	 * Escapes expression in tokens.
 	 * @return MacroTokens
@@ -356,41 +341,41 @@ class PhpWriter extends Nette\Object
 	{
 		$tokens = clone $tokens;
 		switch ($this->compiler->getContentType()) {
-		case Compiler::CONTENT_XHTML:
-		case Compiler::CONTENT_HTML:
-			$context = $this->compiler->getContext();
-			switch ($context[0]) {
-			case Compiler::CONTEXT_SINGLE_QUOTED_ATTR:
-			case Compiler::CONTEXT_DOUBLE_QUOTED_ATTR:
-			case Compiler::CONTEXT_UNQUOTED_ATTR:
-				if ($context[1] === Compiler::CONTENT_JS) {
-					$tokens->prepend('Nette\Templating\Helpers::escapeJs(')->append(')');
-				} elseif ($context[1] === Compiler::CONTENT_CSS) {
-					$tokens->prepend('Nette\Templating\Helpers::escapeCss(')->append(')');
+			case Compiler::CONTENT_XHTML:
+			case Compiler::CONTENT_HTML:
+				$context = $this->compiler->getContext();
+				switch ($context[0]) {
+					case Compiler::CONTEXT_SINGLE_QUOTED_ATTR:
+					case Compiler::CONTEXT_DOUBLE_QUOTED_ATTR:
+					case Compiler::CONTEXT_UNQUOTED_ATTR:
+						if ($context[1] === Compiler::CONTENT_JS) {
+							$tokens->prepend('Nette\Templating\Helpers::escapeJs(')->append(')');
+						} elseif ($context[1] === Compiler::CONTENT_CSS) {
+							$tokens->prepend('Nette\Templating\Helpers::escapeCss(')->append(')');
+						}
+						$tokens->prepend('htmlSpecialChars(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ')');
+						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
+							$tokens->prepend("'\"' . ")->append(" . '\"'");
+						}
+						return $tokens;
+					case Compiler::CONTEXT_COMMENT:
+						return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
+						return;
+					case Compiler::CONTENT_JS:
+					case Compiler::CONTENT_CSS:
+						return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');
+					default:
+						return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
 				}
-				$tokens->prepend('htmlSpecialChars(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ')');
-				if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
-					$tokens->prepend("'\"' . ")->append(" . '\"'");
-				}
-				return $tokens;
-			case Compiler::CONTEXT_COMMENT:
-				return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
-				return;
+			case Compiler::CONTENT_XML:
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
-				return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');
+			case Compiler::CONTENT_ICAL:
+				return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . '(')->append(')');
+			case Compiler::CONTENT_TEXT:
+				return $tokens;
 			default:
-				return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
-			}
-		case Compiler::CONTENT_XML:
-		case Compiler::CONTENT_JS:
-		case Compiler::CONTENT_CSS:
-		case Compiler::CONTENT_ICAL:
-			return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($this->compiler->getContentType()) . '(')->append(')');
-		case Compiler::CONTENT_TEXT:
-			return $tokens;
-		default:
-			return $tokens->prepend('$template->escape(')->append(')');
+				return $tokens->prepend('$template->escape(')->append(')');
 		}
 	}
 

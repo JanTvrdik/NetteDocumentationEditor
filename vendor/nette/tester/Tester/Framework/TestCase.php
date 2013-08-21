@@ -12,7 +12,6 @@
 namespace Tester;
 
 
-
 /**
  * Single test case.
  *
@@ -35,7 +34,16 @@ class TestCase
 			}
 
 			$data = array();
-			$info = Helpers::parseDocComment($method->getDocComment()) + array('dataprovider' => NULL);
+			$info = Helpers::parseDocComment($method->getDocComment()) + array('dataprovider' => NULL, 'throws' => NULL);
+
+			if ($info['throws'] === '') {
+				throw new TestCaseException("Missing class name in @throws annotation for {$method->getName()}().");
+			} elseif (is_array($info['throws'])) {
+				throw new TestCaseException("Annotation @throws for {$method->getName()}() can be specified only once.");
+			} else {
+				$throws = preg_split('#\s+#', $info['throws'], 2) + array(NULL, NULL);
+			}
+
 			foreach ((array) $info['dataprovider'] as $provider) {
 				$res = $this->getData($provider);
 				if (!is_array($res)) {
@@ -50,12 +58,26 @@ class TestCase
 				$data[] = array();
 			}
 
-			foreach ($data as $args) {
-				$this->runTest($method->getName(), $args);
+			foreach ($data as $key => $args) {
+				try {
+					if ($info['throws']) {
+						$tmp = $this;
+						$e = Assert::error(function() use ($tmp, $method, $args) {
+							$tmp->runTest($method->getName(), $args);
+						}, $throws[0], $throws[1]);
+						if ($e instanceof AssertException) {
+							throw $e;
+						}
+					} else {
+						$this->runTest($method->getName(), $args);
+					}
+				} catch (AssertException $e) {
+					$e->message .= " in {$method->getName()}" . (substr(Dumper::toLine($args), 5));
+					throw $e;
+				}
 			}
 		}
 	}
-
 
 
 	/**
@@ -76,7 +98,6 @@ class TestCase
 	}
 
 
-
 	/**
 	 * @return array
 	 */
@@ -85,12 +106,11 @@ class TestCase
 		if (strpos($provider, '.')) {
 			list($file, $query) = preg_split('#\s*,?\s+#', "$provider ", 2);
 			$rc = new \ReflectionClass($this);
-			return DataProvider::load(dirname($rc->getFileName()) . '/' . $file, $query);
+			return DataProvider::load(dirname($rc->getFileName()) . DIRECTORY_SEPARATOR . $file, $query);
 		} else {
 			return $this->$provider();
+		}
 	}
-	}
-
 
 
 	/**
@@ -102,7 +122,6 @@ class TestCase
 	}
 
 
-
 	/**
 	 * This method is called after a test is executed.
 	 * @return void
@@ -112,7 +131,6 @@ class TestCase
 	}
 
 }
-
 
 
 class TestCaseException extends \Exception

@@ -1,36 +1,35 @@
-<style>
-	.flex-container {
-		display: -ms-flexbox;
-		display: -webkit-flex;
-		display: flex;
-	}
-
-	.flex-container > div {
-		-ms-flex: 1 1 auto;
-		-webkit-flex: 1 1 auto;
-		flex: 1 1 auto;
-
-		padding: 20px;
-	}
-
-	.left textarea {
-		box-sizing: border-box;
-		width: 100%;
-		height: 500px;
-
-	}
-</style>
-
 <script>
-	var processUrl = {link process!};
+	var processUrl = {link renderPreview!};
 	var controlId = {$control->uniqueId};
 </script>
 
-<div class="live-texy-editor flex-container">
-	<div class="left">
-		<textarea class="input">{$content}</textarea>
+{form form, style => "height: 100%"}
+	<div class="live-texy-editor">
+		<div class="controls">
+			{label page}Page:{/label}&nbsp;
+			{input page, size => 40, placeholder => "doc.nette.org/en/components"}
+			{input open, value => "Open"}
+
+
+			<select name="panels">
+				<option value="code">Code</option>
+				<option value="preview">Preview</option>
+				<!--<option value="diff">Diff</option>-->
+				<option value="code preview" selected>Code + Preview</option>
+				<!--<option value="code diff">Code + Diff</option>-->
+			</select>
+
+			{input save, value => "Save"}
+		</div>
+
+		<div class="main">
+			<div class="left">
+				{input texyContent, autofocus => true}
+			</div>
+			<div class="right">
+				<iframe class="output"></iframe>
+			</div>
+		</div>
 	</div>
-	<div class="right">
-		<div class="output">OUT DEFAULT</div>
-	</div>
-</div>
+
+{/form}

@@ -5,12 +5,8 @@
  */
 
 
-
 // include Texy!
-require_once dirname(__FILE__).'/../../Texy/Texy.php';
-
-
-
+require_once dirname(__FILE__) . '/../../src/texy.php';
 
 
 /**
@@ -37,7 +33,6 @@ function phraseHandler($invocation, $phrase, $content, $modifier, $link)
 
 	return $invocation->proceed();
 }
-
 
 
 $texy = new Texy();
