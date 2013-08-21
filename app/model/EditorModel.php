@@ -27,11 +27,9 @@ class EditorModel extends Nette\Object
 	public function pageExists($branch, $path)
 	{
 		try {
-			$response = $this->ghClient->getHttpClient()->request(
-				'repos/nette/web-content/contents/' . str_replace('%2F', '/', urlencode($path)),
-				array(),
-				'HEAD'
-			);
+			$httpClient = $this->ghClient->getHttpClient();
+			$apiPath = 'repos/nette/web-content/contents/' . urlencode($path);
+			$response = $httpClient->request($apiPath, [], 'HEAD');
 
 		} catch (Github\Exception\RuntimeException $e) {
 			if ($e->getCode() === 404) return FALSE;
