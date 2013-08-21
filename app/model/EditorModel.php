@@ -17,6 +17,29 @@ class EditorModel extends Nette\Object
 		$this->ghClient = $ghClient;
 	}
 
+	/**
+	 * Checks whether page exists.
+	 *
+	 * @param  string
+	 * @param  string
+	 * @return bool
+	 */
+	public function pageExists($branch, $path)
+	{
+		try {
+			$response = $this->ghClient->getHttpClient()->request(
+				'repos/nette/web-content/contents/' . str_replace('%2F', '/', urlencode($path)),
+				array(),
+				'HEAD'
+			);
+
+		} catch (Github\Exception\RuntimeException $e) {
+			if ($e->getCode() === 404) return FALSE;
+			throw $e;
+		}
+
+		return $response->getStatusCode() === 200;
+	}
 
 	/**
 	 * Returns content of given page in Texy! formatting.
