@@ -41,6 +41,8 @@ final class EditorPresenter extends BasePresenter
 		} else {
 			$editor->enableSave = FALSE;
 		}
+
+		$this->template->page = isset($page) ? $page : NULL;
 	}
 
 	/**
