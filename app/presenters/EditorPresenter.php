@@ -45,6 +45,14 @@ final class EditorPresenter extends BasePresenter
 		$this->template->page = isset($page) ? $page : NULL;
 	}
 
+	public function renderView($branch, $path)
+	{
+		$page = $this->editorModel->loadPage($branch, $path);
+		if (!$page) $this->error();
+
+		$this['pageView']->page = $page;
+	}
+
 	/**
 	 * @return LiveTexyEditorControl
 	 */
@@ -150,6 +158,14 @@ final class EditorPresenter extends BasePresenter
 
 		$this['editor']->flashMessage($msg);
 		$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+	}
+
+	/**
+	 * @return PageRendererControl
+	 */
+	protected function createComponentPageView()
+	{
+		return new PageRendererControl();
 	}
 
 }
