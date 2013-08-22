@@ -1,38 +1,31 @@
-<head>
-	<meta charset="utf-8">
-	<meta name="robots" content="noindex, nofollow">
-	<link rel="stylesheet" href="http://files.nette.org/css/combined.css">
-	<style>
-		body {
-			background-image: none;
-		}
+<!doctype html>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="http://files.nette.org/css/combined.css">
+<style>
+	body { background-image: none; }
+	#page { padding: 20px; }
+</style>
 
-		#page {
-			padding: 20px;
-		}
-	</style>
-</head>
-<body>
-	<div id="page">
-		<div id="main" class="sidebar">
-			<div id="content">{!$htmlContent}</div>
-			{if $toc}
-				<aside id="sidebar">
-					<div id="toc">
-						<h3>Contents</h3>
-						<ul>
-							{foreach $toc as $heading}
-								<li><a href="#{$heading->id}">{$heading->title}</a>
-								{if $next = $iterator->nextValue}
-									{if $next->level === $heading->level}</li>
-									{elseif $next->level > $heading->level}<ul>
-									{else}</ul></li>{/if}
-								{/if}
-							{/foreach}
-						</ul>
-					</div>
-				</aside>
-			{/if}
-		</div>
+<div id="page">
+	<div id="main" class="sidebar">
+		<div id="content">{!$htmlContent}</div>
+		{if $toc}
+			<aside id="sidebar">
+				<div id="toc">
+					<h3>Contents</h3>
+					<ul>
+						{foreach $toc as $heading}
+							<li><a href="#{$heading->id}">{$heading->title}</a>
+							{if $next = $iterator->nextValue}
+								{if $next->level === $heading->level}</li>
+								{elseif $next->level > $heading->level}<ul>
+								{else}</ul></li>{/if}
+							{/if}
+						{/foreach}
+					</ul>
+				</div>
+			</aside>
+		{/if}
 	</div>
-</body>
+</div>

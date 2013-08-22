@@ -8,7 +8,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 
 
-final class EditorPresenter extends BasePresenter
+final class EditorPresenter extends UI\Presenter
 {
 
 	/**
