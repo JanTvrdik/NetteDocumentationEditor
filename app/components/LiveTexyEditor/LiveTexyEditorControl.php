@@ -42,6 +42,12 @@ class LiveTexyEditorControl extends UI\Control
 		$form->addHidden('path');
 		$form->addHidden('prevBlobHash');
 		$form->addSubmit('save');
+		$form->addSelect('panels', NULL, [
+			'code' => 'code',
+			'preview' => 'preview',
+			'code preview' => 'code and preview',
+		])->setDefaultValue('code preview');
+
 		return $form;
 	}
 

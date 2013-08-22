@@ -18,7 +18,9 @@
 		line-height: 1.0;
 
 		.controls {
-			padding: 10px;
+			.display(flex);
+
+			padding: 5px;
 
 			input, select {
 				line-height: 1.0;
@@ -28,8 +30,9 @@
 
 			input[type=text] {
 				height: 18px;
-				border: none;
+				margin: 5px 0;
 				padding: 3px 5px;
+				border: none;
 
 				&::-webkit-input-placeholder {
 					padding: 2px 0px; /* WebKit hot fix */
@@ -38,6 +41,7 @@
 
 			select {
 				height: 24px;
+				margin: 5px 0;
 				padding: 3px;
 				border: none;
 				width: 150px;
@@ -45,13 +49,33 @@
 
 			input[type=submit] {
 				width: 60px;
+				margin-right: 40px;
+			}
+
+			.left {
+				.flex(1, 1, auto);
+			}
+
+			.right {
+				.flex(0, 0, auto);
+			}
+
+			.nowrap {
+				white-space: nowrap;
 			}
 		}
 
-		.form-errors {
+		.status {
 			padding: 10px;
 			margin-bottom: 12px;
-			background-color: #BE0404;
+
+			&.info {
+				background-color: #00A700;
+			}
+
+			&.error {
+				background-color: #BE0404;
+			}
 		}
 	}
 

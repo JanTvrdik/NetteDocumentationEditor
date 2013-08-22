@@ -32,7 +32,14 @@
   line-height: 1.0;
 }
 .live-texy-editor .header .controls {
-  padding: 10px;
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  padding: 5px;
 }
 .live-texy-editor .header .controls input,
 .live-texy-editor .header .controls select {
@@ -42,8 +49,9 @@
 }
 .live-texy-editor .header .controls input[type=text] {
   height: 18px;
-  border: none;
+  margin: 5px 0;
   padding: 3px 5px;
+  border: none;
 }
 .live-texy-editor .header .controls input[type=text]::-webkit-input-placeholder {
   padding: 2px 0px;
@@ -52,16 +60,42 @@
 }
 .live-texy-editor .header .controls select {
   height: 24px;
+  margin: 5px 0;
   padding: 3px;
   border: none;
   width: 150px;
 }
 .live-texy-editor .header .controls input[type=submit] {
   width: 60px;
+  margin-right: 40px;
 }
-.live-texy-editor .header .form-errors {
+.live-texy-editor .header .controls .left {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -moz-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+.live-texy-editor .header .controls .right {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -moz-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+}
+.live-texy-editor .header .controls .nowrap {
+  white-space: nowrap;
+}
+.live-texy-editor .header .status {
   padding: 10px;
   margin-bottom: 12px;
+}
+.live-texy-editor .header .status.info {
+  background-color: #00A700;
+}
+.live-texy-editor .header .status.error {
   background-color: #BE0404;
 }
 .live-texy-editor .main {
