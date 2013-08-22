@@ -88,9 +88,11 @@ final class EditorPresenter extends BasePresenter
 		));
 	}
 
-	public function processEditorSave(UI\Form $form)
+	public function processEditorSave(SubmitButton $button)
 	{
+		$form = $button->form;
 		$values = $form->values;
+
 		$page = new Page();
 		$page->branch = $values->branch;
 		$page->path = $values->path;
@@ -105,6 +107,7 @@ final class EditorPresenter extends BasePresenter
 			$url = new Nette\Http\Url('https://github.com/login/oauth/authorize');
 			$url->setQuery([
 				'client_id' => $this->context->parameters['github']['clientId'],
+				'scope' => 'user:email',
 				'redirect_uri' => $this->link('//authorized', array('pageKey' => $pageKey)),
 				'state' => Strings::random(20),
 			]);
@@ -125,7 +128,14 @@ final class EditorPresenter extends BasePresenter
 
 		$page = $session->pages[$pageKey];
 		$accessToken = $this->getAccessToken($code);
+		if ($accessToken === FALSE) {
+			$this->flashMessage('Failed to acquire access token.', 'error');
+			$this->redirect('default');
+		}
+
 		$this->createCommit($page, $accessToken);
+		$this->flashMessage('Done');
+		$this->redirect('default');
 	}
 
 	private function getAccessToken($code)
@@ -141,39 +151,48 @@ final class EditorPresenter extends BasePresenter
 
 		$ghParams = $this->context->parameters['github'];
 		$context = stream_context_create([
-				'http' => [
-					'method' => 'POST',
-					'header' => ['Content-Type: application/x-www-form-urlencoded'],
-					'content' => http_build_query([
-							'client_id' => $ghParams['clientId'],
-							'client_secret' => $ghParams['clientSecret'],
-							'code' => $code,
-						]),
-				]
-			]);
+			'http' => [
+				'method' => 'POST',
+				'header' => ['Content-Type: application/x-www-form-urlencoded'],
+				'content' => http_build_query([
+					'client_id' => $ghParams['clientId'],
+					'client_secret' => $ghParams['clientSecret'],
+					'code' => $code,
+				]),
+			]
+		]);
 
 		$response = file_get_contents('https://github.com/login/oauth/access_token', NULL, $context);
 		parse_str($response, $params);
 
-		dump($params);
-
-		return $params['access_token'];
+		return isset($params['access_token']) ? $params['access_token'] : FALSE;
 	}
 
-	private function createCommit(Page $page, $accessToken)
+	private function createCommit(Page $page, $userAccessToken)
 	{
-		$this->ghClient->authenticate($accessToken, Github\Client::AUTH_HTTP_TOKEN);
+		$ghParams = $this->context->parameters['github'];
+
+		$this->ghClient->authenticate($userAccessToken, Github\Client::AUTH_HTTP_TOKEN);
+		$currentUser = $this->ghClient->api('current_user');
+		$user = $currentUser->show();
+
+		if ($user['email'] === NULL) {
+			$mails = $currentUser->emails()->all();
+			$user['email'] = reset($mails);
+		}
+
+		$this->ghClient->authenticate($ghParams['accessToken'], NULL, Github\Client::AUTH_HTTP_TOKEN);
 		$this->ghClient->getHttpClient()->put(
 			sprintf(
-				'/repos/%s/%s/contents/%s',
-				urlencode('JanTvrdik'), urlencode('web-content'), urlencode($page->path) // TODO: use values from config
+				'repos/%s/%s/contents/%s',
+				urlencode($ghParams['repoOwner']), urlencode($ghParams['repoName']), urlencode($page->path)
 			), [
 				'message' => $page->message,
-				'content' => $page->content,
+				'content' => base64_encode($page->content),
 				'sha' => $page->prevBlobHash,
 				'branch' => $page->branch,
-				// 'committer.name' =>
-				// 'committer.email'
+				'author.name' => $user['name'],
+				'author.email' => $user['email'],
 			]
 		);
 	}
