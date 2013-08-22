@@ -134,8 +134,17 @@ final class EditorPresenter extends BasePresenter
 			$this->redirect('default');
 		}
 
-		$this->createCommit($page, $accessToken);
-		$this->flashMessage('Done');
+
+		$response = $this->createCommit($page, $accessToken);
+		$commitUrl = str_replace('/commits/', '/commit/', $response->getContent()['commit']['html_url']); // fix gh bug
+		$msg = Nette\Utils\Html::el();
+		$msg->add('Page successfully saved. ');
+		$msg->create('a', 'View commit')
+			->setHref($commitUrl)
+			->setTarget('_blank');
+		$msg->add('.');
+
+		$this['editor']->flashMessage($msg);
 		$this->redirect('default');
 	}
 
@@ -183,7 +192,7 @@ final class EditorPresenter extends BasePresenter
 		}
 
 		$this->ghClient->authenticate($ghParams['accessToken'], NULL, Github\Client::AUTH_HTTP_TOKEN);
-		$this->ghClient->getHttpClient()->put(
+		$response = $this->ghClient->getHttpClient()->put(
 			sprintf(
 				'repos/%s/%s/contents/%s',
 				urlencode($ghParams['repoOwner']), urlencode($ghParams['repoName']), urlencode($page->path)
@@ -196,6 +205,8 @@ final class EditorPresenter extends BasePresenter
 				'author.email' => $user['email'],
 			]
 		);
+
+		return $response;
 	}
 
 }
