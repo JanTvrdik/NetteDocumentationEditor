@@ -20,7 +20,13 @@ class RouterFactory extends Nette\Object
 	public function createRouter()
 	{
 		$router = new RouteList();
-		$router[] = new Route('<presenter>/<action>', 'Homepage:default');
+		$router[] = new Route('<action>[/<branch>/<path .+>]', [
+			'presenter' => 'Editor',
+			'action' => [
+				Route::VALUE => 'default',
+				Route::FILTER_TABLE => ['edit' => 'default'],
+			]
+		]);
 		return $router;
 	}
 
