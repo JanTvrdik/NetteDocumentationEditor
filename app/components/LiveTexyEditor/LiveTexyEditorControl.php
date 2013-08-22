@@ -18,17 +18,20 @@ class LiveTexyEditorControl extends UI\Control
 		$this->template->render();
 	}
 
-	public function handleRenderPreview($texyContent, $book, $lang, $name)
+	public function handleRenderPreview($texyContent)
 	{
-		$convertor = new \Text\Convertor($book, $lang, $name);
-		$convertor->parse($texyContent);
+		$page = new Page();
+		$page->branch = $this->presenter->getParameter('branch');
+		$page->path = $this->presenter->getParameter('path');
+		$page->content = $texyContent;
 
-		$tpl = $this->createTemplate();
-		$tpl->setFile(__DIR__ . '/preview.latte');
-		$tpl->htmlContent = $convertor->html;
-		$tpl->toc = $convertor->toc;
+		ob_start();
+		$preview = $this['preview'];
+		$preview->page = $page;
+		$preview->render();
+		$htmlContent = ob_get_clean();
 
-		$this->presenter->payload->htmlContent = (string) $tpl;
+		$this->presenter->payload->htmlContent = $htmlContent;
 		$this->presenter->sendPayload();
 	}
 
@@ -60,6 +63,14 @@ class LiveTexyEditorControl extends UI\Control
 		])->setDefaultValue('code preview');
 
 		return $form;
+	}
+
+	/**
+	 * @return PageRendererControl
+	 */
+	protected function createComponentPreview()
+	{
+		return new PageRendererControl();
 	}
 
 }
