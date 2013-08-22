@@ -86,12 +86,15 @@ var LiveTexyEditor;
             });
 
             this.textarea.on('keydown', function (e) {
+                if (e.keyCode !== 9 && e.keyCode !== 13)
+                    return;
                 if (e.ctrlKey || e.altKey || e.metaKey)
                     return;
 
+                e.preventDefault();
+                var textarea = e.target;
+
                 if (e.keyCode === 9) {
-                    e.preventDefault();
-                    var textarea = e.target;
                     var start = textarea.selectionStart, end = textarea.selectionEnd;
                     var top = textarea.scrollTop;
                     if (start !== end) {
@@ -107,6 +110,16 @@ var LiveTexyEditor;
                     textarea.setSelectionRange(start === end ? start + 1 : start, start + sel.length);
                     textarea.focus();
                     textarea.scrollTop = top;
+                } else if (e.keyCode === 13) {
+                    if (textarea.selectionStart !== textarea.selectionEnd)
+                        return;
+                    var cursor = textarea.selectionStart;
+                    var lineStart = textarea.value.lastIndexOf("\n", cursor - 1) + 1;
+                    var line = textarea.value.substring(lineStart, cursor);
+                    var indentation = line.match(/^\t*/)[0];
+                    textarea.value = textarea.value.substring(0, cursor) + "\n" + indentation + textarea.value.substr(cursor);
+                    textarea.setSelectionRange(cursor + indentation.length + 1, cursor + indentation.length + 1);
+                    textarea.focus();
                 }
             });
 
