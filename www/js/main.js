@@ -10,17 +10,11 @@ var LiveTexyEditor;
                 return this.input;
             },
             set: function (val) {
-                var _this = this;
                 if (val !== this.input) {
-                    var xhr = $.post(this.processUrl, {
-                        "editor-texyContent": val
-                    });
+                    this.input = val;
 
-                    xhr.done(function (payload) {
-                        _this.input = val;
-                        _this.output = payload.htmlContent;
-                        _this.trigger('output:change');
-                    });
+                    clearTimeout(this.timeoutId);
+                    this.timeoutId = setTimeout(this.updateOutput.bind(this), 800);
                 }
             },
             enumerable: true,
@@ -48,6 +42,18 @@ var LiveTexyEditor;
                     this.handlers[eventName][i]();
                 }
             }
+        };
+
+        Model.prototype.updateOutput = function () {
+            var _this = this;
+            var xhr = $.post(this.processUrl, {
+                "editor-texyContent": this.input
+            });
+
+            xhr.done(function (payload) {
+                _this.output = payload.htmlContent;
+                _this.trigger('output:change');
+            });
         };
         return Model;
     })();

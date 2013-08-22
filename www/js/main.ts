@@ -14,6 +14,7 @@ module LiveTexyEditor
 	{
 		private input: string;
 		private output: string;
+		private timeoutId: number;
 
 		private handlers: {
 			[eventName: string]: EventCallback[];
@@ -32,15 +33,10 @@ module LiveTexyEditor
 		set Input(val: string)
 		{
 			if (val !== this.input) {
-				var xhr = $.post(this.processUrl, {
-					"editor-texyContent": val // TODO: fix
-				});
+				this.input = val;
 
-				xhr.done((payload) => {
-					this.input = val;
-					this.output = payload.htmlContent;
-					this.trigger('output:change');
-				});
+				clearTimeout(this.timeoutId);
+				this.timeoutId = setTimeout(this.updateOutput.bind(this), 800);
 			}
 		}
 
@@ -59,10 +55,23 @@ module LiveTexyEditor
 		{
 			if (eventName in this.handlers) {
 				for (var i = 0; i < this.handlers[eventName].length; i++) {
-					this.handlers[eventName][i]();
+					this.handlers[eventName][i]( );
 				}
 			}
 		}
+
+		private updateOutput()
+		{
+			var xhr = $.post(this.processUrl, {
+				"editor-texyContent": this.input
+			});
+
+			xhr.done((payload) => {
+				this.output = payload.htmlContent;
+				this.trigger('output:change');
+			});
+		}
+
 	}
 
 	class EditorView
