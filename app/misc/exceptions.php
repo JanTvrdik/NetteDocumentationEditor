@@ -52,6 +52,16 @@ class DuplicateEntryException extends \RuntimeException
 
 
 /**
+ *  Vyjímka vyhazovaná v případě, že operaci nelze dokončit kvůli nedostatku oprávnění.
+ */
+class PermissionDeniedException extends \RuntimeException
+{
+
+}
+
+
+
+/**
  * Výjimky vyhazovaná v případě, že se dojdek IO chybě.
  */
 class IOException extends \RuntimeException

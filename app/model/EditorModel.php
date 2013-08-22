@@ -39,12 +39,8 @@ class EditorModel extends Nette\Object
 	public function pageExists($branch, $path)
 	{
 		try {
-			$httpClient = $this->ghClient->getHttpClient();
-			$apiPath = sprintf(
-				'repos/%s/%s/contents/%s?ref=%s',
-				urlencode($this->repoOwner), urlencode($this->repoName), urlencode($path), urlencode($branch)
-			);
-			$response = $httpClient->request($apiPath, [], 'HEAD');
+			$apiPath = $this->getRepoPath() . '/contents/' . urlencode($path) . '?ref=' . urlencode($branch);
+			$response = $this->ghClient->getHttpClient()->request($apiPath, [], 'HEAD');
 
 		} catch (Github\Exception\RuntimeException $e) {
 			if ($e->getCode() === 404) return FALSE;
@@ -92,29 +88,17 @@ class EditorModel extends Nette\Object
 	 * @param  Page
 	 * @param  string  user access token with user:email permission
 	 * @return Github\HttpClient\Message\Response
+	 * @throws PermissionDeniedException
 	 */
 	public function savePage(Page $page, $userAccessToken)
 	{
-		$this->ghClient->authenticate($userAccessToken, Github\Client::AUTH_HTTP_TOKEN);
-		$currentUser = $this->ghClient->api('current_user');
-		$user = $currentUser->show();
+		$user = $this->getUser($userAccessToken);
+		if (!$this->canEdit($user['login'])) throw new PermissionDeniedException();
 
-		if ($user['email'] === NULL) {
-			$mails = $currentUser->emails()->all();
-			$user['email'] = reset($mails);
-		}
-
-		if (!$this->canEdit($user['login'])) {
-			throw new \Exception();
-		}
-
-
-		$this->ghClient->authenticate($this->accessToken, NULL, Github\Client::AUTH_HTTP_TOKEN);
-		$response = $this->ghClient->getHttpClient()->put(
-			sprintf(
-				'repos/%s/%s/contents/%s',
-				urlencode($this->repoOwner), urlencode($this->repoName), urlencode($page->path)
-			), [
+		$httpClient = $this->ghClient->getHttpClient();
+		$httpClient->authenticate($this->accessToken, NULL, Github\Client::AUTH_HTTP_TOKEN);
+		$response = $httpClient->put(
+			$this->getRepoPath() . '/contents/' . urlencode($page->path), [
 				'message' => $page->message,
 				'content' => base64_encode($page->content),
 				'sha' => $page->prevBlobHash,
@@ -154,6 +138,32 @@ class EditorModel extends Nette\Object
 		$path .= '.texy';
 
 		return [$branch, $path];
+	}
+
+	/**
+	 * @returns string
+	 */
+	private function getRepoPath()
+	{
+		return sprintf('repos/%s/%s', urlencode($this->repoOwner), urlencode($this->repoName));
+	}
+
+	/**
+	 * @param  string access token with user:email permission
+	 * @return array
+	 */
+	private function getUser($accessToken)
+	{
+		$this->ghClient->authenticate($accessToken, Github\Client::AUTH_HTTP_TOKEN);
+		$currentUser = $this->ghClient->api('current_user');
+		$user = $currentUser->show();
+
+		if ($user['email'] === NULL) {
+			$mails = $currentUser->emails()->all();
+			$user['email'] = reset($mails); // pick the first email
+		}
+
+		return $user;
 	}
 
 }
