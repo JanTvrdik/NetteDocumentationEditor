@@ -34,14 +34,20 @@ class LiveTexyEditorControl extends UI\Control
 	{
 		$form = new UI\Form();
 
-		$form->addText('page');
-		$form->addSubmit('open');
+		$form->addText('page')
+			->setRequired('Please specify which page to open.');
+		$form->addSubmit('open')
+			->setValidationScope([$form['page']]);
 
+		$form->addText('message')
+			->setRequired('Please fill commit message.');
 		$form->addTextArea('texyContent');
 		$form->addHidden('branch');
 		$form->addHidden('path');
 		$form->addHidden('prevBlobHash');
-		$form->addSubmit('save');
+		$form->addSubmit('save')
+			->setValidationScope([$form['message'], $form['texyContent']]);
+
 		$form->addSelect('panels', NULL, [
 			'code' => 'code',
 			'preview' => 'preview',
