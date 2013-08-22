@@ -85,6 +85,31 @@ var LiveTexyEditor;
                 }
             });
 
+            this.textarea.on('keydown', function (e) {
+                if (e.ctrlKey || e.altKey || e.metaKey)
+                    return;
+
+                if (e.keyCode === 9) {
+                    e.preventDefault();
+                    var textarea = e.target;
+                    var start = textarea.selectionStart, end = textarea.selectionEnd;
+                    var top = textarea.scrollTop;
+                    if (start !== end) {
+                        start = textarea.value.lastIndexOf("\n", start) + 1;
+                    }
+                    var sel = textarea.value.substring(start, end);
+                    if (e.shiftKey) {
+                        sel = sel.replace(/^\t/gm, '');
+                    } else {
+                        sel = sel.replace(/^/gm, "\t");
+                    }
+                    textarea.value = textarea.value.substring(0, start) + sel + textarea.value.substr(end);
+                    textarea.setSelectionRange(start === end ? start + 1 : start, start + sel.length);
+                    textarea.focus();
+                    textarea.scrollTop = top;
+                }
+            });
+
             this.textarea.on('keyup', function () {
                 _this.model.Input = _this.textarea.val();
             });

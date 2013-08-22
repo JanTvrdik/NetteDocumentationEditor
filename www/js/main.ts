@@ -108,6 +108,32 @@ module LiveTexyEditor
 				}
 			});
 
+			this.textarea.on('keydown', (e) => {
+				if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+				// tab
+				if (e.keyCode === 9) {
+					// (c) David Grudl, http://editor.texy.info
+					e.preventDefault();
+					var textarea = e.target;
+					var start = textarea.selectionStart, end = textarea.selectionEnd;
+					var top = textarea.scrollTop;
+					if (start !== end) {
+						start = textarea.value.lastIndexOf("\n", start) + 1;
+					}
+					var sel = textarea.value.substring(start, end);
+					if (e.shiftKey) {
+						sel = sel.replace(/^\t/gm, '');
+					} else {
+						sel = sel.replace(/^/gm, "\t");
+					}
+					textarea.value = textarea.value.substring(0, start) + sel + textarea.value.substr(end);
+					textarea.setSelectionRange(start === end ? start + 1 : start, start + sel.length);
+					textarea.focus();
+					textarea.scrollTop = top; // Firefox
+				}
+			});
+
 			this.textarea.on('keyup', () => {
 				this.model.Input = this.textarea.val();
 			});
