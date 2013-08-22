@@ -69,11 +69,15 @@ class EditorModel extends Nette\Object
 	 *
 	 * @param  string $url
 	 * @return array  0 => branch, 1 => path
-	 * @throws InvalidArgumentException if URL is not on nette.org domain
+	 * @throws InvalidArgumentException if URL is not on nette.org domain or is invalid
 	 */
 	public function urlToRepoPath($url)
 	{
-		$url = new Nette\Http\Url($url);
+		try {
+			$url = new Nette\Http\Url($url);
+		} catch (Nette\InvalidArgumentException $e) {
+			throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+		}
 		if (!Strings::endsWith($url->host, 'nette.org')) throw new InvalidArgumentException();
 		$hostParts = explode('.', $url->host);
 		if (count($hostParts) === 2) $subdomain = 'www';
