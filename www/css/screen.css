@@ -130,6 +130,9 @@ html.js .jshidden {
   padding: 10px;
   margin-bottom: 12px;
 }
+.live-texy-editor .header .status a {
+  color: inherit;
+}
 .live-texy-editor .header .status.info {
   background-color: #00A700;
 }
