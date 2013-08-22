@@ -17,12 +17,6 @@ final class EditorPresenter extends BasePresenter
 	 */
 	public $editorModel;
 
-	/**
-	 * @var Github\Client
-	 * @inject
-	 */
-	public $ghClient;
-
 	public function renderDefault($branch, $path)
 	{
 		if ($branch && $path) {
@@ -62,10 +56,13 @@ final class EditorPresenter extends BasePresenter
 
 		$form = $button->form;
 		$page = $form['page']->value;
+
+		// branch:path
 		if ($m = Strings::match($page, '#^([a-z0-9.-]+):([a-z][a-z0-9._/-]+)\z#')) {
 			list(, $branch, $path) = $m;
+
+		// page URL
 		} else {
-			if (!Strings::startsWith($page, 'http://')) $page = "http://$page";
 			try {
 				list($branch, $path) = $this->editorModel->urlToRepoPath($page);
 			} catch (InvalidArgumentException $e) {
@@ -97,27 +94,22 @@ final class EditorPresenter extends BasePresenter
 		$page->message = $values->message;
 		$page->content = $values->texyContent;
 
-		$session = $this->getSession(__CLASS__);
-		if ($session->accessToken === NULL) {
-			$pageKey = Strings::random(10);
-			$session->pages[$pageKey] = $page;
+		$pageKey = Strings::random(10);
+		$this->getSession(__CLASS__)->pages[$pageKey] = $page;
 
-			$url = new Nette\Http\Url('https://github.com/login/oauth/authorize');
-			$url->setQuery([
-				'client_id' => $this->context->parameters['github']['clientId'],
-				'scope' => 'user:email',
-				'redirect_uri' => $this->link('//authorized', array('pageKey' => $pageKey)),
-				'state' => Strings::random(20),
-			]);
-			$this->redirectUrl($url);
-
-		} else {
-			$this->editorModel->savePage($page, $session->accessToken);
-		}
+		$url = new Nette\Http\Url('https://github.com/login/oauth/authorize');
+		$url->setQuery([
+			'client_id' => $this->context->parameters['github']['clientId'],
+			'scope' => 'user:email',
+			'redirect_uri' => $this->link('//authorized', ['pageKey' => $pageKey]),
+		]);
+		$this->redirectUrl($url);
 	}
 
 	public function actionAuthorized($pageKey, $code)
 	{
+		if (!$pageKey || !$code) $this->error();
+
 		$session = $this->getSession(__CLASS__);
 		if (!isset($session->pages[$pageKey])) {
 			$this->flashMessage('Invalid page key.', 'error');
@@ -125,13 +117,22 @@ final class EditorPresenter extends BasePresenter
 		}
 
 		$page = $session->pages[$pageKey];
-		$accessToken = $this->getAccessToken($code);
+		$accessToken = $this->editorModel->getAccessToken($code);
 		if ($accessToken === FALSE) {
-			$this->flashMessage('Failed to acquire access token.', 'error');
-			$this->redirect('default');
+			$this->flashMessage('Failed to acquire user access token.', 'error');
+			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 		}
 
-		$response = $this->editorModel->savePage($page, $accessToken);
+		try {
+			$response = $this->editorModel->savePage($page, $accessToken);
+		} catch (PermissionDeniedException $e) {
+			$ghParams = $this->context->parameters['github'];
+			$repo = $ghParams['repoOwner'] . '/' . $ghParams['repoName'];
+			$this->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
+			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+		}
+
+		// build flash message
 		$commitUrl = str_replace('/commits/', '/commit/', $response->getContent()['commit']['html_url']); // fix gh bug
 		$msg = Nette\Utils\Html::el();
 		$msg->add('Page successfully saved. ');
@@ -141,37 +142,7 @@ final class EditorPresenter extends BasePresenter
 		$msg->add('.');
 
 		$this['editor']->flashMessage($msg);
-		$this->redirect('default');
-	}
-
-	private function getAccessToken($code)
-	{
-		$ghParams = $this->context->parameters['github'];
-//		$response = $this->ghClient->getHttpClient()->post('login/oauth/access_token', [
-//			'client_id' => $ghParams['clientId'],
-//			'client_secret' => $ghParams['clientSecret'],
-//			'code' => $code,
-//		]);
-//
-//		return $response->getContent()['access_token'];
-
-		$ghParams = $this->context->parameters['github'];
-		$context = stream_context_create([
-			'http' => [
-				'method' => 'POST',
-				'header' => ['Content-Type: application/x-www-form-urlencoded'],
-				'content' => http_build_query([
-					'client_id' => $ghParams['clientId'],
-					'client_secret' => $ghParams['clientSecret'],
-					'code' => $code,
-				]),
-			]
-		]);
-
-		$response = file_get_contents('https://github.com/login/oauth/access_token', NULL, $context);
-		parse_str($response, $params);
-
-		return isset($params['access_token']) ? $params['access_token'] : FALSE;
+		$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 	}
 
 }

@@ -13,6 +13,12 @@ class EditorModel extends Nette\Object
 	private $ghClient;
 
 	/** @var string */
+	private $clientId;
+
+	/** @var string */
+	private $clientSecret;
+
+	/** @var string */
 	private $repoOwner;
 
 	/** @var string */
@@ -21,9 +27,11 @@ class EditorModel extends Nette\Object
 	/** @var string */
 	private $accessToken;
 
-	public function __construct(Github\Client $ghClient, $repoOwner, $repoName, $accessToken)
+	public function __construct(Github\Client $ghClient, $clientId, $clientSecret, $repoOwner, $repoName, $accessToken)
 	{
 		$this->ghClient = $ghClient;
+		$this->clientId = $clientId;
+		$this->clientSecret = $clientSecret;
 		$this->repoOwner = $repoOwner;
 		$this->repoName = $repoName;
 		$this->accessToken = $accessToken;
@@ -126,6 +134,35 @@ class EditorModel extends Nette\Object
 	}
 
 	/**
+	 * Acquire user access token.
+	 *
+	 * @param  string temporary code provided by GitHub (see http://developer.github.com/v3/oauth/#github-redirects-back-to-your-site)
+	 * @return string user access token
+	 */
+	public function getAccessToken($code)
+	{
+		$ghParams = $this->context->parameters['github'];
+		$context = stream_context_create([
+			'http' => [
+				'method' => 'POST',
+				'header' => [
+					'Content-Type: application/json',
+					'Accept: application/json'
+				],
+				'content' => Nette\Utils\Json::encode([
+					'client_id' => $this->clientId,
+					'client_secret' => $this->clientSecret,
+					'code' => $code,
+				]),
+			]
+		]);
+
+		$json = file_get_contents('https://github.com/login/oauth/access_token', NULL, $context);
+		$params = Nette\Utils\Json::decode($json, Nette\Utils\Json::FORCE_ARRAY);
+		return isset($params['access_token']) ? $params['access_token'] : FALSE;
+	}
+
+	/**
 	 * Converts absolute URL (on nette.org domain) to branch and path inside Git repository.
 	 *
 	 * @param  string $url
@@ -135,6 +172,7 @@ class EditorModel extends Nette\Object
 	public function urlToRepoPath($url)
 	{
 		try {
+			if (!Strings::startsWith($url, 'http://')) $url = "http://$url";
 			$url = new Nette\Http\Url($url);
 		} catch (Nette\InvalidArgumentException $e) {
 			throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
