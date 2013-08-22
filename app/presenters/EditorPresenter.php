@@ -97,6 +97,7 @@ final class EditorPresenter extends BasePresenter
 		$page->branch = $values->branch;
 		$page->path = $values->path;
 		$page->prevBlobHash = $values->prevBlobHash;
+		$page->message = $values->message;
 		$page->content = $values->texyContent;
 
 		$session = $this->getSession(__CLASS__);
