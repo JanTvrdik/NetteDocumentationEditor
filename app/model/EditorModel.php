@@ -55,6 +55,24 @@ class EditorModel extends Nette\Object
 	}
 
 	/**
+	 * Checks whether given user has permission to edit the repository.
+	 *
+	 * @param  string
+	 * @return bool
+	 */
+	public function canEdit($username)
+	{
+		try {
+			$response = $this->ghClient->api('repos')->collaborators()->check($this->repoOwner, $this->repoName, $username);
+			return TRUE;
+
+		} catch (Github\Exception\RuntimeException $e) {
+			if ($e->getCode() === 404) return FALSE;
+			throw $e;
+		}
+	}
+
+	/**
 	 * Returns content of given page in Texy! formatting.
 	 *
 	 * @param  string $branch
