@@ -189,6 +189,9 @@ html.js .jshidden {
   -moz-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
+  -o-tab-size: 4;
+  -moz-tab-size: 4;
+  tab-size: 4;
   margin: 0;
   padding: 5px;
   border: none;
