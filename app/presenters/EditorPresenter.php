@@ -65,7 +65,7 @@ final class EditorPresenter extends BasePresenter
 
 		$form = $button->form;
 		$page = $form['page']->value;
-		if ($m = Strings::match($page, '#^([a-z0-9.-]+):([a-z0-9._/-]+)\z#')) {
+		if ($m = Strings::match($page, '#^([a-z0-9.-]+):([a-z][a-z0-9._/-]+)\z#')) {
 			list(, $branch, $path) = $m;
 		} else {
 			if (!Strings::startsWith($page, 'http://')) $page = "http://$page";
@@ -78,7 +78,7 @@ final class EditorPresenter extends BasePresenter
 		}
 
 		if (!$this->editorModel->pageExists($branch, $path)) {
-			$form->addError('Page not found.');
+			$form->addError("Page ($branch:$path) not found.");
 			return;
 		}
 
