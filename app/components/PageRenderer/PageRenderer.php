@@ -12,6 +12,9 @@ class PageRendererControl extends UI\Control
 	/** @var Page */
 	public $page;
 
+	/** @var bool */
+	public $forceNewWindow = FALSE;
+
 	public function render()
 	{
 		$presenter = $this->presenter;
@@ -27,6 +30,10 @@ class PageRendererControl extends UI\Control
 		};
 
 		$convertor->parse($this->page->content);
+
+		if ($this->forceNewWindow) {
+			$convertor->html = Strings::replace($convertor->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
+		}
 
 		$this->template->setFile(__DIR__ . '/PageRenderer.latte');
 		$this->template->htmlContent = $convertor->html;

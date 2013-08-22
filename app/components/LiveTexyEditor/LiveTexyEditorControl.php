@@ -28,6 +28,7 @@ class LiveTexyEditorControl extends UI\Control
 		ob_start();
 		$preview = $this['preview'];
 		$preview->page = $page;
+		$preview->forceNewWindow = TRUE;
 		$preview->render();
 		$htmlContent = ob_get_clean();
 
