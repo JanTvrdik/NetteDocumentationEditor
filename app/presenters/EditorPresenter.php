@@ -26,23 +26,20 @@ final class EditorPresenter extends BasePresenter
 	public function renderDefault($branch, $path)
 	{
 		if ($branch && $path) {
-			try {
-				$file = $this->editorModel->loadPage($branch, $path);
-				if ($file['encoding'] !== 'base64') throw new NotSupportedException();
-				$form = $this['editor-form']->setDefaults([
-					'page' => "$branch:$path",
-					'branch' => $branch,
-					'path' => $path,
-					'prevBlobHash' => $file['sha'],
-					'texyContent' => base64_decode($file['content']),
+			$form = $this['editor-form'];
+			$page = $this->editorModel->loadPage($branch, $path);
+
+			if ($page) {
+				$form->setDefaults([
+					'page' => "{$page->branch}:{$page->path}",
+					'branch' => $page->branch,
+					'path' => $page->path,
+					'prevBlobHash' => $page->prevBlobHash,
+					'texyContent' => $page->content,
 				]);
 
-			} catch (\Github\Exception\RuntimeException $e) {
-				if ($e->getCode() === 404) {
-					$this['editor-form']->addError('Page not found.');
-				} else {
-					throw $e;
-				}
+			} else {
+				$form->addError('Page not found.');
 			}
 		}
 	}

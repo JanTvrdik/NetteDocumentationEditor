@@ -73,13 +73,27 @@ class EditorModel extends Nette\Object
 	 *
 	 * @param  string $branch
 	 * @param  string $path
-	 * @return string
+	 * @return Page|NULL
 	 * @throws NotSupportedException
 	 * @throws InvalidArgumentException if URL is not on nette.org domain
 	 */
 	public function loadPage($branch, $path)
 	{
-		return $this->ghClient->api('repos')->contents()->show($this->repoOwner, $this->repoName, $path, $branch);
+		try {
+			$file = $this->ghClient->api('repos')->contents()->show($this->repoOwner, $this->repoName, $path, $branch);
+
+		} catch (\Github\Exception\RuntimeException $e) {
+			if ($e->getCode() === 404) return NULL;
+			throw $e;
+		}
+
+		$page = new Page();
+		$page->branch = $branch;
+		$page->path = $file['path'];
+		$page->prevBlobHash = $file['sha'];
+		$page->content = base64_decode($file['content']);
+
+		return $page;
 	}
 
 	/**
