@@ -7,9 +7,14 @@ use Nette\Application\UI;
 
 class LiveTexyEditorControl extends UI\Control
 {
+
+	/** @var bool */
+	public $enableSave = TRUE;
+
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/LiveTexyEditorControl.latte');
+		$this->template->enableSave = $this->enableSave;
 		$this->template->render();
 	}
 

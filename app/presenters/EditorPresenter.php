@@ -19,8 +19,9 @@ final class EditorPresenter extends BasePresenter
 
 	public function renderDefault($branch, $path)
 	{
+		$editor = $this['editor'];
 		if ($branch && $path) {
-			$form = $this['editor-form'];
+			$form = $editor['form'];
 			$page = $this->editorModel->loadPage($branch, $path);
 
 			if ($page) {
@@ -33,8 +34,12 @@ final class EditorPresenter extends BasePresenter
 				]);
 
 			} else {
+				$editor->enableSave = FALSE;
 				$form->addError('Page not found.');
 			}
+
+		} else {
+			$editor->enableSave = FALSE;
 		}
 	}
 

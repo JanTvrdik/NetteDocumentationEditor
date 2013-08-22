@@ -14,7 +14,7 @@
 						{input open, value => "Open"}
 					</span>
 					&nbsp;
-					<span class="nowrap">
+					<span n:if="$enableSave" class="nowrap">
 						{label message}Commit message:{/label}&nbsp;
 						{input message, size => 40}
 						{input save, value => "Save"}
