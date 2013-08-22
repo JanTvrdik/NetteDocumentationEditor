@@ -104,6 +104,10 @@ class EditorModel extends Nette\Object
 			$user['email'] = reset($mails);
 		}
 
+		if (!$this->canEdit($user['login'])) {
+			throw new \Exception();
+		}
+
 
 		$this->ghClient->authenticate($this->accessToken, NULL, Github\Client::AUTH_HTTP_TOKEN);
 		$response = $this->ghClient->getHttpClient()->put(
