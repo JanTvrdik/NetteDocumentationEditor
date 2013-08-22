@@ -178,33 +178,4 @@ final class EditorPresenter extends BasePresenter
 		);
 	}
 
-	/**
-	 * @return UI\Form
-	 */
-	protected function createComponentOpenPageForm()
-	{
-		$form = new UI\Form();
-		$form->addText('page')
-			->addRule($form::URL)
-			->setRequired();
-		$form->addSubmit('send', 'Send');
-		$form->onSuccess[] = $this->openPageFormSubmitted;
-
-		return $form;
-	}
-
-
-	/**
-	 * @param UI\Form $form
-	 */
-	public function openPageFormSubmitted(UI\Form $form)
-	{
-		$pageUrl = $form->values->page;
-		list($branch, $path) = $this->editorModel->urlToRepoPath($pageUrl);
-		$this->redirect('this', array(
-			'branch' => $branch,
-			'path' => $path,
-		));
-	}
-
 }
