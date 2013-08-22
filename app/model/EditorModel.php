@@ -18,11 +18,15 @@ class EditorModel extends Nette\Object
 	/** @var string */
 	private $repoName;
 
-	public function __construct(Github\Client $ghClient, $repoOwner, $repoName)
+	/** @var string */
+	private $accessToken;
+
+	public function __construct(Github\Client $ghClient, $repoOwner, $repoName, $accessToken)
 	{
 		$this->ghClient = $ghClient;
 		$this->repoOwner = $repoOwner;
 		$this->repoName = $repoName;
+		$this->accessToken = $accessToken;
 	}
 
 	/**
@@ -62,6 +66,43 @@ class EditorModel extends Nette\Object
 	public function loadPage($branch, $path)
 	{
 		return $this->ghClient->api('repos')->contents()->show($this->repoOwner, $this->repoName, $path, $branch);
+	}
+
+	/**
+	 * Saves page to the repository.
+	 *
+	 * @param  Page
+	 * @param  string  user access token with user:email permission
+	 * @return Github\HttpClient\Message\Response
+	 */
+	public function savePage(Page $page, $userAccessToken)
+	{
+		$this->ghClient->authenticate($userAccessToken, Github\Client::AUTH_HTTP_TOKEN);
+		$currentUser = $this->ghClient->api('current_user');
+		$user = $currentUser->show();
+
+		if ($user['email'] === NULL) {
+			$mails = $currentUser->emails()->all();
+			$user['email'] = reset($mails);
+		}
+
+
+		$this->ghClient->authenticate($this->accessToken, NULL, Github\Client::AUTH_HTTP_TOKEN);
+		$response = $this->ghClient->getHttpClient()->put(
+			sprintf(
+				'repos/%s/%s/contents/%s',
+				urlencode($this->repoOwner), urlencode($this->repoName), urlencode($page->path)
+			), [
+				'message' => $page->message,
+				'content' => base64_encode($page->content),
+				'sha' => $page->prevBlobHash,
+				'branch' => $page->branch,
+				'author.name' => $user['name'],
+				'author.email' => $user['email'],
+			]
+		);
+
+		return $response;
 	}
 
 	/**

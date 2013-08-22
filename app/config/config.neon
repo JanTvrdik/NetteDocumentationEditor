@@ -15,7 +15,7 @@ nette:
 
 services:
 	- App\RouterFactory
-	- App\EditorModel(..., %github.repoOwner%, %github.repoName%)
+	- App\EditorModel(..., %github.repoOwner%, %github.repoName%, %github.accessToken%)
 	- Github\Client
 
 	router: @App\RouterFactory::createRouter

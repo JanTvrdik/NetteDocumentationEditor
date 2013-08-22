@@ -115,7 +115,7 @@ final class EditorPresenter extends BasePresenter
 			$this->redirectUrl($url);
 
 		} else {
-			$this->createCommit($page, $session->accessToken);
+			$this->editorModel->savePage($page, $session->accessToken);
 		}
 	}
 
@@ -134,8 +134,7 @@ final class EditorPresenter extends BasePresenter
 			$this->redirect('default');
 		}
 
-
-		$response = $this->createCommit($page, $accessToken);
+		$response = $this->editorModel->savePage($page, $accessToken);
 		$commitUrl = str_replace('/commits/', '/commit/', $response->getContent()['commit']['html_url']); // fix gh bug
 		$msg = Nette\Utils\Html::el();
 		$msg->add('Page successfully saved. ');
@@ -176,37 +175,6 @@ final class EditorPresenter extends BasePresenter
 		parse_str($response, $params);
 
 		return isset($params['access_token']) ? $params['access_token'] : FALSE;
-	}
-
-	private function createCommit(Page $page, $userAccessToken)
-	{
-		$ghParams = $this->context->parameters['github'];
-
-		$this->ghClient->authenticate($userAccessToken, Github\Client::AUTH_HTTP_TOKEN);
-		$currentUser = $this->ghClient->api('current_user');
-		$user = $currentUser->show();
-
-		if ($user['email'] === NULL) {
-			$mails = $currentUser->emails()->all();
-			$user['email'] = reset($mails);
-		}
-
-		$this->ghClient->authenticate($ghParams['accessToken'], NULL, Github\Client::AUTH_HTTP_TOKEN);
-		$response = $this->ghClient->getHttpClient()->put(
-			sprintf(
-				'repos/%s/%s/contents/%s',
-				urlencode($ghParams['repoOwner']), urlencode($ghParams['repoName']), urlencode($page->path)
-			), [
-				'message' => $page->message,
-				'content' => base64_encode($page->content),
-				'sha' => $page->prevBlobHash,
-				'branch' => $page->branch,
-				'author.name' => $user['name'],
-				'author.email' => $user['email'],
-			]
-		);
-
-		return $response;
 	}
 
 }
