@@ -112,40 +112,42 @@ module LiveTexyEditor
 				if (e.keyCode !== 9 && e.keyCode !== 13) return;
 				if (e.ctrlKey || e.altKey || e.metaKey) return;
 
+				// based on code by David Grudl, http://editor.texy.info
 				e.preventDefault();
 				var textarea = e.target;
+				var top = textarea.scrollTop;
+				var start = textarea.selectionStart, end = textarea.selectionEnd;
+				var lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
+				var lines = textarea.value.substring(lineStart, end);
+				var diff = 0;
 
 				// tab
 				if (e.keyCode === 9) {
-					// (c) David Grudl, http://editor.texy.info
-					var start = textarea.selectionStart, end = textarea.selectionEnd;
-					var top = textarea.scrollTop;
-					if (start !== end) {
-						start = textarea.value.lastIndexOf("\n", start) + 1;
-					}
-					var sel = textarea.value.substring(start, end);
 					if (e.shiftKey) {
-						sel = sel.replace(/^\t/gm, '');
+						diff = -1;
+						lines = lines.replace(/^\t/gm, '');
+
 					} else {
-						sel = sel.replace(/^/gm, "\t");
+						diff = 1;
+						if (start !== end) lines = lines.replace(/^/gm, '\t');
+						else lines += '\t';
 					}
-					textarea.value = textarea.value.substring(0, start) + sel + textarea.value.substr(end);
-					textarea.setSelectionRange(start === end ? start + 1 : start, start + sel.length);
-					textarea.focus();
-					textarea.scrollTop = top; // Firefox
 
 				// enter
 				} else if (e.keyCode === 13) {
-					if (textarea.selectionStart !== textarea.selectionEnd) return;
-					var cursor = textarea.selectionStart;
-					var lineStart = textarea.value.lastIndexOf("\n", cursor - 1) + 1;
-					var line = textarea.value.substring(lineStart, cursor);
-					var indentation = line.match(/^\t*/)[0];
-					textarea.value = textarea.value.substring(0, cursor) + "\n" + indentation + textarea.value.substr(cursor);
-					textarea.setSelectionRange(cursor + indentation.length + 1, cursor + indentation.length + 1);
-					textarea.focus();
+					if (start !== end) return; // ignore enter when text is selected
+					var indentation = lines.match(/^\t*/)[0];
+					diff = 1 + indentation.length;
+					lines += '\n' + indentation;
 				}
 
+				textarea.value = textarea.value.substring(0, lineStart) + lines + textarea.value.substr(end);
+
+				if (start !== lineStart || start === end) start += diff;
+				end = lineStart + lines.length;
+				textarea.setSelectionRange(start, end);
+				textarea.focus();
+				textarea.scrollTop = top; // Firefox
 			});
 
 			this.textarea.on('keyup', () => {
