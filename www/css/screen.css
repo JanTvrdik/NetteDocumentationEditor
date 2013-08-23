@@ -180,10 +180,10 @@ html.js .jshidden {
 .live-texy-editor .main.right-only > .left {
   display: none;
 }
-.live-texy-editor .main.right-only .right {
+.live-texy-editor .main.right-only > .right {
   max-width: none;
 }
-.live-texy-editor .main .left textarea {
+.live-texy-editor .main > .left textarea {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 1 auto;
@@ -201,10 +201,10 @@ html.js .jshidden {
   overflow-y: scroll;
   font-family: Consolas, monospace;
 }
-.live-texy-editor .main .right {
+.live-texy-editor .main > .right {
   max-width: 1000px;
 }
-.live-texy-editor .main .right iframe.output {
+.live-texy-editor .main > .right iframe.output {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 1 auto;

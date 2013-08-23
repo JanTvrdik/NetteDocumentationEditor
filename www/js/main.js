@@ -1,3 +1,4 @@
+/// <reference path="jquery.d.ts" />
 var LiveTexyEditor;
 (function (LiveTexyEditor) {
     var Model = (function () {
@@ -98,6 +99,7 @@ var LiveTexyEditor;
                 if (e.ctrlKey || e.altKey || e.metaKey)
                     return;
 
+                // based on code by David Grudl, http://editor.texy.info
                 e.preventDefault();
                 var textarea = e.target;
                 var top = textarea.scrollTop;
@@ -113,9 +115,11 @@ var LiveTexyEditor;
                     } else {
                         startMove = 1;
                         if (start !== end)
-                            lines = lines.replace(/^/gm, '\t'); else
+                            lines = lines.replace(/^/gm, '\t');
+else
                             lines += '\t';
                     }
+                    // enter
                 } else if (e.keyCode === 13) {
                     if (start !== end)
                         return;
@@ -192,4 +196,4 @@ var LiveTexyEditor;
         }
     });
 })(LiveTexyEditor || (LiveTexyEditor = {}));
-//@ sourceMappingURL=main.js.map
+//# sourceMappingURL=main.js.map
