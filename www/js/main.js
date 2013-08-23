@@ -180,6 +180,12 @@ else
 
         EditorView.prototype.initPanels = function () {
             this.model.Input = this.textarea.val();
+
+            // IE preview height hotfix
+            var expectedPreviewHeight = this.main.find('.right').innerHeight();
+            if (this.output.height() !== expectedPreviewHeight) {
+                this.output.css('height', expectedPreviewHeight + 'px');
+            }
         };
         return EditorView;
     })();
