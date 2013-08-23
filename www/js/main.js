@@ -158,6 +158,20 @@ var LiveTexyEditor;
                 iframeDoc.close();
                 iframeWin.scrollTo(0, scrollY);
             });
+
+            this.textarea.on('scroll', function () {
+                var iframe = _this.output.get(0);
+                var iframeWin = iframe.contentWindow;
+                var iframeBody = iframe.contentDocument.body;
+
+                var textareaMaximumScrollTop = _this.textarea.prop('scrollHeight') - _this.textarea.height();
+                var iframeMaximumScrollTop = iframeBody.scrollHeight - _this.output.height();
+
+                var percent = _this.textarea.scrollTop() / textareaMaximumScrollTop;
+                var iframePos = iframeMaximumScrollTop * percent;
+
+                iframeWin.scrollTo(0, iframePos);
+            });
         };
 
         EditorView.prototype.initPanels = function () {

@@ -181,6 +181,20 @@ module LiveTexyEditor
 				iframeDoc.close();
 				iframeWin.scrollTo(0, scrollY);
 			});
+
+			this.textarea.on('scroll', () => {
+				var iframe = this.output.get(0);
+				var iframeWin = iframe.contentWindow;
+				var iframeBody = iframe.contentDocument.body;
+
+				var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
+				var iframeMaximumScrollTop = iframeBody.scrollHeight - this.output.height();
+
+				var percent = this.textarea.scrollTop() / textareaMaximumScrollTop;
+				var iframePos = iframeMaximumScrollTop * percent;
+
+				iframeWin.scrollTo(0, iframePos);
+			});
 		}
 
 		private initPanels()
