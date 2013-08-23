@@ -141,7 +141,6 @@ class EditorModel extends Nette\Object
 	 */
 	public function getAccessToken($code)
 	{
-		$ghParams = $this->context->parameters['github'];
 		$context = stream_context_create([
 			'http' => [
 				'method' => 'POST',
