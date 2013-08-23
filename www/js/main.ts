@@ -193,6 +193,12 @@ module LiveTexyEditor
 		var container = $('.live-texy-editor');
 		var model = new Model(processUrl);
 		var view = new EditorView(container, model);
+
+		var backupAlert = localStorage.getItem('backupAlert');
+		if (!backupAlert) {
+			alert('You are responsible for backing up what you\'ve written, because I haven\'t implemented it yet. Your text may be lost at unexpected moments.');
+			localStorage.setItem('backupAlert', 'true');
+		}
 	});
 }
 
