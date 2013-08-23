@@ -119,16 +119,16 @@ module LiveTexyEditor
 				var start = textarea.selectionStart, end = textarea.selectionEnd;
 				var lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
 				var lines = textarea.value.substring(lineStart, end);
-				var diff = 0;
+				var startMove = 0, endMove = 0;
 
 				// tab
 				if (e.keyCode === 9) {
 					if (e.shiftKey) {
-						diff = -1;
+						startMove = -1;
 						lines = lines.replace(/^\t/gm, '');
 
 					} else {
-						diff = 1;
+						startMove = 1;
 						if (start !== end) lines = lines.replace(/^/gm, '\t');
 						else lines += '\t';
 					}
@@ -136,15 +136,26 @@ module LiveTexyEditor
 				// enter
 				} else if (e.keyCode === 13) {
 					if (start !== end) return; // ignore enter when text is selected
-					var indentation = lines.match(/^\t*/)[0];
-					diff = 1 + indentation.length;
-					lines += '\n' + indentation;
+
+					var m, indentation;
+					if (m = lines.match(/^(\t*)\/\*\*/)) { // PHPDoc / JSDoc start
+						indentation = m[1];
+						startMove = 4 + indentation.length;
+						endMove = -4 - indentation.length;
+						lines += '\n' + indentation + ' * \n' + indentation + ' */';
+
+					} else {
+						m = lines.match(/^\t*( \*(?: |$))?/);
+						indentation = m[0] + (m[1] === ' *' ? ' ' : '');
+						startMove = 1 + indentation.length;
+						lines += '\n' + indentation;
+					}
 				}
 
 				textarea.value = textarea.value.substring(0, lineStart) + lines + textarea.value.substr(end);
 
-				if (start !== lineStart || start === end) start += diff;
-				end = lineStart + lines.length;
+				if (start !== lineStart || start === end) start += startMove;
+				end = lineStart + lines.length + endMove;
 				textarea.setSelectionRange(start, end);
 				textarea.focus();
 				textarea.scrollTop = top; // Firefox
