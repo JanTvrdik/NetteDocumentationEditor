@@ -1,6 +1,7 @@
 /app/config/config.local.neon
 /log/*
 /temp/*
+/vendors/*
 
 !.gitignore
 !.htaccess
