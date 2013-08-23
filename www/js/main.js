@@ -4,6 +4,9 @@ var LiveTexyEditor;
         function Model(processUrl) {
             this.processUrl = processUrl;
             this.handlers = {};
+            this.visiblePanels = [];
+            this.previewOutOfDate = false;
+            this.initEvents();
         }
         Object.defineProperty(Model.prototype, "Input", {
             get: function () {
@@ -13,8 +16,12 @@ var LiveTexyEditor;
                 if (val !== this.input) {
                     this.input = val;
 
-                    clearTimeout(this.timeoutId);
-                    this.timeoutId = setTimeout(this.updateOutput.bind(this), 800);
+                    if (this.visiblePanels.indexOf('preview') !== -1) {
+                        clearTimeout(this.timeoutId);
+                        this.timeoutId = setTimeout(this.updatePreview.bind(this), 800);
+                    } else {
+                        this.previewOutOfDate = true;
+                    }
                 }
             },
             enumerable: true,
@@ -30,10 +37,46 @@ var LiveTexyEditor;
             configurable: true
         });
 
+        Object.defineProperty(Model.prototype, "VisiblePanels", {
+            get: function () {
+                return this.visiblePanels;
+            },
+            set: function (panels) {
+                var knowPanels = ['code', 'preview', 'diff'];
+                for (var i = 0; i < knowPanels.length; i++) {
+                    var panel = knowPanels[i];
+                    var before = (this.visiblePanels.indexOf(panel) !== -1);
+                    var now = (panels.indexOf(panel) !== -1);
+                    if (!before && now) {
+                        this.trigger(panel + ':show');
+                    } else if (before && !now) {
+                        this.trigger(panel + ':hide');
+                    }
+                }
+
+                this.visiblePanels = panels;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
         Model.prototype.on = function (eventName, callback) {
-            if (typeof this.handlers[eventName] === 'undefined')
-                this.handlers[eventName] = [];
-            this.handlers[eventName].push(callback);
+            var events = eventName.split(' ');
+            for (var i = 0; i < events.length; i++) {
+                var event = events[i];
+                if (typeof this.handlers[event] === 'undefined')
+                    this.handlers[event] = [];
+                this.handlers[event].push(callback);
+            }
+        };
+
+        Model.prototype.initEvents = function () {
+            var _this = this;
+            this.on('preview:show', function () {
+                if (_this.previewOutOfDate)
+                    _this.updatePreview();
+            });
         };
 
         Model.prototype.trigger = function (eventName) {
@@ -44,8 +87,9 @@ var LiveTexyEditor;
             }
         };
 
-        Model.prototype.updateOutput = function () {
+        Model.prototype.updatePreview = function () {
             var _this = this;
+            this.previewOutOfDate = false;
             var xhr = $.post(this.processUrl, {
                 "editor-texyContent": this.input
             });
@@ -67,7 +111,6 @@ var LiveTexyEditor;
             this.initPanels();
         }
         EditorView.prototype.initElements = function () {
-            this.panels = this.container.find('select[name=panels]');
             this.main = this.container.find('.main');
             this.textarea = this.container.find('textarea');
             this.output = this.container.find('.output');
@@ -75,14 +118,8 @@ var LiveTexyEditor;
 
         EditorView.prototype.initEvents = function () {
             var _this = this;
-            this.panels.on('change', function (e) {
-                console.log('X');
-                var panels = _this.panels.val().split(' ');
-                _this.main.removeClass('left-only right-only');
-                if (panels.length === 1) {
-                    var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
-                    _this.main.addClass(className);
-                }
+            this.container.find('input[name=message]').on('change', function (e) {
+                _this.model.VisiblePanels = e.target.value.split(' ');
             });
 
             this.container.find('input[name=message]').on('keydown', function (e) {
@@ -158,9 +195,18 @@ var LiveTexyEditor;
                 iframeDoc.close();
                 iframeWin.scrollTo(0, scrollY);
             });
+
+            this.model.on('preview:show diff:show', function () {
+                _this.main.removeClass('left-only');
+            });
+
+            this.model.on('preview:show diff:show', function () {
+                _this.main.removeClass('left-only');
+            });
         };
 
         EditorView.prototype.initPanels = function () {
+            this.visiblePanels = this.container.find('input[name=panels]').val().split(' ');
             this.model.Input = this.textarea.val();
         };
         return EditorView;
