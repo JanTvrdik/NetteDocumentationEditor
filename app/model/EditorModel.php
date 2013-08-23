@@ -125,8 +125,10 @@ class EditorModel extends Nette\Object
 				'content' => base64_encode($page->content),
 				'sha' => $page->prevBlobHash,
 				'branch' => $page->branch,
-				'author.name' => $user['name'],
-				'author.email' => $user['email'],
+				'committer' => [
+					'name' => $user['login'],
+					'email' => $user['email'],
+				],
 			]
 		);
 
@@ -209,7 +211,7 @@ class EditorModel extends Nette\Object
 		$currentUser = $this->ghClient->api('current_user');
 		$user = $currentUser->show();
 
-		if ($user['email'] === NULL) {
+		if (empty($user['email'])) {
 			$mails = $currentUser->emails()->all();
 			$user['email'] = reset($mails); // pick the first email
 		}
