@@ -18,6 +18,7 @@
 
 	.header {
 		.flex(0, 0, auto);
+		min-height: 44px; // fix for Opera
 
 		background-color: darken(@nette-blue, 20%);
 		color: #fff;
@@ -134,7 +135,7 @@
 
 			iframe.output {
 				.flex(1, 1, auto);
-				min-height: 100%; /* for IE */
+				// min-height: 100%; // fix for IE, disabled to fix Opera =)
 				border: none;
 			}
 		}

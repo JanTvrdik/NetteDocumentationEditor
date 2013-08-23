@@ -65,6 +65,7 @@ html.js .jshidden {
   -moz-flex: 0 0 auto;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
+  min-height: 44px;
   background-color: #1d5183;
   color: #fff;
   line-height: 1.0;
@@ -210,8 +211,5 @@ html.js .jshidden {
   -moz-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  min-height: 100%;
-  /* for IE */
-
   border: none;
 }
