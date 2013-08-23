@@ -77,7 +77,7 @@ module LiveTexyEditor
 	class EditorView
 	{
 		private panels: JQuery;
-		private flexContainer: JQuery;
+		private main: JQuery;
 		private textarea: JQuery;
 		private output: JQuery;
 
@@ -91,7 +91,7 @@ module LiveTexyEditor
 		private initElements()
 		{
 			this.panels = this.container.find('select[name=panels]');
-			this.flexContainer = this.container.find('.main');
+			this.main = this.container.find('.main');
 			this.textarea = this.container.find('textarea');
 			this.output = this.container.find('.output');
 		}
@@ -101,15 +101,15 @@ module LiveTexyEditor
 			this.panels.on('change', (e) => {
 				console.log('X');
 				var panels = this.panels.val().split(' ');
-				this.flexContainer.removeClass('left-only right-only');
+				this.main.removeClass('left-only right-only');
 				if (panels.length === 1) {
 					var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
-					this.flexContainer.addClass(className);
+					this.main.addClass(className);
 				}
 			});
 
 			this.textarea.on('keydown', (e) => {
-				if (e.keyCode !== 9 && e.keyCode !== 13) return;
+				if (e.keyCode !== 9 && e.keyCode !== 13) return; // ignore everything but tab and enter
 				if (e.ctrlKey || e.altKey || e.metaKey) return;
 
 				// based on code by David Grudl, http://editor.texy.info

@@ -68,7 +68,7 @@ var LiveTexyEditor;
         }
         EditorView.prototype.initElements = function () {
             this.panels = this.container.find('select[name=panels]');
-            this.flexContainer = this.container.find('.main');
+            this.main = this.container.find('.main');
             this.textarea = this.container.find('textarea');
             this.output = this.container.find('.output');
         };
@@ -78,10 +78,10 @@ var LiveTexyEditor;
             this.panels.on('change', function (e) {
                 console.log('X');
                 var panels = _this.panels.val().split(' ');
-                _this.flexContainer.removeClass('left-only right-only');
+                _this.main.removeClass('left-only right-only');
                 if (panels.length === 1) {
                     var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
-                    _this.flexContainer.addClass(className);
+                    _this.main.addClass(className);
                 }
             });
 
