@@ -164,6 +164,12 @@
   font-family: Consolas, monospace;
 }
 .live-texy-editor .main > .right {
+  -webkit-box-flex: 1.2;
+  -moz-box-flex: 1.2;
+  -webkit-flex: 1.2 1 auto;
+  -moz-flex: 1.2 1 auto;
+  -ms-flex: 1.2 1 auto;
+  flex: 1.2 1 auto;
   max-width: 1000px;
 }
 .live-texy-editor .main > .right iframe.output {
