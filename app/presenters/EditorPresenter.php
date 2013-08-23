@@ -127,14 +127,14 @@ final class EditorPresenter extends UI\Presenter
 
 		$session = $this->getSession(__CLASS__);
 		if (!isset($session->pages[$pageKey])) {
-			$this->flashMessage('Invalid page key.', 'error');
+			$this['editor']->flashMessage('Invalid page key.', 'error');
 			$this->redirect('default');
 		}
 
 		$page = $session->pages[$pageKey];
 		$accessToken = $this->editorModel->getAccessToken($code);
 		if ($accessToken === FALSE) {
-			$this->flashMessage('Failed to acquire user access token.', 'error');
+			$this['editor']->flashMessage('Failed to acquire user access token.', 'error');
 			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 		}
 
@@ -143,7 +143,7 @@ final class EditorPresenter extends UI\Presenter
 		} catch (PermissionDeniedException $e) {
 			$ghParams = $this->context->parameters['github'];
 			$repo = $ghParams['repoOwner'] . '/' . $ghParams['repoName'];
-			$this->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
+			$this['editor']->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
 			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 		}
 
