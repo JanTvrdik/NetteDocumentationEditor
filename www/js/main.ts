@@ -108,6 +108,12 @@ module LiveTexyEditor
 				}
 			});
 
+			this.container.find('input[name=message]').on('keydown', (e) => {
+				if (e.keyCode !== 13 /* enter */ || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
+				e.preventDefault();
+				this.container.find('input[name=save]').trigger('click');
+			});
+
 			this.textarea.on('keydown', (e) => {
 				if (e.keyCode !== 9 && e.keyCode !== 13) return; // ignore everything but tab and enter
 				if (e.ctrlKey || e.altKey || e.metaKey) return;

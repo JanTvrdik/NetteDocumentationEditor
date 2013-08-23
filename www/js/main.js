@@ -85,6 +85,13 @@ var LiveTexyEditor;
                 }
             });
 
+            this.container.find('input[name=message]').on('keydown', function (e) {
+                if (e.keyCode !== 13 || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)
+                    return;
+                e.preventDefault();
+                _this.container.find('input[name=save]').trigger('click');
+            });
+
             this.textarea.on('keydown', function (e) {
                 if (e.keyCode !== 9 && e.keyCode !== 13)
                     return;
