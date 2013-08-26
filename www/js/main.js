@@ -4,18 +4,28 @@ var LiveTexyEditor;
     var Model = (function () {
         function Model(processUrl) {
             this.processUrl = processUrl;
+            this.panelsVisiblity = {
+                code: false,
+                preview: false
+            };
+            this.previewOutOfDate = false;
             this.handlers = {};
+            this.initEvents();
         }
         Object.defineProperty(Model.prototype, "Input", {
             get: function () {
                 return this.input;
             },
             set: function (val) {
-                if (val !== this.input) {
-                    this.input = val;
+                if (val === this.input)
+                    return;
+                this.input = val;
 
-                    clearTimeout(this.timeoutId);
-                    this.timeoutId = setTimeout(this.updateOutput.bind(this), 800);
+                if (this.panelsVisiblity.preview) {
+                    clearTimeout(this.previewTimeoutId);
+                    this.previewTimeoutId = setTimeout(this.updatePreview.bind(this), 800);
+                } else {
+                    this.previewOutOfDate = true;
                 }
             },
             enumerable: true,
@@ -23,37 +33,84 @@ var LiveTexyEditor;
         });
 
 
-        Object.defineProperty(Model.prototype, "Output", {
+        Object.defineProperty(Model.prototype, "Preview", {
             get: function () {
-                return this.output;
+                return this.preview;
             },
             enumerable: true,
             configurable: true
         });
 
+        Object.defineProperty(Model.prototype, "VisiblePanels", {
+            get: function () {
+                var visiblePanels = [];
+                for (var panel in this.panelsVisiblity) {
+                    if (this.panelsVisiblity[panel]) {
+                        visiblePanels.push(panel);
+                    }
+                }
+                return visiblePanels;
+            },
+            set: function (panels) {
+                for (var panel in this.panelsVisiblity) {
+                    var visibility = (panels.indexOf(panel) !== -1);
+                    if (this.panelsVisiblity[panel] === visibility)
+                        continue;
+
+                    this.panelsVisiblity[panel] = visibility;
+                    var eventName = 'panel:' + (visibility ? 'show' : 'hide');
+                    this.trigger(eventName, {
+                        'name': eventName,
+                        'panelName': panel,
+                        'panelVisibility': visibility
+                    });
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+
         Model.prototype.on = function (eventName, callback) {
-            if (typeof this.handlers[eventName] === 'undefined')
-                this.handlers[eventName] = [];
-            this.handlers[eventName].push(callback);
+            var events = eventName.split(' ');
+            for (var i = 0; i < events.length; i++) {
+                var event = events[i];
+                if (typeof this.handlers[event] === 'undefined')
+                    this.handlers[event] = [];
+                this.handlers[event].push(callback);
+            }
         };
 
-        Model.prototype.trigger = function (eventName) {
+        Model.prototype.initEvents = function () {
+            var _this = this;
+            this.on('panel:show', function (e) {
+                if (e.panelName === 'preview' && _this.previewOutOfDate) {
+                    _this.updatePreview();
+                }
+            });
+        };
+
+        Model.prototype.trigger = function (eventName, event) {
+            if (typeof event === 'undefined')
+                event = { name: eventName };
+
             if (eventName in this.handlers) {
                 for (var i = 0; i < this.handlers[eventName].length; i++) {
-                    this.handlers[eventName][i]();
+                    this.handlers[eventName][i](event);
                 }
             }
         };
 
-        Model.prototype.updateOutput = function () {
+        Model.prototype.updatePreview = function () {
             var _this = this;
+            this.previewOutOfDate = false;
             var xhr = $.post(this.processUrl, {
                 "editor-texyContent": this.input
             });
 
             xhr.done(function (payload) {
-                _this.output = payload.htmlContent;
-                _this.trigger('output:change');
+                _this.preview = payload.htmlContent;
+                _this.trigger('preview:change');
             });
         };
         return Model;
@@ -68,22 +125,16 @@ var LiveTexyEditor;
             this.initPanels();
         }
         EditorView.prototype.initElements = function () {
-            this.panels = this.container.find('select[name=panels]');
             this.main = this.container.find('.main');
-            this.textarea = this.container.find('textarea');
-            this.output = this.container.find('.output');
+            this.textarea = this.container.find('.code textarea');
+            this.preview = this.container.find('.preview iframe');
         };
 
         EditorView.prototype.initEvents = function () {
             var _this = this;
-            this.panels.on('change', function (e) {
-                console.log('X');
-                var panels = _this.panels.val().split(' ');
-                _this.main.removeClass('left-only right-only');
-                if (panels.length === 1) {
-                    var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
-                    _this.main.addClass(className);
-                }
+            this.container.find('select[name=panels]').on('change', function (e) {
+                var input = e.target;
+                _this.model.VisiblePanels = input.value.split(' ');
             });
 
             this.container.find('input[name=message]').on('keydown', function (e) {
@@ -148,43 +199,49 @@ else
                 textarea.scrollTop = top;
             });
 
-            this.textarea.on('keyup', function () {
-                _this.model.Input = _this.textarea.val();
-            });
-
-            this.model.on('output:change', function () {
-                var iframe = _this.output.get(0);
-                var iframeWin = iframe.contentWindow;
-                var iframeDoc = iframe.contentDocument;
-                var scrollY = iframeWin.scrollY;
-                iframeDoc.open('text/html', 'replace');
-                iframeDoc.write(_this.model.Output);
-                iframeDoc.close();
-                iframeWin.scrollTo(0, scrollY);
+            this.textarea.on('keyup', function (e) {
+                var textarea = e.target;
+                _this.model.Input = textarea.value;
             });
 
             this.textarea.on('scroll', function () {
-                var iframe = _this.output.get(0);
+                var iframe = _this.preview.get(0);
                 var iframeWin = iframe.contentWindow;
                 var iframeBody = iframe.contentDocument.body;
 
                 var textareaMaximumScrollTop = _this.textarea.prop('scrollHeight') - _this.textarea.height();
-                var iframeMaximumScrollTop = iframeBody.scrollHeight - _this.output.height();
+                var iframeMaximumScrollTop = iframeBody.scrollHeight - _this.preview.height();
 
                 var percent = _this.textarea.scrollTop() / textareaMaximumScrollTop;
                 var iframePos = iframeMaximumScrollTop * percent;
 
                 iframeWin.scrollTo(0, iframePos);
             });
+
+            this.model.on('panel:show panel:hide', function (e) {
+                _this.main.toggleClass(e.panelName, e.panelVisibility);
+            });
+
+            this.model.on('preview:change', function () {
+                var iframe = _this.preview.get(0);
+                var iframeWin = iframe.contentWindow;
+                var iframeDoc = iframe.contentDocument;
+                var scrollY = iframeWin.pageYOffset;
+                iframeDoc.open('text/html', 'replace');
+                iframeDoc.write(_this.model.Preview);
+                iframeDoc.close();
+                iframeWin.scrollTo(0, scrollY);
+            });
         };
 
         EditorView.prototype.initPanels = function () {
+            this.model.VisiblePanels = this.container.find('select[name=panels]').val().split(' ');
             this.model.Input = this.textarea.val();
 
             // IE preview height hotfix
             var expectedPreviewHeight = this.main.find('.right').innerHeight();
-            if (this.output.height() !== expectedPreviewHeight) {
-                this.output.css('height', expectedPreviewHeight + 'px');
+            if (this.preview.height() !== expectedPreviewHeight) {
+                this.preview.css('height', expectedPreviewHeight + 'px');
             }
         };
         return EditorView;

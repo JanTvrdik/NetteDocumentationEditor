@@ -36,6 +36,7 @@ a[href^="error:"] {
 html.js .jshidden {
   display: none;
 }
+/* (c) David Grudl, nette.org */
 .live-texy-editor {
   display: -moz-box;
   display: -webkit-box;
@@ -55,8 +56,6 @@ html.js .jshidden {
   height: 100%;
   background-color: #3484d2;
   font-family: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif;
-  /* from nette.org */
-
 }
 .live-texy-editor .header {
   -webkit-box-flex: 0;
@@ -155,8 +154,16 @@ html.js .jshidden {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
 }
-.live-texy-editor .main > .left,
-.live-texy-editor .main > .right {
+.live-texy-editor .main .column {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1 0 400px;
+  -moz-flex: 1 0 400px;
+  -ms-flex: 1 0 400px;
+  flex: 1 0 400px;
+  display: none;
+}
+.live-texy-editor .main.code .column.code {
   display: -moz-box;
   display: -webkit-box;
   display: -webkit-flex;
@@ -164,26 +171,8 @@ html.js .jshidden {
   display: -ms-flexbox;
   display: -ms-flex;
   display: flex;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  -moz-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  width: 400px;
-  /* normalize width */
-
 }
-.live-texy-editor .main.left-only > .right {
-  display: none;
-}
-.live-texy-editor .main.right-only > .left {
-  display: none;
-}
-.live-texy-editor .main.right-only > .right {
-  max-width: none;
-}
-.live-texy-editor .main > .left textarea {
+.live-texy-editor .main.code .column.code textarea {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 1 auto;
@@ -201,16 +190,20 @@ html.js .jshidden {
   overflow-y: scroll;
   font-family: Consolas, monospace;
 }
-.live-texy-editor .main > .right {
-  -webkit-box-flex: 1.2;
-  -moz-box-flex: 1.2;
-  -webkit-flex: 1.2 1 auto;
-  -moz-flex: 1.2 1 auto;
-  -ms-flex: 1.2 1 auto;
-  flex: 1.2 1 auto;
-  max-width: 1000px;
+.live-texy-editor .main.preview .column.preview {
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-flex-grow: 1.2;
+  -moz-flex-grow: 1.2;
+  -ms-flex-grow: 1.2;
+  flex-grow: 1.2;
 }
-.live-texy-editor .main > .right iframe.output {
+.live-texy-editor .main.preview .column.preview iframe {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 1 auto;
@@ -218,4 +211,7 @@ html.js .jshidden {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   border: none;
+}
+.live-texy-editor .main.code.preview .column.preview {
+  max-width: 1000px;
 }
