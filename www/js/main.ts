@@ -1,5 +1,3 @@
-/// <reference path="jquery.d.ts" />
-
 module LiveTexyEditor
 {
 	declare var processUrl: string;
@@ -146,24 +144,24 @@ module LiveTexyEditor
 		private updatePreview()
 		{
 			this.previewOutOfDate = false;
-			var xhr = $.post(this.processUrl, {
+			/*var xhr = $.post(this.processUrl, {
 				"editor-texyContent": this.input
 			});
 
 			xhr.done((payload) => {
 				this.preview = payload.htmlContent;
 				this.trigger('preview:change');
-			});
+			});*/
 		}
 	}
 
 	class EditorView
 	{
-		private main: JQuery;
-		private textarea: JQuery;
-		private preview: JQuery;
+		private main: HTMLDivElement;
+		private textarea: HTMLTextAreaElement;
+		private preview: HTMLIFrameElement;
 
-		constructor(private container: JQuery, private model: Model)
+		constructor(private container: HTMLDivElement, private model: Model)
 		{
 			this.initElements();
 			this.initEvents();
@@ -172,25 +170,25 @@ module LiveTexyEditor
 
 		private initElements()
 		{
-			this.main = this.container.find('.main');
-			this.textarea = this.container.find('.code textarea');
-			this.preview = this.container.find('.preview iframe');
+			this.main = <HTMLDivElement> this.container.querySelector('.main');
+			this.textarea = <HTMLTextAreaElement> this.container.querySelector('.code textarea');
+			this.preview = <HTMLIFrameElement> this.container.querySelector('.preview iframe');
 		}
 
 		private initEvents()
 		{
-			this.container.find('select[name=panels]').on('change', (e) => {
+			this.container.querySelector('select[name=panels]').addEventListener('change', (e) => {
 				var input = <HTMLInputElement> e.target;
 				this.model.VisiblePanels = input.value.split(' ');
 			});
 
-			this.container.find('input[name=message]').on('keydown', (e) => {
+			this.container.querySelector('input[name=message]').addEventListener('keydown', (e) => {
 				if (e.keyCode !== 13 /* enter */ || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
 				e.preventDefault();
-				this.container.find('input[name=save]').trigger('click');
+				this.container.querySelector('input[name=save]').trigger('click');
 			});
 
-			this.textarea.on('keydown', (e) => {
+			this.textarea.addEventListener('keydown', (e) => {
 				if (e.keyCode !== 9 && e.keyCode !== 13) return; // ignore everything but tab and enter
 				if (e.ctrlKey || e.altKey || e.metaKey) return;
 
@@ -243,12 +241,12 @@ module LiveTexyEditor
 				textarea.scrollTop = top; // Firefox
 			});
 
-			this.textarea.on('keyup', (e) => {
+			this.textarea.addEventListener('keyup', (e) => {
 				var textarea = <HTMLTextAreaElement> e.target;
 				this.model.Input = textarea.value;
 			});
 
-			this.textarea.on('scroll', () => {
+			this.textarea.addEventListener('scroll', () => {
 				var iframe = <HTMLIFrameElement> this.preview.get(0);
 				var iframeWin = iframe.contentWindow;
 				var iframeBody = iframe.contentDocument.body;
@@ -267,7 +265,7 @@ module LiveTexyEditor
 			});
 
 			this.model.on('preview:change', () => {
-				var iframe = <HTMLIFrameElement> this.preview.get(0);
+				var iframe = this.preview;
 				var iframeWin = iframe.contentWindow;
 				var iframeDoc = iframe.contentDocument;
 				var scrollY = iframeWin.pageYOffset;
@@ -291,8 +289,8 @@ module LiveTexyEditor
 		}
 	}
 
-	$(() => {
-		var container = $('.live-texy-editor');
+	document.addEventListener('DOMContentLoaded', () => {
+		var container = document.querySelector('.live-texy-editor');
 		var model = new Model(processUrl);
 		var view = new EditorView(container, model);
 

@@ -1,4 +1,3 @@
-/// <reference path="jquery.d.ts" />
 var LiveTexyEditor;
 (function (LiveTexyEditor) {
     var Model = (function () {
@@ -102,16 +101,15 @@ var LiveTexyEditor;
         };
 
         Model.prototype.updatePreview = function () {
-            var _this = this;
             this.previewOutOfDate = false;
-            var xhr = $.post(this.processUrl, {
-                "editor-texyContent": this.input
+            /*var xhr = $.post(this.processUrl, {
+            "editor-texyContent": this.input
             });
-
-            xhr.done(function (payload) {
-                _this.preview = payload.htmlContent;
-                _this.trigger('preview:change');
-            });
+            
+            xhr.done((payload) => {
+            this.preview = payload.htmlContent;
+            this.trigger('preview:change');
+            });*/
         };
         return Model;
     })();
@@ -125,26 +123,26 @@ var LiveTexyEditor;
             this.initPanels();
         }
         EditorView.prototype.initElements = function () {
-            this.main = this.container.find('.main');
-            this.textarea = this.container.find('.code textarea');
-            this.preview = this.container.find('.preview iframe');
+            this.main = this.container.querySelector('.main');
+            this.textarea = this.container.querySelector('.code textarea');
+            this.preview = this.container.querySelector('.preview iframe');
         };
 
         EditorView.prototype.initEvents = function () {
             var _this = this;
-            this.container.find('select[name=panels]').on('change', function (e) {
+            this.container.querySelector('select[name=panels]').addEventListener('change', function (e) {
                 var input = e.target;
                 _this.model.VisiblePanels = input.value.split(' ');
             });
 
-            this.container.find('input[name=message]').on('keydown', function (e) {
+            this.container.querySelector('input[name=message]').addEventListener('keydown', function (e) {
                 if (e.keyCode !== 13 || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)
                     return;
                 e.preventDefault();
-                _this.container.find('input[name=save]').trigger('click');
+                _this.container.querySelector('input[name=save]').trigger('click');
             });
 
-            this.textarea.on('keydown', function (e) {
+            this.textarea.addEventListener('keydown', function (e) {
                 if (e.keyCode !== 9 && e.keyCode !== 13)
                     return;
                 if (e.ctrlKey || e.altKey || e.metaKey)
@@ -199,12 +197,12 @@ else
                 textarea.scrollTop = top;
             });
 
-            this.textarea.on('keyup', function (e) {
+            this.textarea.addEventListener('keyup', function (e) {
                 var textarea = e.target;
                 _this.model.Input = textarea.value;
             });
 
-            this.textarea.on('scroll', function () {
+            this.textarea.addEventListener('scroll', function () {
                 var iframe = _this.preview.get(0);
                 var iframeWin = iframe.contentWindow;
                 var iframeBody = iframe.contentDocument.body;
@@ -223,7 +221,7 @@ else
             });
 
             this.model.on('preview:change', function () {
-                var iframe = _this.preview.get(0);
+                var iframe = _this.preview;
                 var iframeWin = iframe.contentWindow;
                 var iframeDoc = iframe.contentDocument;
                 var scrollY = iframeWin.pageYOffset;
@@ -247,8 +245,8 @@ else
         return EditorView;
     })();
 
-    $(function () {
-        var container = $('.live-texy-editor');
+    document.addEventListener('DOMContentLoaded', function () {
+        var container = document.querySelector('.live-texy-editor');
         var model = new Model(processUrl);
         var view = new EditorView(container, model);
 
