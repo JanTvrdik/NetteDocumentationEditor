@@ -12,13 +12,9 @@ module LiveTexyEditor
 		name: string;
 	}
 
-	interface PanelVisibilityChangeEvent extends Event
+	interface PanelEvent extends Event
 	{
-		/** name of panel whose visibility has changed */
-		panelName: string;
-
-		/** new visibility */
-		panelVisibility: bool;
+		panel: Panel;
 	}
 
 	interface EventCallback
@@ -26,24 +22,31 @@ module LiveTexyEditor
 		(e: Event): void;
 	}
 
+	class Panel
+	{
+		/** is panel visible? */
+		visible: bool = false;
+
+		/** panel content */
+		content: string = '';
+
+		/** does panel content need to be updated? */
+		outOfDate: bool = false;
+
+		/** update timeout identifer */
+		timeoutId: number;
+
+		constructor(public name: string)
+		{
+
+		}
+	}
+
 	class Model
 	{
-		/** content in Texy! formatting */
-		private input: string;
-
-		/** preview in HTML */
-		private preview: string;
-
-		/** true if preview does not reflect current input value, false otherwise */
-		private previewOutOfDate: bool;
-
-		/** timeout identifier for updating preview */
-		private previewTimeoutId: number;
-
-		/** whether panels is visible or not */
-		private panelsVisiblity: {
-			code: bool;
-			preview: bool;
+		/** registered panels */
+		private panels: {
+			[name: string]: Panel;
 		};
 
 		/** list of registered event handlers */
@@ -53,62 +56,69 @@ module LiveTexyEditor
 
 		constructor(private processUrl: string)
 		{
-			this.panelsVisiblity = {
-				code: false,
-				preview: false
-			};
-			this.previewOutOfDate = false;
 			this.handlers = {};
 			this.initEvents();
+			this.initPanels();
 		}
 
 		get Input(): string
 		{
-			return this.input;
+			return this.panels['code'].content;
 		}
 
 		set Input(val: string)
 		{
-			if (val === this.input) return;
-			this.input = val;
+			if (val === this.panels['code'].content) return;
+			this.panels['code'].content = val;
 
-			if (this.panelsVisiblity.preview) {
-				clearTimeout(this.previewTimeoutId);
-				this.previewTimeoutId = setTimeout(this.updatePreview.bind(this), 800);
+			for (var name in this.panels) {
+				if (name === 'code') continue;
+				var panel = this.panels[name];
+				if (panel.visible) {
+					clearTimeout(panel.timeoutId);
+					panel.timeoutId = setTimeout(() => {
+						this.updatePanel(panel);
+					}, 800);
 
-			} else {
-				this.previewOutOfDate = true;
+				} else {
+					panel.outOfDate = true;
+				}
 			}
 		}
 
 		get Preview(): string
 		{
-			return this.preview;
+			return this.panels['preview'].content;
+		}
+
+		get Diff(): string
+		{
+			return this.panels['diff'].content;
 		}
 
 		get VisiblePanels(): string[]
 		{
 			var visiblePanels = [];
-			for (var panel in this.panelsVisiblity) {
-				if (this.panelsVisiblity[panel]) {
-					visiblePanels.push(panel);
+			for (var name in this.panels) {
+				if (this.panels[name].visible) {
+					visiblePanels.push(name);
 				}
 			}
 			return visiblePanels;
 		}
 
-		set VisiblePanels(panels: string[])
+		set VisiblePanels(visiblePanels: string[])
 		{
-			for (var panel in this.panelsVisiblity) {
-				var visibility = (panels.indexOf(panel) !== -1);
-				if (this.panelsVisiblity[panel] === visibility) continue;
+			for (var name in this.panels) {
+				var panel = this.panels[name];
+				var visibility = (visiblePanels.indexOf(name) !== -1);
+				if (panel.visible === visibility) continue;
 
-				this.panelsVisiblity[panel] = visibility;
+				panel.visible = visibility;
 				var eventName = 'panel:' + (visibility ? 'show' : 'hide');
 				this.trigger(eventName, {
 					'name': eventName,
-					'panelName': panel,
-					'panelVisibility': visibility
+					'panel': panel
 				});
 			}
 		}
@@ -125,15 +135,24 @@ module LiveTexyEditor
 
 		private initEvents()
 		{
-			this.on('panel:show', (e: PanelVisibilityChangeEvent) => {
-				if (e.panelName === 'preview' && this.previewOutOfDate) {
-					this.updatePreview();
+			this.on('panel:show', (e: PanelEvent) => {
+				if (e.panel.outOfDate) {
+					this.updatePanel(e.panel);
 				}
 			});
 		}
 
+		private initPanels()
+		{
+			this.panels = {};
+			this.panels['code'] = new Panel('code');
+			this.panels['preview'] = new Panel('preview');
+			this.panels['preview'].outOfDate = true;
+		}
+
 		private trigger(eventName: string, event?: Event)
 		{
+			console.log(eventName, event);
 			if (typeof event === 'undefined') event = {name: eventName};
 
 			if (eventName in this.handlers) {
@@ -143,16 +162,19 @@ module LiveTexyEditor
 			}
 		}
 
-		private updatePreview()
+		private updatePanel(panel: Panel)
 		{
-			this.previewOutOfDate = false;
+			panel.outOfDate = false;
 			var xhr = $.post(this.processUrl, {
-				"editor-texyContent": this.input
+				"editor-texyContent": this.Input
 			});
 
 			xhr.done((payload) => {
-				this.preview = payload.htmlContent;
-				this.trigger('preview:change');
+				panel.content = payload.htmlContent;
+				this.trigger(panel.name + ':change', {
+					'name': panel.name + ':change',
+					'panel': panel
+				});
 			});
 		}
 	}
@@ -173,8 +195,8 @@ module LiveTexyEditor
 		private initElements()
 		{
 			this.main = this.container.find('.main');
-			this.textarea = this.container.find('.code textarea');
-			this.preview = this.container.find('.preview iframe');
+			this.textarea = this.main.find('.code textarea');
+			this.preview = this.main.find('.preview iframe');
 		}
 
 		private initEvents()
@@ -262,8 +284,8 @@ module LiveTexyEditor
 				iframeWin.scrollTo(0, iframePos);
 			});
 
-			this.model.on('panel:show panel:hide', (e: PanelVisibilityChangeEvent) => {
-				this.main.toggleClass(e.panelName, e.panelVisibility);
+			this.model.on('panel:show panel:hide', (e: PanelEvent) => {
+				this.main.toggleClass(e.panel.name, e.panel.visible);
 			});
 
 			this.model.on('preview:change', () => {

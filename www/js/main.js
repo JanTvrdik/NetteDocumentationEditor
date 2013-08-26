@@ -1,31 +1,48 @@
 /// <reference path="jquery.d.ts" />
 var LiveTexyEditor;
 (function (LiveTexyEditor) {
+    var Panel = (function () {
+        function Panel(name) {
+            this.name = name;
+            /** is panel visible? */
+            this.visible = false;
+            /** panel content */
+            this.content = '';
+            /** does panel content need to be updated? */
+            this.outOfDate = false;
+        }
+        return Panel;
+    })();
+
     var Model = (function () {
         function Model(processUrl) {
             this.processUrl = processUrl;
-            this.panelsVisiblity = {
-                code: false,
-                preview: false
-            };
-            this.previewOutOfDate = false;
             this.handlers = {};
             this.initEvents();
+            this.initPanels();
         }
         Object.defineProperty(Model.prototype, "Input", {
             get: function () {
-                return this.input;
+                return this.panels['code'].content;
             },
             set: function (val) {
-                if (val === this.input)
+                var _this = this;
+                if (val === this.panels['code'].content)
                     return;
-                this.input = val;
+                this.panels['code'].content = val;
 
-                if (this.panelsVisiblity.preview) {
-                    clearTimeout(this.previewTimeoutId);
-                    this.previewTimeoutId = setTimeout(this.updatePreview.bind(this), 800);
-                } else {
-                    this.previewOutOfDate = true;
+                for (var name in this.panels) {
+                    if (name === 'code')
+                        continue;
+                    var panel = this.panels[name];
+                    if (panel.visible) {
+                        clearTimeout(panel.timeoutId);
+                        panel.timeoutId = setTimeout(function () {
+                            _this.updatePanel(panel);
+                        }, 800);
+                    } else {
+                        panel.outOfDate = true;
+                    }
                 }
             },
             enumerable: true,
@@ -35,7 +52,15 @@ var LiveTexyEditor;
 
         Object.defineProperty(Model.prototype, "Preview", {
             get: function () {
-                return this.preview;
+                return this.panels['preview'].content;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Model.prototype, "Diff", {
+            get: function () {
+                return this.panels['diff'].content;
             },
             enumerable: true,
             configurable: true
@@ -44,25 +69,25 @@ var LiveTexyEditor;
         Object.defineProperty(Model.prototype, "VisiblePanels", {
             get: function () {
                 var visiblePanels = [];
-                for (var panel in this.panelsVisiblity) {
-                    if (this.panelsVisiblity[panel]) {
-                        visiblePanels.push(panel);
+                for (var name in this.panels) {
+                    if (this.panels[name].visible) {
+                        visiblePanels.push(name);
                     }
                 }
                 return visiblePanels;
             },
-            set: function (panels) {
-                for (var panel in this.panelsVisiblity) {
-                    var visibility = (panels.indexOf(panel) !== -1);
-                    if (this.panelsVisiblity[panel] === visibility)
+            set: function (visiblePanels) {
+                for (var name in this.panels) {
+                    var panel = this.panels[name];
+                    var visibility = (visiblePanels.indexOf(name) !== -1);
+                    if (panel.visible === visibility)
                         continue;
 
-                    this.panelsVisiblity[panel] = visibility;
+                    panel.visible = visibility;
                     var eventName = 'panel:' + (visibility ? 'show' : 'hide');
                     this.trigger(eventName, {
                         'name': eventName,
-                        'panelName': panel,
-                        'panelVisibility': visibility
+                        'panel': panel
                     });
                 }
             },
@@ -84,13 +109,21 @@ var LiveTexyEditor;
         Model.prototype.initEvents = function () {
             var _this = this;
             this.on('panel:show', function (e) {
-                if (e.panelName === 'preview' && _this.previewOutOfDate) {
-                    _this.updatePreview();
+                if (e.panel.outOfDate) {
+                    _this.updatePanel(e.panel);
                 }
             });
         };
 
+        Model.prototype.initPanels = function () {
+            this.panels = {};
+            this.panels['code'] = new Panel('code');
+            this.panels['preview'] = new Panel('preview');
+            this.panels['preview'].outOfDate = true;
+        };
+
         Model.prototype.trigger = function (eventName, event) {
+            console.log(eventName, event);
             if (typeof event === 'undefined')
                 event = { name: eventName };
 
@@ -101,16 +134,19 @@ var LiveTexyEditor;
             }
         };
 
-        Model.prototype.updatePreview = function () {
+        Model.prototype.updatePanel = function (panel) {
             var _this = this;
-            this.previewOutOfDate = false;
+            panel.outOfDate = false;
             var xhr = $.post(this.processUrl, {
-                "editor-texyContent": this.input
+                "editor-texyContent": this.Input
             });
 
             xhr.done(function (payload) {
-                _this.preview = payload.htmlContent;
-                _this.trigger('preview:change');
+                panel.content = payload.htmlContent;
+                _this.trigger(panel.name + ':change', {
+                    'name': panel.name + ':change',
+                    'panel': panel
+                });
             });
         };
         return Model;
@@ -126,8 +162,8 @@ var LiveTexyEditor;
         }
         EditorView.prototype.initElements = function () {
             this.main = this.container.find('.main');
-            this.textarea = this.container.find('.code textarea');
-            this.preview = this.container.find('.preview iframe');
+            this.textarea = this.main.find('.code textarea');
+            this.preview = this.main.find('.preview iframe');
         };
 
         EditorView.prototype.initEvents = function () {
@@ -219,7 +255,7 @@ else
             });
 
             this.model.on('panel:show panel:hide', function (e) {
-                _this.main.toggleClass(e.panelName, e.panelVisibility);
+                _this.main.toggleClass(e.panel.name, e.panel.visible);
             });
 
             this.model.on('preview:change', function () {
