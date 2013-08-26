@@ -1,6 +1,8 @@
 @import "flex/flex";
 
+/* (c) David Grudl, nette.org */
 @nette-blue: #3484d2;
+@nette-font: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif;
 
 .tab-size(@value) {
 	-o-tab-size: @value;
@@ -14,7 +16,7 @@
 
 	height: 100%;
 	background-color: @nette-blue;
-	font-family: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif; /* from nette.org */
+	font-family: @nette-font;
 
 	.header {
 		.flex(0, 0, auto);
@@ -94,29 +96,14 @@
 		.display(flex);
 		.flex(1, 1, auto);
 
-		> .left, > .right {
+		.column {
+			.flex(1, 0, 400px);
+			display: none;
+		}
+
+		&.code .column.code {
 			.display(flex);
-			.flex(1, 1, auto);
-			width: 400px; /* normalize width */
-		}
 
-		&.left-only {
-			> .right {
-				display: none;
-			}
-		}
-
-		&.right-only {
-			> .left {
-				display: none;
-			}
-
-			> .right {
-				max-width: none;
-			}
-		}
-
-		> .left {
 			textarea {
 				.flex(1, 1, auto);
 				.tab-size(4);
@@ -130,15 +117,18 @@
 			}
 		}
 
-		> .right {
-			.flex(1.2, 1, auto); // 1.2 makes horizontal scrollbar not visible at 1080p
-			max-width: 1000px;
+		&.preview .column.preview {
+			.display(flex);
+			.flex-grow(1.2); // makes horizontal scrollbar not visible at 1080p
 
-			iframe.output {
+			iframe {
 				.flex(1, 1, auto);
-				// min-height: 100%; // fix for IE, disabled to fix Opera =)
 				border: none;
 			}
+		}
+
+		&.code.preview .column.preview {
+			max-width: 1000px;
 		}
 	}
 }

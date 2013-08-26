@@ -5,24 +5,61 @@ module LiveTexyEditor
 	declare var processUrl: string;
 	declare var controlId: string;
 
+
+	interface Event
+	{
+		/** event name */
+		name: string;
+	}
+
+	interface PanelVisibilityChangeEvent extends Event
+	{
+		/** name of panel whose visibility has changed */
+		panelName: string;
+
+		/** new visibility */
+		panelVisibility: bool;
+	}
+
 	interface EventCallback
 	{
-		(): void;
+		(e: Event): void;
 	}
 
 	class Model
 	{
+		/** content in Texy! formatting */
 		private input: string;
-		private output: string;
-		private timeoutId: number;
 
+		/** preview in HTML */
+		private preview: string;
+
+		/** true if preview does not reflect current input value, false otherwise */
+		private previewOutOfDate: bool;
+
+		/** timeout identifier for updating preview */
+		private previewTimeoutId: number;
+
+		/** whether panels is visible or not */
+		private panelsVisiblity: {
+			code: bool;
+			preview: bool;
+		};
+
+		/** list of registered event handlers */
 		private handlers: {
 			[eventName: string]: EventCallback[];
 		};
 
 		constructor(private processUrl: string)
 		{
+			this.panelsVisiblity = {
+				code: false,
+				preview: false
+			};
+			this.previewOutOfDate = false;
 			this.handlers = {};
+			this.initEvents();
 		}
 
 		get Input(): string
@@ -32,54 +69,99 @@ module LiveTexyEditor
 
 		set Input(val: string)
 		{
-			if (val !== this.input) {
-				this.input = val;
+			if (val === this.input) return;
+			this.input = val;
 
-				clearTimeout(this.timeoutId);
-				this.timeoutId = setTimeout(this.updateOutput.bind(this), 800);
+			if (this.panelsVisiblity.preview) {
+				clearTimeout(this.previewTimeoutId);
+				this.previewTimeoutId = setTimeout(this.updatePreview.bind(this), 800);
+
+			} else {
+				this.previewOutOfDate = true;
 			}
 		}
 
-		get Output(): string
+		get Preview(): string
 		{
-			return this.output;
+			return this.preview;
+		}
+
+		get VisiblePanels(): string[]
+		{
+			var visiblePanels = [];
+			for (var panel in this.panelsVisiblity) {
+				if (this.panelsVisiblity[panel]) {
+					visiblePanels.push(panel);
+				}
+			}
+			return visiblePanels;
+		}
+
+		set VisiblePanels(panels: string[])
+		{
+			for (var panel in this.panelsVisiblity) {
+				var visibility = (panels.indexOf(panel) !== -1);
+				if (this.panelsVisiblity[panel] === visibility) continue;
+
+				this.panelsVisiblity[panel] = visibility;
+				var eventName = 'panel:' + (visibility ? 'show' : 'hide');
+				this.trigger(eventName, {
+					'name': eventName,
+					'panelName': panel,
+					'panelVisibility': visibility
+				});
+			}
 		}
 
 		on(eventName: string, callback: EventCallback)
 		{
-			if (typeof this.handlers[eventName] === 'undefined') this.handlers[eventName] = [];
-			this.handlers[eventName].push(callback);
+			var events = eventName.split(' ');
+			for (var i = 0; i < events.length; i++) {
+				var event = events[i];
+				if (typeof this.handlers[event] === 'undefined') this.handlers[event] = [];
+				this.handlers[event].push(callback);
+			}
 		}
 
-		private trigger(eventName: string)
+		private initEvents()
 		{
+			this.on('panel:show', (e: PanelVisibilityChangeEvent) => {
+				if (e.panelName === 'preview' && this.previewOutOfDate) {
+					this.updatePreview();
+				}
+			});
+		}
+
+		private trigger(eventName: string, event?: Event)
+		{
+			if (typeof event === 'undefined') event = {name: eventName};
+
 			if (eventName in this.handlers) {
 				for (var i = 0; i < this.handlers[eventName].length; i++) {
-					this.handlers[eventName][i]( );
+					this.handlers[eventName][i](event);
 				}
 			}
 		}
 
-		private updateOutput()
+		private updatePreview()
 		{
+			this.previewOutOfDate = false;
 			var xhr = $.post(this.processUrl, {
 				"editor-texyContent": this.input
 			});
 
 			xhr.done((payload) => {
-				this.output = payload.htmlContent;
-				this.trigger('output:change');
+				this.preview = payload.htmlContent;
+				this.trigger('preview:change');
 			});
 		}
-
 	}
 
 	class EditorView
 	{
-		private panels: JQuery;
 		private main: JQuery;
 		private textarea: JQuery;
-		private output: JQuery;
+		private preview: JQuery;
 
 		constructor(private container: JQuery, private model: Model)
 		{
@@ -90,22 +172,16 @@ module LiveTexyEditor
 
 		private initElements()
 		{
-			this.panels = this.container.find('select[name=panels]');
 			this.main = this.container.find('.main');
-			this.textarea = this.container.find('textarea');
-			this.output = this.container.find('.output');
+			this.textarea = this.container.find('.code textarea');
+			this.preview = this.container.find('.preview iframe');
 		}
 
 		private initEvents()
 		{
-			this.panels.on('change', (e) => {
-				console.log('X');
-				var panels = this.panels.val().split(' ');
-				this.main.removeClass('left-only right-only');
-				if (panels.length === 1) {
-					var className = (panels[0] === 'code' ? 'left-only' : 'right-only');
-					this.main.addClass(className);
-				}
+			this.container.find('select[name=panels]').on('change', (e) => {
+				var input = <HTMLInputElement> e.target;
+				this.model.VisiblePanels = input.value.split(' ');
 			});
 
 			this.container.find('input[name=message]').on('keydown', (e) => {
@@ -120,7 +196,7 @@ module LiveTexyEditor
 
 				// based on code by David Grudl, http://editor.texy.info
 				e.preventDefault();
-				var textarea = e.target;
+				var textarea = <HTMLTextAreaElement> e.target;
 				var top = textarea.scrollTop;
 				var start = textarea.selectionStart, end = textarea.selectionEnd;
 				var lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
@@ -167,44 +243,50 @@ module LiveTexyEditor
 				textarea.scrollTop = top; // Firefox
 			});
 
-			this.textarea.on('keyup', () => {
-				this.model.Input = this.textarea.val();
-			});
-
-			this.model.on('output:change', () => {
-				var iframe = this.output.get(0);
-				var iframeWin = iframe.contentWindow;
-				var iframeDoc = iframe.contentDocument;
-				var scrollY = iframeWin.scrollY;
-				iframeDoc.open('text/html', 'replace');
-				iframeDoc.write(this.model.Output);
-				iframeDoc.close();
-				iframeWin.scrollTo(0, scrollY);
+			this.textarea.on('keyup', (e) => {
+				var textarea = <HTMLTextAreaElement> e.target;
+				this.model.Input = textarea.value;
 			});
 
 			this.textarea.on('scroll', () => {
-				var iframe = this.output.get(0);
+				var iframe = <HTMLIFrameElement> this.preview.get(0);
 				var iframeWin = iframe.contentWindow;
 				var iframeBody = iframe.contentDocument.body;
 
 				var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
-				var iframeMaximumScrollTop = iframeBody.scrollHeight - this.output.height();
+				var iframeMaximumScrollTop = iframeBody.scrollHeight - this.preview.height();
 
 				var percent = this.textarea.scrollTop() / textareaMaximumScrollTop;
 				var iframePos = iframeMaximumScrollTop * percent;
 
 				iframeWin.scrollTo(0, iframePos);
 			});
+
+			this.model.on('panel:show panel:hide', (e: PanelVisibilityChangeEvent) => {
+				this.main.toggleClass(e.panelName, e.panelVisibility);
+			});
+
+			this.model.on('preview:change', () => {
+				var iframe = <HTMLIFrameElement> this.preview.get(0);
+				var iframeWin = iframe.contentWindow;
+				var iframeDoc = iframe.contentDocument;
+				var scrollY = iframeWin.pageYOffset;
+				iframeDoc.open('text/html', 'replace');
+				iframeDoc.write(this.model.Preview);
+				iframeDoc.close();
+				iframeWin.scrollTo(0, scrollY);
+			});
 		}
 
 		private initPanels()
 		{
+			this.model.VisiblePanels = this.container.find('select[name=panels]').val().split(' ');
 			this.model.Input = this.textarea.val();
 
 			// IE preview height hotfix
 			var expectedPreviewHeight = this.main.find('.right').innerHeight();
-			if (this.output.height() !== expectedPreviewHeight) {
-				this.output.css('height', expectedPreviewHeight + 'px');
+			if (this.preview.height() !== expectedPreviewHeight) {
+				this.preview.css('height', expectedPreviewHeight + 'px');
 			}
 		}
 	}
