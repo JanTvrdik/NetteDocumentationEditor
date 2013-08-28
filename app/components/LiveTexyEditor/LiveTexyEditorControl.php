@@ -11,6 +11,8 @@ class LiveTexyEditorControl extends UI\Control
 	/** @var bool */
 	public $enableSave = TRUE;
 
+	/** @var string */
+	public $originalContent = '';
 
 	/** @var PageRenderer */
 	private $pageRenderer;
@@ -24,6 +26,7 @@ class LiveTexyEditorControl extends UI\Control
 	{
 		$this->template->setFile(__DIR__ . '/LiveTexyEditorControl.latte');
 		$this->template->enableSave = $this->enableSave;
+		$this->template->originalContent = $this->originalContent;
 		$this->template->render();
 	}
 
@@ -62,9 +65,11 @@ class LiveTexyEditorControl extends UI\Control
 			->setValidationScope([$form['message'], $form['texyContent']]);
 
 		$form->addSelect('panels', NULL, [
-			'code' => 'code',
-			'preview' => 'preview',
+			'code' => 'code only',
 			'code preview' => 'code and preview',
+			'code diff' => 'code and diff',
+			'preview' => 'preview only',
+			'diff' => 'diff only',
 		])->setDefaultValue('code preview');
 
 		return $form;

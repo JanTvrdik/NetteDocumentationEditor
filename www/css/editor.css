@@ -174,6 +174,38 @@
   flex: 1 1 auto;
   border: none;
 }
-.live-texy-editor .main.code.preview .column.preview {
+.live-texy-editor .main.code.preview .column.preview,
+.live-texy-editor .main.code.diff .column.diff {
   max-width: 1000px;
+}
+.live-texy-editor .main.diff .column.diff {
+  -webkit-flex-grow: 1.2;
+  -moz-flex-grow: 1.2;
+  -ms-flex-grow: 1.2;
+  flex-grow: 1.2;
+  display: block;
+  overflow-y: scroll;
+}
+.live-texy-editor .main.diff .column.diff .content {
+  padding: 20px;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  line-height: normal;
+}
+.live-texy-editor .main.diff .column.diff .content div {
+  box-sizing: border-box;
+  max-width: 940px;
+  margin: 0 auto 20px auto;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  white-space: pre-wrap;
+}
+.live-texy-editor .main.diff .column.diff .content ins {
+  background: #9e9;
+  text-decoration: none;
+}
+.live-texy-editor .main.diff .column.diff .content del {
+  background: #e99;
+  text-decoration: none;
 }

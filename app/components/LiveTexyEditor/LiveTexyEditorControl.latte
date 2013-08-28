@@ -31,8 +31,11 @@
 		</div>
 
 		<div class="main">
-			<div class="column code">{input texyContent, autofocus => true}</div>
+			<div class="column code">{input texyContent, autofocus => true, data-original => $originalContent}</div>
 			<div class="column preview"><iframe></iframe></div>
+			<div class="column diff">
+				<div class="content"></div>
+			</div>
 		</div>
 	</div>
 {/form}

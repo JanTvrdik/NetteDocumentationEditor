@@ -25,6 +25,7 @@ final class EditorPresenter extends UI\Presenter
 			$page = $this->editorModel->loadPage($branch, $path);
 
 			if ($page) {
+				$editor->originalContent = $page->content;
 				$form->setDefaults([
 					'page' => "{$page->branch}:{$page->path}",
 					'branch' => $page->branch,

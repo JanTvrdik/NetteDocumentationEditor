@@ -1,22 +1,106 @@
 /// <reference path="jquery.d.ts" />
+/// <reference path="diff_match_patch.d.ts" />
 var LiveTexyEditor;
 (function (LiveTexyEditor) {
     var Panel = (function () {
-        function Panel(name) {
+        /**
+        * @param name      panel name
+        * @param outOfDate does panel content need to be updated?
+        */
+        function Panel(name, outOfDate) {
+            if (typeof outOfDate === "undefined") { outOfDate = false; }
             this.name = name;
+            this.outOfDate = outOfDate;
             /** is panel visible? */
             this.visible = false;
             /** panel content */
             this.content = '';
-            /** does panel content need to be updated? */
-            this.outOfDate = false;
         }
         return Panel;
     })();
 
+    var DiffRenderer = (function () {
+        function DiffRenderer(contextChars, contextLines) {
+            this.contextChars = contextChars;
+            this.contextLines = contextLines;
+        }
+        DiffRenderer.prototype.render = function (diffs) {
+            var html = [];
+            for (var i = 0; i < diffs.length; i++) {
+                var op = diffs[i][0];
+                var data = diffs[i][1];
+                var text = this.escapeHtml(data);
+                switch (op) {
+                    case DIFF_INSERT:
+                        html[i] = '<ins>' + this.vizualizeNewLines(text) + '</ins>';
+                        break;
+
+                    case DIFF_DELETE:
+                        html[i] = '<del>' + this.vizualizeNewLines(text) + '</del>';
+                        break;
+
+                    case DIFF_EQUAL:
+                        if (i === 0) {
+                            text = this.reduceStringLeft(text, this.contextChars, this.contextLines);
+                        } else if (i === diffs.length - 1) {
+                            text = this.reduceStringRight(text, this.contextChars, this.contextLines);
+                        } else if (text.length > 2 * this.contextChars) {
+                            var after = this.reduceStringRight(text, this.contextChars, this.contextLines);
+                            var before = this.reduceStringLeft(text, this.contextChars, this.contextLines);
+                            text = after + '</div><div>' + before;
+                        }
+
+                        html[i] = text;
+                        break;
+                }
+            }
+            return '<div>' + html.join('') + '</div>';
+        };
+
+        DiffRenderer.prototype.escapeHtml = function (s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
+
+        DiffRenderer.prototype.vizualizeNewLines = function (s) {
+            return s.replace(/\n/g, '&para;\n');
+        };
+
+        DiffRenderer.prototype.reduceStringLeft = function (s, maxLen, maxLines) {
+            s = s.substr(-maxLen);
+            for (var i = 0, pos = s.length; i < maxLines; i++) {
+                pos = s.lastIndexOf('\n', pos);
+                if (pos === -1)
+                    return s;
+else
+                    pos--;
+            }
+            s = s.substr(pos + 2);
+            s = s.replace(/^\s+/, '');
+            return s;
+        };
+
+        DiffRenderer.prototype.reduceStringRight = function (s, maxLen, maxLines) {
+            s = s.substr(0, maxLen);
+            for (var i = 0, pos = 0; i < maxLines; i++) {
+                pos = s.indexOf('\n', pos);
+                if (pos === -1)
+                    return s;
+else
+                    pos++;
+            }
+
+            s = s.substr(0, pos - 1);
+            s = s.replace(/\s+$/, '');
+            return s;
+        };
+        return DiffRenderer;
+    })();
+
     var Model = (function () {
-        function Model(processUrl) {
+        function Model(diffRenderer, processUrl, controlId) {
+            this.diffRenderer = diffRenderer;
             this.processUrl = processUrl;
+            this.controlId = controlId;
             this.handlers = {};
             this.initEvents();
             this.initPanels();
@@ -26,7 +110,6 @@ var LiveTexyEditor;
                 return this.panels['code'].content;
             },
             set: function (val) {
-                var _this = this;
                 if (val === this.panels['code'].content)
                     return;
                 this.panels['code'].content = val;
@@ -36,10 +119,7 @@ var LiveTexyEditor;
                         continue;
                     var panel = this.panels[name];
                     if (panel.visible) {
-                        clearTimeout(panel.timeoutId);
-                        panel.timeoutId = setTimeout(function () {
-                            _this.updatePanel(panel);
-                        }, 800);
+                        this.scheduleForUpdate(panel);
                     } else {
                         panel.outOfDate = true;
                     }
@@ -116,10 +196,11 @@ var LiveTexyEditor;
         };
 
         Model.prototype.initPanels = function () {
-            this.panels = {};
-            this.panels['code'] = new Panel('code');
-            this.panels['preview'] = new Panel('preview');
-            this.panels['preview'].outOfDate = true;
+            this.panels = {
+                code: new Panel('code'),
+                preview: new Panel('preview', true),
+                diff: new Panel('diff', true)
+            };
         };
 
         Model.prototype.trigger = function (eventName, event) {
@@ -134,20 +215,39 @@ var LiveTexyEditor;
             }
         };
 
+        Model.prototype.scheduleForUpdate = function (panel) {
+            var _this = this;
+            clearTimeout(panel.timeoutId);
+            panel.timeoutId = setTimeout(function () {
+                _this.updatePanel(panel);
+            }, 800);
+        };
+
         Model.prototype.updatePanel = function (panel) {
             var _this = this;
             panel.outOfDate = false;
-            var xhr = $.post(this.processUrl, {
-                "editor-texyContent": this.Input
-            });
 
-            xhr.done(function (payload) {
-                panel.content = payload.htmlContent;
-                _this.trigger(panel.name + ':change', {
+            if (panel.name === 'preview') {
+                var data = {};
+                data[this.controlId + '-texyContent'] = this.Input;
+
+                $.post(this.processUrl, data, function (payload) {
+                    panel.content = payload.htmlContent;
+                    _this.trigger(panel.name + ':change', {
+                        'name': panel.name + ':change',
+                        'panel': panel
+                    });
+                });
+            } else if (panel.name === 'diff') {
+                var dmp = new diff_match_patch();
+                var diffs = dmp.diff_main(this.OriginalContent, this.Input);
+                dmp.diff_cleanupSemantic(diffs);
+                panel.content = this.diffRenderer.render(diffs);
+                this.trigger(panel.name + ':change', {
                     'name': panel.name + ':change',
                     'panel': panel
                 });
-            });
+            }
         };
         return Model;
     })();
@@ -164,6 +264,7 @@ var LiveTexyEditor;
             this.main = this.container.find('.main');
             this.textarea = this.main.find('.code textarea');
             this.preview = this.main.find('.preview iframe');
+            this.diff = this.main.find('.diff .content');
         };
 
         EditorView.prototype.initEvents = function () {
@@ -268,11 +369,16 @@ else
                 iframeDoc.close();
                 iframeWin.scrollTo(0, scrollY);
             });
+
+            this.model.on('diff:change', function () {
+                _this.diff.html(_this.model.Diff);
+            });
         };
 
         EditorView.prototype.initPanels = function () {
-            this.model.VisiblePanels = this.container.find('select[name=panels]').val().split(' ');
+            this.model.OriginalContent = this.textarea.data('original');
             this.model.Input = this.textarea.val();
+            this.model.VisiblePanels = this.container.find('select[name=panels]').val().split(' ');
 
             // IE preview height hotfix
             var expectedPreviewHeight = this.main.find('.right').innerHeight();
@@ -285,7 +391,8 @@ else
 
     $(function () {
         var container = $('.live-texy-editor');
-        var model = new Model(processUrl);
+        var diffRenderer = new DiffRenderer(300, 4);
+        var model = new Model(diffRenderer, processUrl, controlId);
         var view = new EditorView(container, model);
 
         var backupAlert = localStorage.getItem('backupAlert');

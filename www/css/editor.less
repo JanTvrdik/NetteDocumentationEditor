@@ -127,8 +127,42 @@
 			}
 		}
 
-		&.code.preview .column.preview {
+		&.code.preview .column.preview, &.code.diff .column.diff {
 			max-width: 1000px;
+		}
+
+		&.diff .column.diff {
+			.flex-grow(1.2); // to have the same width as preview
+			display: block;
+			overflow-y: scroll;
+
+			.content {
+				padding: 20px;
+
+				font-family: Consolas, monospace;
+				font-size: 13px;
+				line-height: normal;
+
+				div {
+					box-sizing: border-box;
+					max-width: 940px;
+					margin: 0 auto 20px auto;
+					padding: 10px;
+					border-radius: 5px;
+					background-color: #fff;
+					white-space: pre-wrap;
+				}
+
+				ins {
+					background: #9e9;
+					text-decoration: none;
+				}
+
+				del {
+					background: #e99;
+					text-decoration: none;
+				}
+			}
 		}
 	}
 }
