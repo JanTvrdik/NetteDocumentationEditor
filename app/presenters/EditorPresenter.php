@@ -35,8 +35,11 @@ final class EditorPresenter extends UI\Presenter
 				]);
 
 			} else {
-				$editor->enableSave = FALSE;
-				$form->addError('Page not found.');
+				$form->setDefaults([
+					'page' => "{$branch}:{$path}",
+					'branch' => $branch,
+					'path' => $path,
+				]);
 			}
 
 		} else {
@@ -86,11 +89,6 @@ final class EditorPresenter extends UI\Presenter
 				$form->addError('Invalid page identifier.');
 				return;
 			}
-		}
-
-		if (!$this->editorModel->pageExists($branch, $path)) {
-			$form->addError("Page ($branch:$path) not found.");
-			return;
 		}
 
 		$this->redirect('this', [
