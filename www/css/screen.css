@@ -247,9 +247,15 @@ html.js .jshidden {
   background: #9e9;
   text-decoration: none;
 }
+.live-texy-editor .main.diff .column.diff .content ins.multiline {
+  background: #dfd;
+}
 .live-texy-editor .main.diff .column.diff .content del {
   background: #e99;
   text-decoration: none;
+}
+.live-texy-editor .main.diff .column.diff .content del.multiline {
+  background: #fdd;
 }
 .live-texy-editor .main.diff .column.diff .content .whitespace {
   opacity: 0.2;

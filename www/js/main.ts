@@ -61,11 +61,10 @@ module LiveTexyEditor
 				var text = this.escapeHtml(data);
 				switch (op) {
 					case DIFF_INSERT:
-						html[i] = '<ins>' + this.visualizeWhitespaces(text) + '</ins>';
-						break;
-
 					case DIFF_DELETE:
-						html[i] = '<del>' + this.visualizeWhitespaces(text) + '</del>';
+						var tag = (op === DIFF_INSERT ? 'ins' : 'del');
+						var multiline = text.indexOf('\n') !== -1;
+						html[i] = '<' + tag + (multiline ? ' class="multiline"' : '') + '>' + this.visualizeWhitespaces(text) + '</' + tag + '>';
 						break;
 
 					case DIFF_EQUAL:
