@@ -51,6 +51,7 @@ class LinkFactory extends Nette\Object
 		}
 
 		list($presenter, $action) = explode(':', $destination);
+		$params['action'] = $action;
 		$request = new Nette\Application\Request($presenter, 'GET', $params);
 		$refUrl = $this->httpRequest->getUrl();
 		$url = $this->router->constructUrl($request, $refUrl);
