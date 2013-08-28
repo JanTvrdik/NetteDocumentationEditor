@@ -72,7 +72,7 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	/**
 	 * Formats date-time for use in a SQL statement.
 	 */
-	public function formatDateTime(\DateTime $value)
+	public function formatDateTime(/*\DateTimeInterface*/ $value)
 	{
 		return $value->format("'Y-m-d H:i:s'");
 	}
@@ -211,7 +211,18 @@ class MySqlDriver extends Nette\Object implements Nette\Database\ISupplementalDr
 	 */
 	public function getColumnTypes(\PDOStatement $statement)
 	{
-		return Nette\Database\Helpers::detectTypes($statement);
+		$types = array();
+		$count = $statement->columnCount();
+		for ($col = 0; $col < $count; $col++) {
+			$meta = $statement->getColumnMeta($col);
+			if (isset($meta['native_type'])) {
+				$types[$meta['name']] = $type = Nette\Database\Helpers::detectType($meta['native_type']);
+				if ($type === Nette\Database\IReflection::FIELD_TIME) {
+					$types[$meta['name']] = Nette\Database\IReflection::FIELD_TIME_INTERVAL;
+				}
+			}
+		}
+		return $types;
 	}
 
 

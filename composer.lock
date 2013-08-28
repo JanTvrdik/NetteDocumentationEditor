@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "4f08f2f271590f8e00e68cc2c7a7f453",
+    "hash": "12a74e9896cec2b06f2b009c4efb9c4d",
     "packages": [
         {
             "name": "jantvrdik/nette-doc-convertor",
@@ -108,12 +108,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "v0.10"
+                "reference": "759432d66387e3433d3b06cb6f773b97225b9b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/v0.10",
-                "reference": "v0.10",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/759432d66387e3433d3b06cb6f773b97225b9b17",
+                "reference": "759432d66387e3433d3b06cb6f773b97225b9b17",
                 "shasum": ""
             },
             "require": {
@@ -155,13 +155,13 @@
             "version": "2.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kukulich/fshl",
-                "reference": "2.1.0"
+                "url": "https://github.com/kukulich/fshl.git",
+                "reference": "974c294ade5d76c0c16b6fe3fd3a584ba999b24f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/kukulich/fshl/zipball/2.1.0",
-                "reference": "2.1.0",
+                "url": "https://api.github.com/repos/kukulich/fshl/zipball/974c294ade5d76c0c16b6fe3fd3a584ba999b24f",
+                "reference": "974c294ade5d76c0c16b6fe3fd3a584ba999b24f",
                 "shasum": ""
             },
             "require": {
@@ -190,7 +190,7 @@
                 "library",
                 "syntax"
             ],
-            "time": "2012-09-08 12:00:07"
+            "time": "2012-09-08 19:00:07"
         },
         {
             "name": "nette/nette",
@@ -198,12 +198,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "f36f5daab168925ccd1b4f7f35faa434be076dc6"
+                "reference": "2855c33ff9f9b8496b5a29d7314022800eb23b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/f36f5daab168925ccd1b4f7f35faa434be076dc6",
-                "reference": "f36f5daab168925ccd1b4f7f35faa434be076dc6",
+                "url": "https://api.github.com/repos/nette/nette/zipball/2855c33ff9f9b8496b5a29d7314022800eb23b6a",
+                "reference": "2855c33ff9f9b8496b5a29d7314022800eb23b6a",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +264,7 @@
                 "neon",
                 "templating"
             ],
-            "time": "2013-08-20 15:31:16"
+            "time": "2013-08-28 17:29:27"
         },
         {
             "name": "texy/texy",
@@ -272,12 +272,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "v2.3"
+                "reference": "11c34e6df7846ff1e02e6ef7c0ef4a1e3af40847"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/v2.3",
-                "reference": "v2.3",
+                "url": "https://api.github.com/repos/dg/texy/zipball/11c34e6df7846ff1e02e6ef7c0ef4a1e3af40847",
+                "reference": "11c34e6df7846ff1e02e6ef7c0ef4a1e3af40847",
                 "shasum": ""
             },
             "require": {
@@ -323,16 +323,16 @@
     "packages-dev": [
         {
             "name": "nette/tester",
-            "version": "dev-master",
+            "version": "v0.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "v0.9.3"
+                "reference": "6729cd04e70761c51f77bdb46e2916220f18ee56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/v0.9.3",
-                "reference": "v0.9.3",
+                "url": "https://api.github.com/repos/nette/tester/zipball/6729cd04e70761c51f77bdb46e2916220f18ee56",
+                "reference": "6729cd04e70761c51f77bdb46e2916220f18ee56",
                 "shasum": ""
             },
             "require": {
@@ -380,8 +380,7 @@
     "stability-flags": {
         "nette/nette": 20,
         "knplabs/github-api": 20,
-        "jantvrdik/nette-doc-convertor": 20,
-        "nette/tester": 20
+        "jantvrdik/nette-doc-convertor": 20
     },
     "platform": {
         "php": ">= 5.4.0"

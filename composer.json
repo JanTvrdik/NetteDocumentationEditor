@@ -13,6 +13,6 @@
 		"jantvrdik/nette-doc-convertor": "@dev"
 	},
 	"require-dev": {
-		"nette/tester": "@dev"
+		"nette/tester": "~0.9"
 	}
 }
