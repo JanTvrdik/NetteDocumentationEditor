@@ -62,6 +62,17 @@ class PermissionDeniedException extends \RuntimeException
 
 
 /**
+ * Vyjímka vyhazovaná v případě, že ukládání stránky selže, protože došlo ke konfliktu, tj. verze ze které vycházíme
+ * již není aktuální.
+ */
+class PageSaveConflictException extends \RuntimeException
+{
+
+}
+
+
+
+/**
  * Výjimky vyhazovaná v případě, že se dojdek IO chybě.
  */
 class IOException extends \RuntimeException

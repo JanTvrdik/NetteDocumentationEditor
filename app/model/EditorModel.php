@@ -90,7 +90,7 @@ class EditorModel extends Nette\Object
 		try {
 			$file = $this->ghClient->api('repos')->contents()->show($this->repoOwner, $this->repoName, $path, $branch);
 
-		} catch (\Github\Exception\RuntimeException $e) {
+		} catch (Github\Exception\RuntimeException $e) {
 			if ($e->getCode() === 404) return NULL;
 			throw $e;
 		}
@@ -111,6 +111,7 @@ class EditorModel extends Nette\Object
 	 * @param  string  user access token with user:email permission
 	 * @return Github\HttpClient\Message\Response
 	 * @throws PermissionDeniedException
+	 * @throws PageSaveConflictException
 	 */
 	public function savePage(Page $page, $userAccessToken)
 	{
@@ -119,18 +120,25 @@ class EditorModel extends Nette\Object
 
 		$httpClient = $this->ghClient->getHttpClient();
 		$httpClient->authenticate($this->accessToken, NULL, Github\Client::AUTH_HTTP_TOKEN);
-		$response = $httpClient->put(
-			$this->getRepoPath() . '/contents/' . urlencode($page->path), [
-				'message' => $page->message,
-				'content' => base64_encode($page->content),
-				'sha' => $page->prevBlobHash,
-				'branch' => $page->branch,
-				'committer' => [
-					'name' => $user['login'],
-					'email' => $user['email'],
-				],
-			]
-		);
+
+		try {
+			$response = $httpClient->put(
+				$this->getRepoPath() . '/contents/' . urlencode($page->path), [
+					'message' => $page->message,
+					'content' => base64_encode($page->content),
+					'sha' => $page->prevBlobHash,
+					'branch' => $page->branch,
+					'committer' => [
+						'name' => $user['login'],
+						'email' => $user['email'],
+					],
+				]
+			);
+
+		} catch (Github\Exception\RuntimeException $e) {
+			if ($e->getCode() === 409) throw new PageSaveConflictException($e->getMessage(), NULL, $e);
+			throw $e;
+		}
 
 		return $response;
 	}

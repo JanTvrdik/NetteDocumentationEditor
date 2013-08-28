@@ -140,10 +140,15 @@ final class EditorPresenter extends UI\Presenter
 
 		try {
 			$response = $this->editorModel->savePage($page, $accessToken);
+
 		} catch (PermissionDeniedException $e) {
 			$ghParams = $this->context->parameters['github'];
 			$repo = $ghParams['repoOwner'] . '/' . $ghParams['repoName'];
 			$this['editor']->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
+			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+
+		} catch (PageSaveConflictException $e) {
+			$this['editor']->flashMessage('Unable to save page, because someone has changed it before you. Please reopen the page to get up to date content.', 'error');
 			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 		}
 
