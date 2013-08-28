@@ -36,9 +36,10 @@ module LiveTexyEditor
 
 		/**
 		 * @param name      panel name
+		 * @param updateWaitTime how long (in milliseconds) after last input change should the panel be updated?
 		 * @param outOfDate does panel content need to be updated?
 		 */
-		constructor(public name: string, public outOfDate: bool = false)
+		constructor(public name: string, public updateWaitTime: number, public outOfDate: bool = false)
 		{
 
 		}
@@ -232,9 +233,9 @@ module LiveTexyEditor
 		private initPanels()
 		{
 			this.panels = {
-				code: new Panel('code'),
-				preview: new Panel('preview', true),
-				diff: new Panel('diff', true)
+				code: new Panel('code', 0),
+				preview: new Panel('preview', 800, true),
+				diff: new Panel('diff', 200, true)
 			};
 		}
 
@@ -255,7 +256,7 @@ module LiveTexyEditor
 			clearTimeout(panel.timeoutId);
 			panel.timeoutId = setTimeout(() => {
 				this.updatePanel(panel);
-			}, 800);
+			}, panel.updateWaitTime);
 		}
 
 		private updatePanel(panel: Panel)

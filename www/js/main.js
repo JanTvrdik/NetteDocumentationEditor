@@ -5,11 +5,13 @@ var LiveTexyEditor;
     var Panel = (function () {
         /**
         * @param name      panel name
+        * @param updateWaitTime how long (in milliseconds) after last input change should the panel be updated?
         * @param outOfDate does panel content need to be updated?
         */
-        function Panel(name, outOfDate) {
+        function Panel(name, updateWaitTime, outOfDate) {
             if (typeof outOfDate === "undefined") { outOfDate = false; }
             this.name = name;
+            this.updateWaitTime = updateWaitTime;
             this.outOfDate = outOfDate;
             /** is panel visible? */
             this.visible = false;
@@ -199,9 +201,9 @@ else
 
         Model.prototype.initPanels = function () {
             this.panels = {
-                code: new Panel('code'),
-                preview: new Panel('preview', true),
-                diff: new Panel('diff', true)
+                code: new Panel('code', 0),
+                preview: new Panel('preview', 800, true),
+                diff: new Panel('diff', 200, true)
             };
         };
 
@@ -222,7 +224,7 @@ else
             clearTimeout(panel.timeoutId);
             panel.timeoutId = setTimeout(function () {
                 _this.updatePanel(panel);
-            }, 800);
+            }, panel.updateWaitTime);
         };
 
         Model.prototype.updatePanel = function (panel) {
