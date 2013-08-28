@@ -42,7 +42,9 @@ var LiveTexyEditor;
                         break;
 
                     case DIFF_EQUAL:
-                        if (i === 0) {
+                        if (diffs.length === 1) {
+                            text = '<em>No difference</em>';
+                        } else if (i === 0) {
                             text = this.reduceStringLeft(text, this.contextChars, this.contextLines);
                         } else if (i === diffs.length - 1) {
                             text = this.reduceStringRight(text, this.contextChars, this.contextLines);
