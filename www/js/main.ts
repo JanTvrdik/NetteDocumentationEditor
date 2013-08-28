@@ -277,8 +277,9 @@ module LiveTexyEditor
 				});
 
 			} else if (panel.name === 'diff') {
+				var input = this.Input.trim().replace(/[ \t]+\n/g, '\n') + '\n';
 				var dmp = new diff_match_patch();
-				var diffs = dmp.diff_main(this.OriginalContent, this.Input);
+				var diffs = dmp.diff_main(this.OriginalContent, input);
 				dmp.diff_cleanupSemantic(diffs);
 				panel.content = this.diffRenderer.render(diffs);
 				this.trigger(panel.name + ':change', {
