@@ -139,9 +139,11 @@
 			.content {
 				padding: 20px;
 
+				color: #000;
 				font-family: Consolas, monospace;
 				font-size: 13px;
 				line-height: normal;
+				.tab-size(4);
 
 				div {
 					box-sizing: border-box;
@@ -161,6 +163,16 @@
 				del {
 					background: #e99;
 					text-decoration: none;
+				}
+
+				.whitespace {
+					opacity: 0.2;
+
+					&.tab {
+						background-image: url('../images/tab-arrow.png');
+						background-position: top 0 right 1px;
+						background-repeat: no-repeat;
+					}
 				}
 			}
 		}

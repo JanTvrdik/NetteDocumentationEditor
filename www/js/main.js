@@ -32,11 +32,11 @@ var LiveTexyEditor;
                 var text = this.escapeHtml(data);
                 switch (op) {
                     case DIFF_INSERT:
-                        html[i] = '<ins>' + this.vizualizeNewLines(text) + '</ins>';
+                        html[i] = '<ins>' + this.visualizeWhitespaces(text) + '</ins>';
                         break;
 
                     case DIFF_DELETE:
-                        html[i] = '<del>' + this.vizualizeNewLines(text) + '</del>';
+                        html[i] = '<del>' + this.visualizeWhitespaces(text) + '</del>';
                         break;
 
                     case DIFF_EQUAL:
@@ -61,8 +61,10 @@ var LiveTexyEditor;
             return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         };
 
-        DiffRenderer.prototype.vizualizeNewLines = function (s) {
-            return s.replace(/\n/g, '&para;\n');
+        DiffRenderer.prototype.visualizeWhitespaces = function (s) {
+            s = s.replace(/\n/g, '<span class="whitespace para">&para;</span>\n');
+            s = s.replace(/\t/g, '<span class="whitespace tab">\t</span>');
+            return s;
         };
 
         DiffRenderer.prototype.reduceStringLeft = function (s, maxLen, maxLines) {

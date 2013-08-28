@@ -226,9 +226,13 @@ html.js .jshidden {
 }
 .live-texy-editor .main.diff .column.diff .content {
   padding: 20px;
+  color: #000;
   font-family: Consolas, monospace;
   font-size: 13px;
   line-height: normal;
+  -o-tab-size: 4;
+  -moz-tab-size: 4;
+  tab-size: 4;
 }
 .live-texy-editor .main.diff .column.diff .content div {
   box-sizing: border-box;
@@ -246,4 +250,12 @@ html.js .jshidden {
 .live-texy-editor .main.diff .column.diff .content del {
   background: #e99;
   text-decoration: none;
+}
+.live-texy-editor .main.diff .column.diff .content .whitespace {
+  opacity: 0.2;
+}
+.live-texy-editor .main.diff .column.diff .content .whitespace.tab {
+  background-image: url('../images/tab-arrow.png');
+  background-position: top 0 right 1px;
+  background-repeat: no-repeat;
 }

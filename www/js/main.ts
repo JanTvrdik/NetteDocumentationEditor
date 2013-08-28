@@ -60,11 +60,11 @@ module LiveTexyEditor
 				var text = this.escapeHtml(data);
 				switch (op) {
 					case DIFF_INSERT:
-						html[i] = '<ins>' + this.vizualizeNewLines(text) + '</ins>'; // &#x21B5;␊ + '</ins>';
+						html[i] = '<ins>' + this.visualizeWhitespaces(text) + '</ins>';
 						break;
 
 					case DIFF_DELETE:
-						html[i] = '<del>' + this.vizualizeNewLines(text) + '</del>'; // &#x21B5;␊ + '</del>';
+						html[i] = '<del>' + this.visualizeWhitespaces(text) + '</del>';
 						break;
 
 					case DIFF_EQUAL:
@@ -92,9 +92,11 @@ module LiveTexyEditor
 			return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 		}
 
-		private vizualizeNewLines(s)
+		private visualizeWhitespaces(s)
 		{
-			return s.replace(/\n/g, '&para;\n')
+			s = s.replace(/\n/g, '<span class="whitespace para">&para;</span>\n');
+			s = s.replace(/\t/g, '<span class="whitespace tab">\t</span>');
+			return s;
 		}
 
 		private reduceStringLeft(s, maxLen, maxLines)
