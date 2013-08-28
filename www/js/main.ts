@@ -112,7 +112,7 @@ module LiveTexyEditor
 
 			}
 			s = s.substr(pos + 2);
-			s = s.replace(/^\s+/, '');
+			s = s.replace(/^\n+/, '');
 			return s;
 		}
 
@@ -126,7 +126,7 @@ module LiveTexyEditor
 			}
 
 			s = s.substr(0, pos - 1);
-			s = s.replace(/\s+$/, '');
+			s = s.replace(/\n+$/, '');
 			return s;
 		}
 	}
