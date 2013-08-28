@@ -93,10 +93,10 @@ final class EditorPresenter extends UI\Presenter
 			return;
 		}
 
-		$this->redirect('this', array(
+		$this->redirect('this', [
 			'branch' => $branch,
 			'path' => $path,
-		));
+		]);
 	}
 
 	public function processEditorSave(SubmitButton $button)

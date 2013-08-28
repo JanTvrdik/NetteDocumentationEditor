@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<head>
-	<title>{#title}Nette Web Editor{/#}</title>
-	<link rel="stylesheet" href="{$basePath}/css/screen.css">
-	{#head}{/#}
-</head>
+<title>{#title}Nette Web Editor{/#}</title>
+<link rel="stylesheet" href="{$basePath}/css/screen.css">
+{#head}{/#}
 
 <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
-
 {include #content}
 
 {#scripts}
