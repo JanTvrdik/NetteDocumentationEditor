@@ -243,7 +243,6 @@ module LiveTexyEditor
 
 		private trigger(eventName: string, event?: Event)
 		{
-			console.log(eventName, event);
 			if (typeof event === 'undefined') event = {name: eventName};
 
 			if (eventName in this.handlers) {

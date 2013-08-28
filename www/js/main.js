@@ -209,7 +209,6 @@ else
         };
 
         Model.prototype.trigger = function (eventName, event) {
-            console.log(eventName, event);
             if (typeof event === 'undefined')
                 event = { name: eventName };
 
