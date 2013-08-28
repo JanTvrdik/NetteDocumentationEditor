@@ -121,6 +121,10 @@ class EditorModel extends Nette\Object
 		$httpClient = $this->ghClient->getHttpClient();
 		$httpClient->authenticate($this->accessToken, NULL, Github\Client::AUTH_HTTP_TOKEN);
 
+		// whitespace correction
+		$page->content = trim($page->content) . "\n";
+		$page->content = Strings::replace($page->content, '#\h+$#m', '');
+
 		try {
 			$response = $httpClient->put(
 				$this->getRepoPath() . '/contents/' . urlencode($page->path), [
