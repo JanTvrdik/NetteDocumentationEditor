@@ -50,7 +50,8 @@ final class EditorPresenter extends UI\Presenter
 		$page = $this->editorModel->loadPage($branch, $path);
 		if (!$page) $this->error();
 
-		$this['pageView']->page = $page;
+		$content = $this->context->pageRenderer->render($page);
+		$this->sendResponse(new Nette\Application\Responses\TextResponse($content));
 	}
 
 	/**
@@ -58,7 +59,7 @@ final class EditorPresenter extends UI\Presenter
 	 */
 	protected function createComponentEditor()
 	{
-		$control = new LiveTexyEditorControl();
+		$control = new LiveTexyEditorControl($this->context->pageRenderer);
 		$control['form-open']->onClick[] = $this->processEditorOpen;
 		$control['form-save']->onClick[] = $this->processEditorSave;
 
@@ -163,14 +164,6 @@ final class EditorPresenter extends UI\Presenter
 
 		$this['editor']->flashMessage($msg);
 		$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
-	}
-
-	/**
-	 * @return PageRendererControl
-	 */
-	protected function createComponentPageView()
-	{
-		return new PageRendererControl();
 	}
 
 }

@@ -2,43 +2,47 @@
 namespace App;
 
 use Nette;
-use Nette\Application\UI;
 use Nette\Utils\Strings;
 
 
-class PageRendererControl extends UI\Control
+class PageRenderer extends Nette\Object
 {
 
-	/** @var Page */
-	public $page;
+	/** @var Nette\Templating\FileTemplate */
+	private $template;
 
-	/** @var bool */
-	public $forceNewWindow = FALSE;
+	/** @var LinkFactory */
+	private $linkFactory;
 
-	public function render()
+	public function __construct(Nette\Templating\FileTemplate $template, LinkFactory $linkFactory)
 	{
-		$presenter = $this->presenter;
-		$convertor = new TextConvertor($this->page->book, $this->page->lang, $this->page->name);
-		$convertor->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($this->page->branch);
+		$this->template = $template;
+		$this->linkFactory = $linkFactory;
+	}
+
+	public function render(Page $page, $forceNewWindow = FALSE)
+	{
+		$convertor = new TextConvertor($page->book, $page->lang, $page->name);
+		$convertor->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
 		$convertor->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
-		$convertor->linkFactory = function (\Text\Link $link) use ($presenter) {
+		$convertor->linkFactory = function (\Text\Link $link) {
 			$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
-			return $presenter->link('Editor:view' . $fragment, [
+			return $this->linkFactory->link('Editor:view' . $fragment, [
 				'branch' => $this->getBranch($link->book),
 				'path' => $link->lang . '/' . $link->name . '.texy',
 			]);
 		};
 
-		$convertor->parse($this->page->content);
+		$convertor->parse($page->content);
 
-		if ($this->forceNewWindow) {
+		if ($forceNewWindow) {
 			$convertor->html = Strings::replace($convertor->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
 		}
 
 		$this->template->setFile(__DIR__ . '/PageRenderer.latte');
 		$this->template->htmlContent = $convertor->html;
 		$this->template->toc = $convertor->toc;
-		$this->template->render();
+		return (string) $this->template;
 	}
 
 	private function getApiVersion($branch)

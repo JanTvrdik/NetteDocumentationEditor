@@ -11,6 +11,15 @@ class LiveTexyEditorControl extends UI\Control
 	/** @var bool */
 	public $enableSave = TRUE;
 
+
+	/** @var PageRenderer */
+	private $pageRenderer;
+
+	public function __construct(PageRenderer $pageRenderer)
+	{
+		$this->pageRenderer = $pageRenderer;
+	}
+
 	public function render()
 	{
 		$this->template->setFile(__DIR__ . '/LiveTexyEditorControl.latte');
@@ -25,12 +34,7 @@ class LiveTexyEditorControl extends UI\Control
 		$page->path = $this->presenter->getParameter('path');
 		$page->content = $texyContent;
 
-		ob_start();
-		$preview = $this['preview'];
-		$preview->page = $page;
-		$preview->forceNewWindow = TRUE;
-		$preview->render();
-		$htmlContent = ob_get_clean();
+		$htmlContent = $this->pageRenderer->render($page, TRUE);
 
 		$this->presenter->payload->htmlContent = $htmlContent;
 		$this->presenter->sendPayload();
@@ -64,14 +68,6 @@ class LiveTexyEditorControl extends UI\Control
 		])->setDefaultValue('code preview');
 
 		return $form;
-	}
-
-	/**
-	 * @return PageRendererControl
-	 */
-	protected function createComponentPreview()
-	{
-		return new PageRendererControl();
 	}
 
 }
