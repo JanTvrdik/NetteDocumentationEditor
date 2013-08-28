@@ -18,6 +18,7 @@ services:
 	- App\EditorModel(..., %github.clientId%, %github.clientSecret%, %github.repoOwner%, %github.repoName%, %github.accessToken%)
 	- Github\Client
 
+	- App\LinkFactory
 	router: @App\RouterFactory::createRouter
 
 
