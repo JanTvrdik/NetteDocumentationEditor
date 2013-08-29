@@ -15,12 +15,12 @@ nette:
 
 services:
 	- App\RouterFactory
+	- App\LinkFactory
 	- App\EditorModel(..., %github.clientId%, %github.clientSecret%, %github.repoOwner%, %github.repoName%, %github.accessToken%)
 	- Github\Client
-	- App\LinkFactory
 
-	pageRenderer: App\PageRenderer(@nette.template)
 	router: @App\RouterFactory::createRouter
+	pageRenderer: App\PageRenderer(@nette.template)
 
 
 factories:

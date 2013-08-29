@@ -20,33 +20,30 @@ final class EditorPresenter extends UI\Presenter
 	public function renderDefault($branch, $path)
 	{
 		$editor = $this['editor'];
-		if ($branch && $path) {
-			$form = $editor['form'];
-			$page = $this->editorModel->loadPage($branch, $path);
+		$form = $editor['form'];
 
+		if ($branch && $path) {
+			$form->setDefaults([
+				'page' => $branch . ':' . $path,
+				'branch' => $branch,
+				'path' => $path,
+			]);
+
+			$page = $this->editorModel->loadPage($branch, $path);
 			if ($page) {
 				$editor->originalContent = $page->content;
 				$form->setDefaults([
-					'page' => "{$page->branch}:{$page->path}",
-					'branch' => $page->branch,
-					'path' => $page->path,
 					'prevBlobHash' => $page->prevBlobHash,
 					'texyContent' => $page->content,
-				]);
-
-			} else {
-				$form->setDefaults([
-					'page' => "{$branch}:{$path}",
-					'branch' => $branch,
-					'path' => $path,
 				]);
 			}
 
 		} else {
+			$page = NULL;
 			$editor->enableSave = FALSE;
 		}
 
-		$this->template->page = isset($page) ? $page : NULL;
+		$this->template->page = $page;
 	}
 
 	public function renderView($branch, $path)
