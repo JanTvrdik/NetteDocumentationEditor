@@ -352,17 +352,7 @@ else
             });
 
             this.textarea.on('scroll', function () {
-                var iframe = _this.preview.get(0);
-                var iframeWin = iframe.contentWindow;
-                var iframeBody = iframe.contentDocument.body;
-
-                var textareaMaximumScrollTop = _this.textarea.prop('scrollHeight') - _this.textarea.height();
-                var iframeMaximumScrollTop = iframeBody.scrollHeight - _this.preview.height();
-
-                var percent = _this.textarea.scrollTop() / textareaMaximumScrollTop;
-                var iframePos = iframeMaximumScrollTop * percent;
-
-                iframeWin.scrollTo(0, iframePos);
+                _this.syncIframeScrollPosition();
             });
 
             this.model.on('panel:show panel:hide', function (e) {
@@ -371,13 +361,11 @@ else
 
             this.model.on('preview:change', function () {
                 var iframe = _this.preview.get(0);
-                var iframeWin = iframe.contentWindow;
                 var iframeDoc = iframe.contentDocument;
-                var scrollY = iframeWin.pageYOffset;
                 iframeDoc.open('text/html', 'replace');
                 iframeDoc.write(_this.model.Preview);
                 iframeDoc.close();
-                iframeWin.scrollTo(0, scrollY);
+                _this.syncIframeScrollPosition();
             });
 
             this.model.on('diff:change', function () {
@@ -395,6 +383,20 @@ else
             if (this.preview.height() !== expectedPreviewHeight) {
                 this.preview.css('height', expectedPreviewHeight + 'px');
             }
+        };
+
+        EditorView.prototype.syncIframeScrollPosition = function () {
+            var iframe = this.preview.get(0);
+            var iframeWin = iframe.contentWindow;
+            var iframeBody = iframe.contentDocument.body;
+
+            var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
+            var iframeMaximumScrollTop = iframeBody.scrollHeight - this.preview.height();
+
+            var percent = this.textarea.scrollTop() / textareaMaximumScrollTop;
+            var iframePos = iframeMaximumScrollTop * percent;
+
+            iframeWin.scrollTo(0, iframePos);
         };
         return EditorView;
     })();

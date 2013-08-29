@@ -389,17 +389,7 @@ module LiveTexyEditor
 			});
 
 			this.textarea.on('scroll', () => {
-				var iframe = <HTMLIFrameElement> this.preview.get(0);
-				var iframeWin = iframe.contentWindow;
-				var iframeBody = iframe.contentDocument.body;
-
-				var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
-				var iframeMaximumScrollTop = iframeBody.scrollHeight - this.preview.height();
-
-				var percent = this.textarea.scrollTop() / textareaMaximumScrollTop;
-				var iframePos = iframeMaximumScrollTop * percent;
-
-				iframeWin.scrollTo(0, iframePos);
+				this.syncIframeScrollPosition();
 			});
 
 			this.model.on('panel:show panel:hide', (e: PanelEvent) => {
@@ -408,13 +398,11 @@ module LiveTexyEditor
 
 			this.model.on('preview:change', () => {
 				var iframe = <HTMLIFrameElement> this.preview.get(0);
-				var iframeWin = iframe.contentWindow;
 				var iframeDoc = iframe.contentDocument;
-				var scrollY = iframeWin.pageYOffset;
 				iframeDoc.open('text/html', 'replace');
 				iframeDoc.write(this.model.Preview);
 				iframeDoc.close();
-				iframeWin.scrollTo(0, scrollY);
+				this.syncIframeScrollPosition();
 			});
 
 			this.model.on('diff:change', () => {
@@ -433,6 +421,21 @@ module LiveTexyEditor
 			if (this.preview.height() !== expectedPreviewHeight) {
 				this.preview.css('height', expectedPreviewHeight + 'px');
 			}
+		}
+
+		private syncIframeScrollPosition()
+		{
+			var iframe = <HTMLIFrameElement> this.preview.get(0);
+			var iframeWin = iframe.contentWindow;
+			var iframeBody = iframe.contentDocument.body;
+
+			var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
+			var iframeMaximumScrollTop = iframeBody.scrollHeight - this.preview.height();
+
+			var percent = this.textarea.scrollTop() / textareaMaximumScrollTop;
+			var iframePos = iframeMaximumScrollTop * percent;
+
+			iframeWin.scrollTo(0, iframePos);
 		}
 	}
 
