@@ -6,8 +6,15 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zend\\Validator\\' => array($vendorDir . '/zendframework/zend-validator'),
+    'Zend\\Uri\\' => array($vendorDir . '/zendframework/zend-uri'),
+    'Zend\\Stdlib\\' => array($vendorDir . '/zendframework/zend-stdlib'),
+    'Zend\\Loader\\' => array($vendorDir . '/zendframework/zend-loader'),
+    'Zend\\Http\\' => array($vendorDir . '/zendframework/zend-http'),
+    'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper'),
     'WebLoader' => array($vendorDir . '/JanMarek/WebLoader'),
     'Github\\' => array($vendorDir . '/knplabs/github-api/lib'),
     'FSHL' => array($vendorDir . '/kukulich/fshl'),
+    'Closure' => array($vendorDir . '/neeckeloo/closure-compiler-php/src'),
     'Buzz' => array($vendorDir . '/kriswallsmith/buzz/lib'),
 );
