@@ -19,9 +19,9 @@ module LiveTexyEditor
 		timeoutId: number;
 
 		/**
-		 * @param name      panel name
+		 * @param name           panel name
 		 * @param updateWaitTime how long (in milliseconds) after last input change should the panel be updated?
-		 * @param outOfDate does panel content need to be updated?
+		 * @param outOfDate      does panel content need to be updated?
 		 */
 		constructor(public name: string, public updateWaitTime: number, public outOfDate: bool = false)
 		{
@@ -136,7 +136,7 @@ module LiveTexyEditor
 				var data = {};
 				data[this.controlId + '-texyContent'] = this.Input;
 
-				$.post(this.processUrl, data, (payload) => {
+				$.post(this.processUrl, data, (payload: {htmlContent: string}) => {
 					panel.content = payload.htmlContent;
 					this.trigger(panel.name + ':change', [{'panel': panel}]);
 				});
@@ -148,6 +148,9 @@ module LiveTexyEditor
 				dmp.diff_cleanupSemantic(diffs);
 				panel.content = this.diffRenderer.render(diffs);
 				this.trigger(panel.name + ':change', [{'panel': panel}]);
+
+			} else {
+				console.warn('Unable to update panel %s.', panel.name);
 			}
 		}
 	}

@@ -17,12 +17,12 @@ interface DiffMatchPatch
 	diff_main(text1: string, text2: string, opt_checklines?: bool, opt_deadline?: number): Diff[];
 	diff_commonPrefix(text1: string, text2: string): number;
 	diff_commonSuffix(text1: string, text2: string): number;
-	diff_cleanupSemantic(diffs: Diff[]);
-	diff_cleanupSemanticLossless(diffs: Diff[]);
-	diff_cleanupEfficiency(diffs: Diff[]);
-	diff_cleanupMerge(diffs: Diff[]);
+	diff_cleanupSemantic(diffs: Diff[]): void;
+	diff_cleanupSemanticLossless(diffs: Diff[]): void;
+	diff_cleanupEfficiency(diffs: Diff[]): void;
+	diff_cleanupMerge(diffs: Diff[]): void;
 	diff_xIndex(diffs: Diff[], loc: number): number;
-	diff_prettyHtml(diffs: Diff[]);
+	diff_prettyHtml(diffs: Diff[]): string;
 	diff_text1(diffs: Diff[]): string;
 	diff_text2(diffs: Diff[]): string;
 	diff_levenshtein(diffs: Diff[]): number;

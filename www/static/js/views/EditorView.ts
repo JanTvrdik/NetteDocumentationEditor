@@ -26,23 +26,23 @@ module LiveTexyEditor
 
 		private initEvents()
 		{
-			this.container.find('select[name=panels]').on('change', (e) => {
+			this.container.find('select[name=panels]').on('change', (e: JQueryEventObject) => {
 				var input = <HTMLInputElement> e.target;
 				this.model.VisiblePanels = input.value.split(' ');
 			});
 
-			this.container.find('input[name=message]').on('keydown', (e) => {
+			this.container.find('input[name=message]').on('keydown', (e: JQueryKeyEventObject) => {
 				if (e.keyCode !== 13 /* enter */ || e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
 				e.preventDefault();
 				this.container.find('input[name=save]').trigger('click');
 			});
 
-			this.container.find('.status button.close').on('click', (e) => {
+			this.container.find('.status button.close').on('click', (e: JQueryEventObject) => {
 				e.preventDefault();
 				$(e.target).closest('.status').remove();
 			});
 
-			this.textarea.on('keydown', (e) => {
+			this.textarea.on('keydown', (e: JQueryKeyEventObject) => {
 				if (e.keyCode !== 9 && e.keyCode !== 13) return; // ignore everything but tab and enter
 				if (e.ctrlKey || e.altKey || e.metaKey) return;
 
@@ -95,7 +95,7 @@ module LiveTexyEditor
 				textarea.scrollTop = top; // Firefox
 			});
 
-			this.textarea.on('keyup', (e) => {
+			this.textarea.on('keyup', (e: JQueryKeyEventObject) => {
 				var textarea = <HTMLTextAreaElement> e.target;
 				this.model.Input = textarea.value;
 			});
