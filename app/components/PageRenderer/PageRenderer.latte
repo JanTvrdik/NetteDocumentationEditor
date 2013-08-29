@@ -10,6 +10,7 @@
 
 <div id="page">
 	<div id="main" class="sidebar">
+		<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>
 		<div id="content">{!$htmlContent}</div>
 		{if $toc}
 			<aside id="sidebar">
