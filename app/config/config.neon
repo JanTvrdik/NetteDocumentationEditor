@@ -29,9 +29,6 @@ webloader:
 				- %wwwDir%/static/vendor/diff-match-patch/diff_match_patch.js
 				- %wwwDir%/static/js/main.js
 
-			filters:
-				- @jsMinifer
-
 
 services:
 	- App\RouterFactory
