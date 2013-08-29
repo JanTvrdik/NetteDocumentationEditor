@@ -16,6 +16,9 @@ nette:
 	session:
 		autoStart: no
 
+	security:
+		debugger: no
+
 
 webloader:
 	js:
