@@ -25,6 +25,7 @@ class PageRenderer extends Nette\Object
 		$convertor = new TextConvertor($page->book, $page->lang, $page->name);
 		$convertor->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
 		$convertor->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
+		$convertor->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}/files";
 		$convertor->linkFactory = function (\Text\Link $link) {
 			$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
 			return $this->linkFactory->link('Editor:view' . $fragment, [
