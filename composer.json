@@ -10,9 +10,16 @@
 		"php": ">= 5.4.0",
 		"nette/nette": "2.1.*@dev",
 		"knplabs/github-api": "@dev",
-		"jantvrdik/nette-doc-convertor": "@dev"
+		"jantvrdik/nette-doc-convertor": "@dev",
+		"janmarek/webloader": "dev-nette-master"
 	},
 	"require-dev": {
 		"nette/tester": "~0.9"
-	}
+	},
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/Mordred/WebLoader"
+		}
+	]
 }

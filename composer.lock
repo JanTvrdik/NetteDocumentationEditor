@@ -3,8 +3,62 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "df81d9a6d80c4086682d82436c9f2b56",
+    "hash": "1633efb34877572622be9eb62aea0d0c",
     "packages": [
+        {
+            "name": "JanMarek/WebLoader",
+            "version": "dev-nette-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Mordred/WebLoader.git",
+                "reference": "1f7340f5275ff585a9157563842732ce866277ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Mordred/WebLoader/zipball/1f7340f5275ff585a9157563842732ce866277ca",
+                "reference": "1f7340f5275ff585a9157563842732ce866277ca",
+                "shasum": ""
+            },
+            "require": {
+                "nette/nette": "~2.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.7.*",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "WebLoader": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Marek",
+                    "email": "mail@janmarek.net"
+                },
+                {
+                    "name": "Martin Jantošovič",
+                    "email": "martin.jantosovic@freya.sk"
+                }
+            ],
+            "description": "Tool for loading or deploying CSS and JS files into web pages",
+            "homepage": "http://addons.nette.org/cs/webloader",
+            "keywords": [
+                "assets",
+                "css",
+                "javascript",
+                "nette",
+                "webloader"
+            ],
+            "support": {
+                "source": "https://github.com/Mordred/WebLoader/tree/nette-master"
+            },
+            "time": "2013-08-08 07:32:17"
+        },
         {
             "name": "jantvrdik/nette-doc-convertor",
             "version": "dev-master",
@@ -198,12 +252,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "2855c33ff9f9b8496b5a29d7314022800eb23b6a"
+                "reference": "5aad1de5c5fe84ce58ac5fb7cafdbe3a4b4c198a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/2855c33ff9f9b8496b5a29d7314022800eb23b6a",
-                "reference": "2855c33ff9f9b8496b5a29d7314022800eb23b6a",
+                "url": "https://api.github.com/repos/nette/nette/zipball/5aad1de5c5fe84ce58ac5fb7cafdbe3a4b4c198a",
+                "reference": "5aad1de5c5fe84ce58ac5fb7cafdbe3a4b4c198a",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +318,7 @@
                 "neon",
                 "templating"
             ],
-            "time": "2013-08-28 17:29:27"
+            "time": "2013-08-29 12:44:52"
         },
         {
             "name": "texy/texy",
@@ -380,7 +434,8 @@
     "stability-flags": {
         "nette/nette": 20,
         "knplabs/github-api": 20,
-        "jantvrdik/nette-doc-convertor": 20
+        "jantvrdik/nette-doc-convertor": 20,
+        "janmarek/webloader": 20
     },
     "platform": {
         "php": ">= 5.4.0"

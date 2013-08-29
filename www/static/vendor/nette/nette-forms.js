@@ -38,7 +38,7 @@ Nette.getValue = function(elem) {
 		return null;
 
 	} else if (elem.nodeName.toLowerCase() === 'select') {
-		var index = elem.selectedIndex, options = elem.options;
+		var index = elem.selectedIndex, options = elem.options, values = [];
 
 		if (index < 0) {
 			return null;
@@ -47,7 +47,7 @@ Nette.getValue = function(elem) {
 			return options[index].value;
 		}
 
-		for (i = 0, values = [], len = options.length; i < len; i++) {
+		for (i = 0, len = options.length; i < len; i++) {
 			if (options[i].selected) {
 				values.push(options[i].value);
 			}
@@ -59,6 +59,9 @@ Nette.getValue = function(elem) {
 
 	} else if (elem.type === 'radio') {
 		return Nette.getValue(elem.form.elements[elem.name].nodeName ? [elem] : elem.form.elements[elem.name]);
+
+	} else if (elem.type === 'file') {
+		return elem.files || elem.value;
 
 	} else {
 		return elem.value.replace("\r", '').replace(/^\s+|\s+$/g, '');
@@ -95,7 +98,11 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
 				continue;
 			}
 			if (!onlyCheck) {
-				Nette.addError(el, rule.msg.replace('%value', Nette.getValue(el)));
+				var arr = Nette.isArray(rule.arg) ? rule.arg : [rule.arg];
+				var message = rule.msg.replace(/%(value|\d+)/g, function(foo, m) {
+					return Nette.getValue(m === 'value' ? el : elem.form.elements[arr[m].control]);
+				});
+				Nette.addError(el, message);
 			}
 			return false;
 		}
@@ -109,7 +116,7 @@ Nette.validateControl = function(elem, rules, onlyCheck) {
  */
 Nette.validateForm = function(sender) {
 	var form = sender.form || sender, scope = false;
-	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate') !== null) {
+	if (form['nette-submittedBy'] && form['nette-submittedBy'].getAttribute('formnovalidate')) {
 		var scopeArr = Nette.parseJSON(form['nette-submittedBy'].getAttribute('data-nette-validation-scope'));
 		if (scopeArr.length) {
 			scope = new RegExp('^(' + scopeArr.join('-|') + '-)');
@@ -120,9 +127,9 @@ Nette.validateForm = function(sender) {
 	for (var i = 0; i < form.elements.length; i++) {
 		var elem = form.elements[i];
 		if (!(elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) ||
-			(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
-			(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
-			elem.disabled || elem.readonly
+		(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
+		(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
+		elem.disabled || elem.readonly
 		) {
 			continue;
 		}
@@ -165,13 +172,23 @@ Nette.validateRule = function(elem, op, arg) {
 	op = op.replace('::', '_');
 	op = op.replace(/\\/g, '');
 
-	return Nette.validators[op] ? Nette.validators[op](elem, arg, val) : null;
+	var arr = Nette.isArray(arg) ? arg.slice(0) : [arg];
+	for (var i = 0, len = arr.length; i < len; i++) {
+		if (arr[i] && arr[i].control) {
+			arr[i] = Nette.getValue(elem.form.elements[arr[i].control]);
+		}
+	}
+	return Nette.validators[op] ? Nette.validators[op](elem, Nette.isArray(arg) ? arr : arr[0], val) : null;
 };
 
 
 Nette.validators = {
 	filled: function(elem, arg, val) {
 		return val !== '' && val !== false && val !== null;
+	},
+
+	blank: function(elem, arg, val) {
+		return !Nette.validators.filled(elem, arg, val);
 	},
 
 	valid: function(elem, arg, val) {
@@ -184,11 +201,15 @@ Nette.validators = {
 		}
 		arg = Nette.isArray(arg) ? arg : [arg];
 		for (var i = 0, len = arg.length; i < len; i++) {
-			if (val == (arg[i].control ? Nette.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
+			if (val == arg[i]) {
 				return true;
 			}
 		}
 		return false;
+	},
+
+	notEqual: function(elem, arg, val) {
+		return arg === undefined ? null : !Nette.validators.equal(elem, arg, val);
 	},
 
 	minLength: function(elem, arg, val) {
@@ -235,7 +256,7 @@ Nette.validators = {
 
 	range: function(elem, arg, val) {
 		return Nette.isArray(arg) ?
-			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+		((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
 	},
 
 	submitted: function(elem, arg, val) {
@@ -243,7 +264,14 @@ Nette.validators = {
 	},
 
 	fileSize: function(elem, arg, val) {
-		return window.FileList && elem.files[0] ? elem.files[0].size <= arg : true;
+		if (window.FileList) {
+			for (var i = 0; i < val.length; i++) {
+				if (val[i].size > arg) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 };
 
@@ -348,10 +376,10 @@ Nette.initForm = function(form) {
 
 	Nette.addEvent(form, 'submit', function(e) {
 		if (!Nette.validateForm(form)) {
-			e = e || event;
-			e.cancelBubble = true;
-			if (e.stopPropagation) {
+			if (e && e.stopPropagation) {
 				e.stopPropagation();
+			} else if (window.event) {
+				event.cancelBubble = true;
 			}
 			return false;
 		}
@@ -386,13 +414,13 @@ Nette.addEvent(window, 'load', function() {
  * Converts string to web safe characters [a-z0-9-] text.
  */
 Nette.webalize = function(s) {
-    s = s.toLowerCase();
-    var res = '', i, ch;
-    for (i = 0; i < s.length; i++) {
-    	ch = Nette.webalizeTable[s.charAt(i)];
-        res += ch ? ch : s.charAt(i);
-    }
-    return res.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+	s = s.toLowerCase();
+	var res = '', i, ch;
+	for (i = 0; i < s.length; i++) {
+		ch = Nette.webalizeTable[s.charAt(i)];
+		res += ch ? ch : s.charAt(i);
+	}
+	return res.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 };
 
 Nette.webalizeTable = {\u00e1: 'a', \u010d: 'c', \u010f: 'd', \u00e9: 'e', \u011b: 'e', \u00ed: 'i', \u0148: 'n', \u00f3: 'o', \u0159: 'r', \u0161: 's', \u0165: 't', \u00fa: 'u', \u016f: 'u', \u00fd: 'y', \u017e: 'z'};

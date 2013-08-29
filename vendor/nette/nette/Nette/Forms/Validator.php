@@ -27,14 +27,16 @@ class Validator extends Nette\Object
 	public static $messages = array(
 		Form::PROTECTION => 'Please submit this form again (security token has expired).',
 		Form::EQUAL => 'Please enter %s.',
-		Form::FILLED => 'Please complete mandatory field.',
-		Form::MIN_LENGTH => 'Please enter a value of at least %d characters.',
-		Form::MAX_LENGTH => 'Please enter a value no longer than %d characters.',
+		Form::NOT_EQUAL => 'This value should not be %s.',
+		Form::FILLED => 'This field is required.',
+		Form::BLANK => 'This field should be blank.',
+		Form::MIN_LENGTH => 'Please enter at least %d characters.',
+		Form::MAX_LENGTH => 'Please enter no more than %d characters.',
 		Form::LENGTH => 'Please enter a value between %d and %d characters long.',
 		Form::EMAIL => 'Please enter a valid email address.',
 		Form::URL => 'Please enter a valid URL.',
-		Form::INTEGER => 'Please enter a numeric value.',
-		Form::FLOAT => 'Please enter a numeric value.',
+		Form::INTEGER => 'Please enter a valid integer.',
+		Form::FLOAT => 'Please enter a valid number.',
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
@@ -48,8 +50,8 @@ class Validator extends Nette\Object
 		if ($message instanceof Nette\Utils\Html) {
 			return $message;
 
-		} elseif ($message === NULL && is_string($rule->operation) && isset(static::$messages[$rule->operation])) {
-			$message = static::$messages[$rule->operation];
+		} elseif ($message === NULL && is_string($rule->validator) && isset(static::$messages[$rule->validator])) {
+			$message = static::$messages[$rule->validator];
 
 		} elseif ($message == NULL) { // intentionally ==
 			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
@@ -97,6 +99,16 @@ class Validator extends Nette\Object
 
 
 	/**
+	 * Is control's value not equal with second parameter?
+	 * @return bool
+	 */
+	public static function validateNotEqual(IControl $control, $arg)
+	{
+		return !static::validateEqual($control, $arg);
+	}
+
+
+	/**
 	 * Is control filled?
 	 * @return bool
 	 */
@@ -107,12 +119,22 @@ class Validator extends Nette\Object
 
 
 	/**
+	 * Is control not filled?
+	 * @return bool
+	 */
+	public static function validateBlank(IControl $control)
+	{
+		return !$control->isFilled();
+	}
+
+
+	/**
 	 * Is control valid?
 	 * @return bool
 	 */
 	public static function validateValid(IControl $control)
 	{
-		return !$control->getRules()->validate();
+		return $control->getRules()->validate();
 	}
 
 

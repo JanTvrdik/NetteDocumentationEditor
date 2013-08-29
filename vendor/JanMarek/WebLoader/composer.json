@@ -1,0 +1,29 @@
+{
+	"name": "janmarek/webloader",
+	"description": "Tool for loading or deploying CSS and JS files into web pages",
+	"keywords": ["webloader", "css", "javascript", "assets", "nette"],
+	"homepage": "http://addons.nette.org/cs/webloader",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Jan Marek",
+			"email": "mail@janmarek.net"
+		},
+		{
+			"name": "Martin Jantošovič",
+			"email": "martin.jantosovic@freya.sk"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"WebLoader": ""
+		}
+	},
+	"require": {
+		"nette/nette": "~2.0"
+	},
+	"require-dev": {
+		"mockery/mockery": "0.7.*",
+		"phpunit/phpunit": "3.7.*"
+	}
+}
