@@ -95,6 +95,10 @@ class EditorModel extends Nette\Object
 			throw $e;
 		}
 
+		if (!isset($file['path'], $file['sha'], $file['content'])) {
+			return NULL;
+		}
+
 		$page = new Page();
 		$page->branch = $branch;
 		$page->path = $file['path'];
