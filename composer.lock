@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "12a74e9896cec2b06f2b009c4efb9c4d",
+    "hash": "df81d9a6d80c4086682d82436c9f2b56",
     "packages": [
         {
             "name": "jantvrdik/nette-doc-convertor",
