@@ -2,20 +2,9 @@
 
 module LiveTexyEditor
 {
-	export interface Event
-	{
-		/** event name */
-		name: string;
-	}
-
-	export interface PanelEvent extends Event
+	export interface PanelEvent
 	{
 		panel: Panel;
-	}
-
-	export interface EventCallback
-	{
-		(e: Event): void;
 	}
 
 	export class Panel
@@ -40,7 +29,7 @@ module LiveTexyEditor
 		}
 	}
 
-	export class Model
+	export class Model extends EventEmitter
 	{
 		/** original content in Texy! formatting */
 		public OriginalContent: string;
@@ -50,14 +39,9 @@ module LiveTexyEditor
 			[name: string]: Panel;
 		};
 
-		/** list of registered event handlers */
-		private handlers: {
-			[eventName: string]: EventCallback[];
-		};
-
 		constructor(private diffRenderer: DiffRenderer, private processUrl: string, private controlId: string)
 		{
-			this.handlers = {};
+			super();
 			this.initEvents();
 			this.initPanels();
 		}
@@ -114,20 +98,10 @@ module LiveTexyEditor
 
 				panel.visible = visibility;
 				var eventName = 'panel:' + (visibility ? 'show' : 'hide');
-				this.trigger(eventName, {
+				this.trigger(eventName, [{
 					'name': eventName,
 					'panel': panel
-				});
-			}
-		}
-
-		on(eventName: string, callback: EventCallback)
-		{
-			var events = eventName.split(' ');
-			for (var i = 0; i < events.length; i++) {
-				var event = events[i];
-				if (typeof this.handlers[event] === 'undefined') this.handlers[event] = [];
-				this.handlers[event].push(callback);
+				}]);
 			}
 		}
 
@@ -149,17 +123,6 @@ module LiveTexyEditor
 			};
 		}
 
-		private trigger(eventName: string, event?: Event)
-		{
-			if (typeof event === 'undefined') event = {name: eventName};
-
-			if (eventName in this.handlers) {
-				for (var i = 0; i < this.handlers[eventName].length; i++) {
-					this.handlers[eventName][i](event);
-				}
-			}
-		}
-
 		private scheduleForUpdate(panel: Panel)
 		{
 			clearTimeout(panel.timeoutId);
@@ -178,10 +141,10 @@ module LiveTexyEditor
 
 				$.post(this.processUrl, data, (payload) => {
 					panel.content = payload.htmlContent;
-					this.trigger(panel.name + ':change', {
+					this.trigger(panel.name + ':change', [{
 						'name': panel.name + ':change',
 						'panel': panel
-					});
+					}]);
 				});
 
 			} else if (panel.name === 'diff') {
@@ -190,10 +153,10 @@ module LiveTexyEditor
 				var diffs = dmp.diff_main(this.OriginalContent, input);
 				dmp.diff_cleanupSemantic(diffs);
 				panel.content = this.diffRenderer.render(diffs);
-				this.trigger(panel.name + ':change', {
+				this.trigger(panel.name + ':change', [{
 					'name': panel.name + ':change',
 					'panel': panel
-				});
+				}]);
 			}
 		}
 	}
