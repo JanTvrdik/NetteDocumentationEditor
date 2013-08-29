@@ -30,7 +30,7 @@ class PageRenderer extends Nette\Object
 			$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
 			return $this->linkFactory->link('Editor:view' . $fragment, [
 				'branch' => $this->getBranch($link->book),
-				'path' => $link->lang . '/' . Strings::webalize($link->name) . '.texy',
+				'path' => $link->lang . '/' . Strings::webalize($link->name, '/') . '.texy',
 			]);
 		};
 
