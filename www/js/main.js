@@ -286,6 +286,11 @@ else
                 _this.container.find('input[name=save]').trigger('click');
             });
 
+            this.container.find('.status button.close').on('click', function (e) {
+                e.preventDefault();
+                $(e.target).closest('.status').remove();
+            });
+
             this.textarea.on('keydown', function (e) {
                 if (e.keyCode !== 9 && e.keyCode !== 13)
                     return;

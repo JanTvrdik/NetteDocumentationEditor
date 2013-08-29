@@ -26,8 +26,8 @@
 				</div>
 			</div>
 
-			<div n:foreach="$form->allErrors as $error" class="status error">{$error}</div>
-			<div n:foreach="$flashes as $flash" class="status {$flash->type}">{$flash->message}</div>
+			<div n:foreach="$form->allErrors as $error" class="status error">{$error}<button class="close">×</button></div>
+			<div n:foreach="$flashes as $flash" class="status {$flash->type}">{$flash->message}<button class="close">×</button></div>
 		</div>
 
 		<div class="main">

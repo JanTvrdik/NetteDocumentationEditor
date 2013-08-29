@@ -325,6 +325,11 @@ module LiveTexyEditor
 				this.container.find('input[name=save]').trigger('click');
 			});
 
+			this.container.find('.status button.close').on('click', (e) => {
+				e.preventDefault();
+				$(e.target).closest('.status').remove();
+			});
+
 			this.textarea.on('keydown', (e) => {
 				if (e.keyCode !== 9 && e.keyCode !== 13) return; // ignore everything but tab and enter
 				if (e.ctrlKey || e.altKey || e.metaKey) return;

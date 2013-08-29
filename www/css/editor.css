@@ -95,6 +95,22 @@
 .live-texy-editor .header .status a {
   color: inherit;
 }
+.live-texy-editor .header .status button.close {
+  float: right;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1;
+  opacity: 0.5;
+}
+.live-texy-editor .header .status button.close:hover {
+  opacity: 0.8;
+}
 .live-texy-editor .header .status.info {
   background-color: #00A700;
 }
