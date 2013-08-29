@@ -1,6 +1,9 @@
 /app/config/config.local.neon
 /log/*
 /temp/*
+/www/css/*.css
+/www/js/main.js
+/www/js/main.map
 
 !.gitignore
 !.htaccess
