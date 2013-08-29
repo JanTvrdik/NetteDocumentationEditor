@@ -87,7 +87,7 @@ html.js .jshidden {
 }
 .live-texy-editor .header .controls input[type=text] {
   height: 18px;
-  margin: 5px 0;
+  margin: 5px 7px;
   padding: 3px 5px;
   border: none;
 }
@@ -95,6 +95,17 @@ html.js .jshidden {
   padding: 2px 0px;
   /* WebKit hot fix */
 
+}
+.live-texy-editor .header .controls input[name=page] {
+  width: 250px;
+}
+.live-texy-editor .header .controls input[name=message] {
+  -webkit-flex-grow: 1;
+  -moz-flex-grow: 1;
+  -ms-flex-grow: 1;
+  flex-grow: 1;
+  min-width: 250px;
+  max-width: 500px;
 }
 .live-texy-editor .header .controls select {
   height: 24px;
@@ -105,15 +116,27 @@ html.js .jshidden {
 }
 .live-texy-editor .header .controls input[type=submit] {
   width: 60px;
-  margin-right: 40px;
 }
 .live-texy-editor .header .controls .left {
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1 1 auto;
   -moz-flex: 1 1 auto;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: mulitple;
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 .live-texy-editor .header .controls .right {
   -webkit-box-flex: 0;
@@ -124,7 +147,40 @@ html.js .jshidden {
   flex: 0 0 auto;
 }
 .live-texy-editor .header .controls .nowrap {
-  white-space: nowrap;
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: -ms-flex;
+  display: flex;
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -moz-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
+}
+.live-texy-editor .header .controls .nowrap.grow {
+  -webkit-flex-grow: 1;
+  -moz-flex-grow: 1;
+  -ms-flex-grow: 1;
+  flex-grow: 1;
+}
+.live-texy-editor .header .controls .nowrap > * {
+  -webkit-box-flex: 0;
+  -moz-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -moz-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 .live-texy-editor .header .status {
   padding: 10px;

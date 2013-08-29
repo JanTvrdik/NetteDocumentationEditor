@@ -8,17 +8,16 @@
 		<div class="header">
 			<div class="controls">
 				<div class="left">
-					<span class="nowrap">
-						{label page}Page:{/label}&nbsp;
+					<div class="nowrap">
+						{label page}Page:{/label}
 						{input page, size => 40, placeholder => "doc.nette.org/en/components"}
 						{input open, value => "Open"}
-					</span>
-					&nbsp;
-					<span n:if="$enableSave" class="nowrap">
-						{label message}Commit message:{/label}&nbsp;
+					</div>
+					<div n:if="$enableSave" class="nowrap grow">
+						{label message}Commit message:{/label}
 						{input message, size => 40}
 						{input save, value => "Save"}
-					</span>
+					</div>
 				</div>
 				<div class="right">
 					{label panels}View:{/label}&nbsp;

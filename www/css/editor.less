@@ -39,13 +39,23 @@
 
 			input[type=text] {
 				height: 18px;
-				margin: 5px 0;
+				margin: 5px 7px;
 				padding: 3px 5px;
 				border: none;
 
 				&::-webkit-input-placeholder {
 					padding: 2px 0px; /* WebKit hot fix */
 				}
+			}
+
+			input[name=page] {
+				width: 250px;
+			}
+
+			input[name=message] {
+				.flex-grow(1);
+				min-width: 250px;
+				max-width: 500px;
 			}
 
 			select {
@@ -58,11 +68,12 @@
 
 			input[type=submit] {
 				width: 60px;
-				margin-right: 40px;
 			}
 
 			.left {
+				.display(flex);
 				.flex(1, 1, auto);
+				.flex-wrap(wrap);
 			}
 
 			.right {
@@ -70,7 +81,18 @@
 			}
 
 			.nowrap {
-				white-space: nowrap;
+				.display(flex);
+				.flex(0, 0, auto);
+				.align-items(center);
+				// margin-right: 40px;
+
+				&.grow {
+					.flex-grow(1);
+				}
+
+				> * {
+					.flex(0, 0, auto);
+				}
 			}
 		}
 
