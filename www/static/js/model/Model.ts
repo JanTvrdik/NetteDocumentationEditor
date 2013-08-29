@@ -98,10 +98,7 @@ module LiveTexyEditor
 
 				panel.visible = visibility;
 				var eventName = 'panel:' + (visibility ? 'show' : 'hide');
-				this.trigger(eventName, [{
-					'name': eventName,
-					'panel': panel
-				}]);
+				this.trigger(eventName, [{'panel': panel}]);
 			}
 		}
 
@@ -141,10 +138,7 @@ module LiveTexyEditor
 
 				$.post(this.processUrl, data, (payload) => {
 					panel.content = payload.htmlContent;
-					this.trigger(panel.name + ':change', [{
-						'name': panel.name + ':change',
-						'panel': panel
-					}]);
+					this.trigger(panel.name + ':change', [{'panel': panel}]);
 				});
 
 			} else if (panel.name === 'diff') {
@@ -153,10 +147,7 @@ module LiveTexyEditor
 				var diffs = dmp.diff_main(this.OriginalContent, input);
 				dmp.diff_cleanupSemantic(diffs);
 				panel.content = this.diffRenderer.render(diffs);
-				this.trigger(panel.name + ':change', [{
-					'name': panel.name + ':change',
-					'panel': panel
-				}]);
+				this.trigger(panel.name + ':change', [{'panel': panel}]);
 			}
 		}
 	}
