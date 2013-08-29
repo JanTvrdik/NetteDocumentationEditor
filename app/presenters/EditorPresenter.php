@@ -25,6 +25,19 @@ final class EditorPresenter extends UI\Presenter
 	 */
 	public $pageRenderer;
 
+	/**
+	 * @var string
+	 * @persistent
+	 */
+	public $branch;
+
+	/**
+	 * @var string
+	 * @persistent
+	 */
+	public $path;
+
+
 	public function renderDefault($branch, $path)
 	{
 		if ($branch && $path) {
@@ -85,10 +98,7 @@ final class EditorPresenter extends UI\Presenter
 			}
 		}
 
-		$this->redirect('this', [
-			'branch' => $branch,
-			'path' => $path,
-		]);
+		$this->redirect('this', ['branch' => $branch, 'path' => $path]);
 	}
 
 
@@ -132,7 +142,7 @@ final class EditorPresenter extends UI\Presenter
 		$accessToken = $this->editorModel->getAccessToken($code);
 		if ($accessToken === FALSE) {
 			$this->flashMessage('Failed to acquire user access token.', 'error');
-			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+			$this->redirect('default');
 		}
 
 		try {
@@ -142,11 +152,11 @@ final class EditorPresenter extends UI\Presenter
 			$ghParams = $this->context->parameters['github'];
 			$repo = $ghParams['repoOwner'] . '/' . $ghParams['repoName'];
 			$this->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
-			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+			$this->redirect('default');
 
 		} catch (PageSaveConflictException $e) {
 			$this->flashMessage('Unable to save page, because someone has changed it before you. Please reopen the page to get up to date content.', 'error');
-			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+			$this->redirect('default');
 		}
 
 		// build flash message
@@ -159,7 +169,7 @@ final class EditorPresenter extends UI\Presenter
 		$msg->add('.');
 
 		$this->flashMessage($msg);
-		$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+		$this->redirect('default');
 	}
 
 
