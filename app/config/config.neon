@@ -10,7 +10,7 @@ nette:
 		mapping:
 			*: App\*Module\*Presenter
 	session:
-		autoStart: true
+		autoStart: no
 
 
 services:
