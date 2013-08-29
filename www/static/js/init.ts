@@ -3,12 +3,11 @@
 module LiveTexyEditor
 {
 	declare var processUrl: string;
-	declare var controlId: string;
 
 	$(() => {
 		var container = $('.live-texy-editor');
 		var diffRenderer = new DiffRenderer(300, 4);
-		var model = new Model(diffRenderer, processUrl, controlId);
+		var model = new Model(diffRenderer, processUrl);
 		var view = new EditorView(container, model);
 
 		var backupAlert = localStorage.getItem('backupAlert');

@@ -3,6 +3,7 @@ namespace App;
 
 use Github;
 use Nette;
+use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
@@ -18,32 +19,36 @@ final class EditorPresenter extends UI\Presenter
 	 */
 	public $editorModel;
 
+	/**
+	 * @var PageRenderer
+	 * @inject
+	 */
+	public $pageRenderer;
+
 	public function renderDefault($branch, $path)
 	{
-		$editor = $this['editor'];
-		$form = $editor['form'];
-
 		if ($branch && $path) {
-			$form->setDefaults([
+			$this['form']->setDefaults([
 				'page' => $branch . ':' . $path,
 				'branch' => $branch,
 				'path' => $path,
 			]);
 
+			$enableSave = TRUE;
 			$page = $this->editorModel->loadPage($branch, $path);
 			if ($page) {
-				$editor->originalContent = $page->content;
-				$form->setDefaults([
+				$this['form']->setDefaults([
 					'prevBlobHash' => $page->prevBlobHash,
 					'texyContent' => $page->content,
 				]);
 			}
 
 		} else {
+			$enableSave = FALSE;
 			$page = NULL;
-			$editor->enableSave = FALSE;
 		}
 
+		$this->template->enableSave = $enableSave;
 		$this->template->page = $page;
 	}
 
@@ -52,21 +57,12 @@ final class EditorPresenter extends UI\Presenter
 		$page = $this->editorModel->loadPage($branch, $path);
 		if (!$page) $this->error();
 
-		$content = $this->context->pageRenderer->render($page);
-		$this->sendResponse(new Nette\Application\Responses\TextResponse($content));
+		$content = $this->pageRenderer->render($page);
+		$this->sendResponse(new TextResponse($content));
 	}
 
-	/**
-	 * @return LiveTexyEditorControl
-	 */
-	protected function createComponentEditor()
-	{
-		$control = new LiveTexyEditorControl($this->context->pageRenderer);
-		$control['form-open']->onClick[] = $this->processEditorOpen;
-		$control['form-save']->onClick[] = $this->processEditorSave;
 
-		return $control;
-	}
+// === Opening new page ================================================================================================
 
 	public function processEditorOpen(SubmitButton $button)
 	{
@@ -94,6 +90,9 @@ final class EditorPresenter extends UI\Presenter
 			'path' => $path,
 		]);
 	}
+
+
+// === Saving page =====================================================================================================
 
 	public function processEditorSave(SubmitButton $button)
 	{
@@ -125,14 +124,14 @@ final class EditorPresenter extends UI\Presenter
 
 		$session = $this->getSession(__CLASS__);
 		if (!isset($session->pages[$pageKey])) {
-			$this['editor']->flashMessage('Invalid page key.', 'error');
+			$this->flashMessage('Invalid page key.', 'error');
 			$this->redirect('default');
 		}
 
 		$page = $session->pages[$pageKey];
 		$accessToken = $this->editorModel->getAccessToken($code);
 		if ($accessToken === FALSE) {
-			$this['editor']->flashMessage('Failed to acquire user access token.', 'error');
+			$this->flashMessage('Failed to acquire user access token.', 'error');
 			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 		}
 
@@ -142,11 +141,11 @@ final class EditorPresenter extends UI\Presenter
 		} catch (PermissionDeniedException $e) {
 			$ghParams = $this->context->parameters['github'];
 			$repo = $ghParams['repoOwner'] . '/' . $ghParams['repoName'];
-			$this['editor']->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
+			$this->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
 			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 
 		} catch (PageSaveConflictException $e) {
-			$this['editor']->flashMessage('Unable to save page, because someone has changed it before you. Please reopen the page to get up to date content.', 'error');
+			$this->flashMessage('Unable to save page, because someone has changed it before you. Please reopen the page to get up to date content.', 'error');
 			$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
 		}
 
@@ -159,8 +158,58 @@ final class EditorPresenter extends UI\Presenter
 			->setTarget('_blank');
 		$msg->add('.');
 
-		$this['editor']->flashMessage($msg);
+		$this->flashMessage($msg);
 		$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+	}
+
+
+// === Preview ========================================================================================================
+
+	public function handleRenderPreview($branch, $path, $texyContent)
+	{
+		$page = new Page();
+		$page->branch = $branch;
+		$page->path = $path;
+		$page->content = $texyContent;
+
+		$htmlContent = $this->pageRenderer->render($page, TRUE);
+
+		$this->payload->htmlContent = $htmlContent;
+		$this->sendPayload();
+	}
+
+
+// === Component factories =============================================================================================
+
+	protected function createComponentForm()
+	{
+		$form = new UI\Form();
+
+		$form->addText('page')
+			->setRequired('Please specify which page to open.');
+		$form->addSubmit('open')
+			->setValidationScope([$form['page']])
+			->onClick[] = $this->processEditorOpen;
+
+		$form->addText('message')
+			->setRequired('Please fill commit message.');
+		$form->addTextArea('texyContent');
+		$form->addHidden('branch');
+		$form->addHidden('path');
+		$form->addHidden('prevBlobHash');
+		$form->addSubmit('save')
+			->setValidationScope([$form['message'], $form['texyContent']])
+			->onClick[] = $this->processEditorSave;
+
+		$form->addSelect('panels', NULL, [
+			'code' => 'code only',
+			'code preview' => 'code and preview',
+			'code diff' => 'code and diff',
+			'preview' => 'preview only',
+			'diff' => 'diff only',
+		])->setDefaultValue('code preview');
+
+		return $form;
 	}
 
 	protected function createComponentJs()

@@ -39,7 +39,7 @@ module LiveTexyEditor
 			[name: string]: Panel;
 		};
 
-		constructor(private diffRenderer: DiffRenderer, private processUrl: string, private controlId: string)
+		constructor(private diffRenderer: DiffRenderer, private processUrl: string)
 		{
 			super();
 			this.initEvents();
@@ -133,10 +133,7 @@ module LiveTexyEditor
 			panel.outOfDate = false;
 
 			if (panel.name === 'preview') {
-				var data = {};
-				data[this.controlId + '-texyContent'] = this.Input;
-
-				$.post(this.processUrl, data, (payload: {htmlContent: string}) => {
+				$.post(this.processUrl, {texyContent: this.Input}, (payload: {htmlContent: string}) => {
 					panel.content = payload.htmlContent;
 					this.trigger(panel.name + ':change', [{'panel': panel}]);
 				});
