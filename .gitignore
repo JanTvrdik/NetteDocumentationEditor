@@ -3,6 +3,7 @@
 /temp/*
 /www/static/css/*.css
 /www/static/js/main.js
+/www/webtemp/*
 
 !.gitignore
 !.htaccess

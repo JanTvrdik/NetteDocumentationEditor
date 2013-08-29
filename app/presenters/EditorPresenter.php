@@ -6,6 +6,7 @@ use Nette;
 use Nette\Application\UI;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
+use WebLoader;
 
 
 final class EditorPresenter extends UI\Presenter
@@ -160,6 +161,14 @@ final class EditorPresenter extends UI\Presenter
 
 		$this['editor']->flashMessage($msg);
 		$this->redirect('default', ['branch' => $page->branch, 'path' => $page->path]);
+	}
+
+	protected function createComponentJs()
+	{
+		return new WebLoader\Nette\JavaScriptLoader(
+			$this->context->getService('webloader.jsDefaultCompiler'),
+			$this->template->basePath . '/webtemp'
+		);
 	}
 
 }
