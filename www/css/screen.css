@@ -96,6 +96,23 @@ html.js .jshidden {
   /* WebKit hot fix */
 
 }
+.live-texy-editor .header .controls input[name=page] {
+  width: 250px;
+}
+.live-texy-editor .header .controls input[name=message] {
+  transition: width 200ms;
+  width: 250px;
+}
+@media all and (min-width: 1240px) {
+  .live-texy-editor .header .controls input[name=message]:focus {
+    width: 350px;
+  }
+}
+@media all and (min-width: 1400px) {
+  .live-texy-editor .header .controls input[name=message]:focus {
+    width: 500px;
+  }
+}
 .live-texy-editor .header .controls select {
   height: 24px;
   margin: 5px 0;

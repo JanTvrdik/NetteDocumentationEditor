@@ -48,6 +48,27 @@
 				}
 			}
 
+			input[name=page] {
+				width: 250px;
+			}
+
+			input[name=message] {
+				transition: width 200ms;
+				width: 250px;
+			}
+
+			@media all and (min-width: 1240px) {
+				input[name=message]:focus {
+					width: 350px;
+				}
+			}
+
+			@media all and (min-width: 1400px) {
+				input[name=message]:focus {
+					width: 500px;
+				}
+			}
+
 			select {
 				height: 24px;
 				margin: 5px 0;
