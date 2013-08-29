@@ -21,6 +21,10 @@ nette:
 
 
 webloader:
+	css:
+		default:
+			files:
+				- %wwwDir%/static/css/screen.css
 	js:
 		default:
 			files:

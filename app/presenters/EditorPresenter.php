@@ -222,6 +222,14 @@ final class EditorPresenter extends UI\Presenter
 		return $form;
 	}
 
+	protected function createComponentCss()
+	{
+		return new WebLoader\Nette\CssLoader(
+			$this->context->getService('webloader.cssDefaultCompiler'),
+			$this->template->basePath . '/webtemp'
+		);
+	}
+
 	protected function createComponentJs()
 	{
 		return new WebLoader\Nette\JavaScriptLoader(
