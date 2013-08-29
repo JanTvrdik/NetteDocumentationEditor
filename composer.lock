@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "1aeb1779e09cbb28d78e23323b8b306a",
+    "hash": "64b8e2630a77137db98a9d956e76f8aa",
     "packages": [
         {
             "name": "JanMarek/WebLoader",
@@ -245,6 +245,48 @@
                 "syntax"
             ],
             "time": "2012-09-08 19:00:07"
+        },
+        {
+            "name": "natxet/CssMin",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/natxet/CssMin.git",
+                "reference": "afdcdbdb5fc332313f47a79ae60346df3e69a572"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/natxet/CssMin/zipball/afdcdbdb5fc332313f47a79ae60346df3e69a572",
+                "reference": "afdcdbdb5fc332313f47a79ae60346df3e69a572",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Scylla",
+                    "email": "joe.scylla@gmail.com",
+                    "homepage": "https://profiles.google.com/joe.scylla"
+                }
+            ],
+            "description": "Minifying CSS",
+            "homepage": "http://code.google.com/p/cssmin/",
+            "keywords": [
+                "css",
+                "minify"
+            ],
+            "time": "2013-07-02 20:53:35"
         },
         {
             "name": "neeckeloo/closure-compiler-php",
@@ -750,7 +792,8 @@
         "knplabs/github-api": 20,
         "jantvrdik/nette-doc-convertor": 20,
         "janmarek/webloader": 20,
-        "neeckeloo/closure-compiler-php": 20
+        "neeckeloo/closure-compiler-php": 20,
+        "natxet/cssmin": 20
     },
     "platform": {
         "php": ">= 5.4.0"
