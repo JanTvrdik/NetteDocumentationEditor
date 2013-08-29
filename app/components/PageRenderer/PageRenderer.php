@@ -40,6 +40,7 @@ class PageRenderer extends Nette\Object
 		}
 
 		$this->template->setFile(__DIR__ . '/PageRenderer.latte');
+		$this->template->title = $convertor->title;
 		$this->template->htmlContent = $convertor->html;
 		$this->template->toc = $convertor->toc;
 		return (string) $this->template;
