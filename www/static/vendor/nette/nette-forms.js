@@ -127,9 +127,9 @@ Nette.validateForm = function(sender) {
 	for (var i = 0; i < form.elements.length; i++) {
 		var elem = form.elements[i];
 		if (!(elem.nodeName.toLowerCase() in {input: 1, select: 1, textarea: 1}) ||
-		(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
-		(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
-		elem.disabled || elem.readonly
+			(elem.type in {hidden: 1, submit: 1, image: 1, reset: 1}) ||
+			(scope && !elem.name.replace(/]\[|\[|]|$/g, '-').match(scope)) ||
+			elem.disabled || elem.readonly
 		) {
 			continue;
 		}
@@ -256,7 +256,7 @@ Nette.validators = {
 
 	range: function(elem, arg, val) {
 		return Nette.isArray(arg) ?
-		((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
+			((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
 	},
 
 	submitted: function(elem, arg, val) {

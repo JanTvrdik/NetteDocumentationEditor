@@ -61,8 +61,8 @@ final class EditorPresenter extends UI\Presenter
 			$page = NULL;
 		}
 
-		$this->template->enableSave = $enableSave;
 		$this->template->page = $page;
+		$this->template->enableSave = $enableSave;
 	}
 
 	public function renderView($branch, $path)

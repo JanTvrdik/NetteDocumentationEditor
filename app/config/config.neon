@@ -43,7 +43,7 @@ services:
 	router: @App\RouterFactory::createRouter
 	pageRenderer: App\PageRenderer(@nette.template)
 	cssMinifier: App\CssMinifier
-	jsMinifer: App\JavaScriptMinifier
+	jsMinifier: App\JavaScriptMinifier
 
 
 factories:
