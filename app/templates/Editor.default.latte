@@ -1,24 +1,20 @@
-{#title}{if $page}{$page->path} ({$page->branch}) – {/if}Nette Web Editor{/#}
+<title n:inner-block="title">{if $page}{$page->path} ({$page->branch}) – {/if}{include #parent}</title>
 
-{#content}
-	<script>
-		var processUrl = {link renderPreview!};
-	</script>
-
-	{form $form, style => "height: 100%"}
-	<div class="live-texy-editor">
+<div n:block="content" class="live-texy-editor">
+	<script>var processUrl = {link renderPreview!};</script>
+	{form $form}
 		<div class="header">
 			<div class="controls">
 				<div class="left">
 						<span class="nowrap">
 							{label page}Page:{/label}&nbsp;
-							{input page, size => 40, placeholder => "doc.nette.org/en/components"}
+							{input page, placeholder => "doc.nette.org/en/components"}
 							{input open, value => "Open"}
 						</span>
 						&nbsp;
 						<span n:if="$enableSave" class="nowrap">
 							{label message}Commit message:{/label}&nbsp;
-							{input message, size => 40}
+							{input message}
 							{input save, value => "Save"}
 						</span>
 				</div>
@@ -36,10 +32,7 @@
 			{var $originalContent = $page ? ($page->content !== $form[texyContent]->value ? $page->content : null) : ''}
 			<div class="column code">{input texyContent, autofocus => true, data-original => $originalContent}</div>
 			<div class="column preview"><iframe></iframe></div>
-			<div class="column diff">
-				<div class="content"></div>
-			</div>
+			<div class="column diff"><div class="content"></div></div>
 		</div>
-	</div>
 	{/form}
-{/#}
+</div>

@@ -6,12 +6,15 @@
 @nette-font: "Open Sans", Verdana, "Geneva CE", lucida, sans-serif;
 
 .live-texy-editor {
-	.display(flex);
-	.flex-direction(column);
-
 	height: 100%;
 	background-color: @nette-blue;
 	font-family: @nette-font;
+
+	form {
+		.display(flex);
+		.flex-direction(column);
+		height: 100%;
+	}
 
 	.header {
 		.flex(0, 0, auto);
