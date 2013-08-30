@@ -5,7 +5,7 @@
 		var processUrl = {link renderPreview!};
 	</script>
 
-	{form form, style => "height: 100%"}
+	{form $form, style => "height: 100%"}
 	<div class="live-texy-editor">
 		<div class="header">
 			<div class="controls">
@@ -33,7 +33,7 @@
 		</div>
 
 		<div class="main">
-			{var $originalContent = $page ? $page->content : ''}
+			{var $originalContent = $page ? ($page->content !== $form[texyContent]->value ? $page->content : null) : ''}
 			<div class="column code">{input texyContent, autofocus => true, data-original => $originalContent}</div>
 			<div class="column preview"><iframe></iframe></div>
 			<div class="column diff">

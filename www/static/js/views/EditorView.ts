@@ -124,7 +124,10 @@ module LiveTexyEditor
 
 		private initPanels()
 		{
-			this.model.OriginalContent = this.textarea.data('original');
+			var orig = this.textarea.data('original');
+			if (orig === undefined) orig = this.textarea.val();
+
+			this.model.OriginalContent = orig;
 			this.model.Input = this.textarea.val();
 			this.model.VisiblePanels = this.container.find('select[name=panels]').val().split(' ');
 
