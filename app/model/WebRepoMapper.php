@@ -72,6 +72,7 @@ class WebRepoMapper extends Nette\Object
 	public function webToUrl($book, $lang, $name)
 	{
 		$sub = ($book === 'www' ? '' : $book . '.');
+		$name = ($name === 'homepage' ? '' : $name);
 		return 'http://' . $sub . 'nette.org/' . $lang . '/' . $name;
 	}
 
