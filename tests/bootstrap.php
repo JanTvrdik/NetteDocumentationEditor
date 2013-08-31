@@ -7,7 +7,7 @@ if (!class_exists('Tester\Assert')) {
 	exit(1);
 }
 
-Tester\Helpers::setup();
+Tester\Environment::setup();
 
 function id($val)
 {
@@ -36,6 +36,7 @@ $configurator->createRobotLoader()
 	->addDirectory(__DIR__ . '/../app')
 	->register();
 
+$configurator->addParameters(['wwwDir' => __DIR__ . '/../www']);
 $configurator->addConfig(__DIR__ . '/../app/config/config.neon');
 $configurator->addConfig(__DIR__ . '/../app/config/config.local.neon');
 return $configurator->createContainer();
