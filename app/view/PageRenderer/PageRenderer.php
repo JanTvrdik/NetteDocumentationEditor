@@ -52,6 +52,7 @@ class PageRenderer extends Nette\Object
 			$this->template->themeIcon = $convertor->themeIcon;
 			$this->template->toc = $convertor->toc;
 			$this->template->htmlContent = $convertor->html;
+			$this->template->netteOrgLink = $this->webRepoMapper->webToUrl($book, $lang, $name);
 
 			if ($menu) {
 				$convertor->parse($menu->content);
@@ -66,6 +67,8 @@ class PageRenderer extends Nette\Object
 			$this->template->htmlContent = nl2br(htmlspecialchars($page->content), FALSE);
 		}
 
+		$this->template->ghLink = "https://github.com/nette/web-content/blob/{$page->branch}/{$page->path}";
+		$this->template->editLink = $this->linkFactory->link('Editor:default', ['branch' => $page->branch, 'path' => $page->path]);
 		$this->template->setFile(__DIR__ . '/PageRenderer.latte');
 		return (string) $this->template;
 	}

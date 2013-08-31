@@ -7,7 +7,14 @@
 
 	{if !isset($topMenu)}
 		#page { padding: 20px; }
+		#wikimenu { top: 0; right: 25px; }
+	{else}
+		#wikimenu { right: 5px; }
 	{/if}
+
+	#wikimenu > ul > li { border: none; }
+	#wikimenu a { margin-right: 3px; }
+	#wikimenu a:hover { background-color: transparent; }
 
 </style>
 
@@ -18,6 +25,17 @@
 			{!$topMenu}
 		</nav>
 	</header>
+	<div n:ifset="$topMenu" id="wikimenu">
+		<ul>
+			<li><a href="#">Wiki&nbsp;<span>▼</span></a>
+				<ul>
+					<li><a href="{$editLink}">Edit</a></li>
+					<li><a href="{$ghLink}">View on GitHub</a></li>
+					<li n:ifset="$netteOrgLink"><a href="{$netteOrgLink}">View on nette.org</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 	<div id="main" n:class="$toc ? sidebar">
 		<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>
 		<div id="content">{!$htmlContent}</div>
