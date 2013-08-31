@@ -14,37 +14,54 @@ class PageRenderer extends Nette\Object
 	/** @var LinkFactory */
 	private $linkFactory;
 
-	public function __construct(Nette\Templating\FileTemplate $template, LinkFactory $linkFactory)
+	/** @var WebRepoMapper */
+	private $webRepoMapper;
+
+	public function __construct(Nette\Templating\FileTemplate $template, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper)
 	{
 		$this->template = $template;
 		$this->linkFactory = $linkFactory;
+		$this->webRepoMapper = $webRepoMapper;
 	}
 
 	public function render(Page $page, $forceNewWindow = FALSE)
 	{
-		$convertor = new TextConvertor($page->book, $page->lang, $page->name);
-		$convertor->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
-		$convertor->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
-		$convertor->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}/files";
-		$convertor->linkFactory = function (\Text\Link $link) {
-			$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
-			return $this->linkFactory->link('Editor:view' . $fragment, [
-				'branch' => $this->getBranch($link->book),
-				'path' => $link->lang . '/' . Strings::webalize($link->name, '/') . '.texy',
-			]);
-		};
+		$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
+		if ($web) {
+			list($book, $lang, $name) = $web;
+			$convertor = new TextConvertor($book, $lang, $name);
+			$convertor->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
+			$convertor->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
+			$convertor->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}/files";
+			$convertor->linkFactory = function (\Text\Link $link) {
+				$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
+				list($branch, $path) = $this->webRepoMapper->webToRepo($link->book, $link->lang, Strings::webalize($link->name, '/'));
+				return $this->linkFactory->link('Editor:view' . $fragment, [
+					'branch' => $branch,
+					'path' => $path,
+				]);
+			};
 
-		$convertor->parse($page->content);
+			$convertor->parse($page->content);
 
-		if ($forceNewWindow) {
-			$convertor->html = Strings::replace($convertor->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
+			if ($forceNewWindow) {
+				$convertor->html = Strings::replace($convertor->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
+			}
+
+			$this->template->title = $convertor->title;
+			$this->template->themeIcon = $convertor->themeIcon;
+			$this->template->toc = $convertor->toc;
+			$this->template->htmlContent = $convertor->html;
+
+		} else {
+			// assume plain-text
+			$this->template->title = NULL;
+			$this->template->themeIcon = NULL;
+			$this->template->toc = NULL;
+			$this->template->htmlContent = nl2br(htmlspecialchars($page->content), FALSE);
 		}
 
 		$this->template->setFile(__DIR__ . '/PageRenderer.latte');
-		$this->template->title = $convertor->title;
-		$this->template->themeIcon = $convertor->themeIcon;
-		$this->template->htmlContent = $convertor->html;
-		$this->template->toc = $convertor->toc;
 		return (string) $this->template;
 	}
 
@@ -55,12 +72,6 @@ class PageRenderer extends Nette\Object
 		} else {
 			return '2.1'; // default
 		}
-	}
-
-	private function getBranch($book)
-	{
-		$aliases = ['doc' => 'doc-2.0', 'doc09' => 'doc-0.9'];
-		return isset($aliases[$book]) ? $aliases[$book] : $book;
 	}
 
 }

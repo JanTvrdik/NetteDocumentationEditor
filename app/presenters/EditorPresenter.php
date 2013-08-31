@@ -26,6 +26,12 @@ final class EditorPresenter extends UI\Presenter
 	public $pageRenderer;
 
 	/**
+	 * @var WebRepoMapper
+	 * @inject
+	 */
+	public $webRepoMapper;
+
+	/**
 	 * @var string
 	 * @persistent
 	 */
@@ -83,23 +89,13 @@ final class EditorPresenter extends UI\Presenter
 		// TODO: persist potentially unsaved page
 
 		$form = $button->form;
-		$page = $form['page']->value;
+		if ($id = $this->webRepoMapper->toRepo($form['page']->value)) {
+			list($branch, $path) = $id;
+			$this->redirect('this', ['branch' => $branch, 'path' => $path]);
 
-		// branch:path
-		if ($m = Strings::match($page, '#^([a-z0-9.-]+):([a-z][a-z0-9._/-]+)\z#')) {
-			list(, $branch, $path) = $m;
-
-		// page URL
 		} else {
-			try {
-				list($branch, $path) = $this->editorModel->urlToRepoPath($page);
-			} catch (InvalidArgumentException $e) {
-				$form->addError('Invalid page identifier.');
-				return;
-			}
+			$form->addError('Invalid page identifier.');
 		}
-
-		$this->redirect('this', ['branch' => $branch, 'path' => $path]);
 	}
 
 

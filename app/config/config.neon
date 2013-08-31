@@ -37,6 +37,7 @@ webloader:
 services:
 	- App\RouterFactory
 	- App\LinkFactory
+	- App\WebRepoMapper
 	- App\EditorModel(..., %github.clientId%, %github.clientSecret%, %github.repoOwner%, %github.repoName%, %github.accessToken%)
 	- Github\Client
 
