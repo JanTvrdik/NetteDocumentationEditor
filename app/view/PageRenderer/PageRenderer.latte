@@ -38,7 +38,7 @@
 	</div>
 	<div id="main" n:class="$toc ? sidebar">
 		<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>
-		<div id="content">{!$htmlContent}</div>
+		<div id="content" n:class="$theme ? $theme">{!$htmlContent}</div>
 		{if $toc}
 			<aside id="sidebar">
 				<div id="toc">

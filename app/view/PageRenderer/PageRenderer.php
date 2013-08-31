@@ -51,6 +51,7 @@ class PageRenderer extends Nette\Object
 			$this->template->title = $convertor->title;
 			$this->template->themeIcon = $convertor->themeIcon;
 			$this->template->toc = $convertor->toc;
+			$this->template->theme = $convertor->theme;
 			$this->template->htmlContent = $convertor->html;
 			$this->template->netteOrgLink = $this->webRepoMapper->webToUrl($book, $lang, $name);
 
@@ -65,6 +66,7 @@ class PageRenderer extends Nette\Object
 			$this->template->title = NULL;
 			$this->template->themeIcon = NULL;
 			$this->template->toc = NULL;
+			$this->template->theme = NULL;
 			$this->template->htmlContent = nl2br(htmlspecialchars($page->content), FALSE);
 		}
 
