@@ -57,6 +57,7 @@ class PageRenderer extends Nette\Object
 			if ($menu) {
 				$convertor->parse($menu->content);
 				$this->template->topMenu = $convertor->html;
+				$this->template->homepageLink = $this->linkFactory->link('Editor:view', ['branch' => 'www', 'path' => $lang . '/' . 'homepage.texy']);
 			}
 
 		} else {
