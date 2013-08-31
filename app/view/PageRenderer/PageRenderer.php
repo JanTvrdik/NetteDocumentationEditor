@@ -24,7 +24,7 @@ class PageRenderer extends Nette\Object
 		$this->webRepoMapper = $webRepoMapper;
 	}
 
-	public function render(Page $page, $forceNewWindow = FALSE)
+	public function render(Page $page, Page $menu = NULL, $forceNewWindow = FALSE)
 	{
 		$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
 		if ($web) {
@@ -52,6 +52,11 @@ class PageRenderer extends Nette\Object
 			$this->template->themeIcon = $convertor->themeIcon;
 			$this->template->toc = $convertor->toc;
 			$this->template->htmlContent = $convertor->html;
+
+			if ($menu) {
+				$convertor->parse($menu->content);
+				$this->template->topMenu = $convertor->html;
+			}
 
 		} else {
 			// assume plain-text

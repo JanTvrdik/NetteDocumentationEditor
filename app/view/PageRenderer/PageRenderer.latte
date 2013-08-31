@@ -4,10 +4,20 @@
 <link rel="stylesheet" href="http://files.nette.org/css/combined.css">
 <style>
 	body { background-image: none; }
-	#page { padding: 20px; }
+
+	{if !isset($topMenu)}
+		#page { padding: 20px; }
+	{/if}
+
 </style>
 
 <div id="page">
+	<header n:ifset="$topMenu" id="header">
+		<a id="logo" title="Homepage"><span>Homepage</span></a>
+		<nav id="menu">
+			{!$topMenu}
+		</nav>
+	</header>
 	<div id="main" n:class="$toc ? sidebar">
 		<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>
 		<div id="content">{!$htmlContent}</div>
