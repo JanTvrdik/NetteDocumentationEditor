@@ -98,7 +98,8 @@ final class EditorPresenter extends UI\Presenter
 		$form = $button->form;
 		if ($id = $this->webRepoMapper->toRepo($form['page']->value)) {
 			list($branch, $path) = $id;
-			$this->redirect('this', ['branch' => $branch, 'path' => $path]);
+			$fragment = str_replace(' ', '+', $form['panels']->value);
+			$this->redirect('this#' . $fragment, ['branch' => $branch, 'path' => $path]);
 
 		} else {
 			$form->addError('Invalid page identifier.');
