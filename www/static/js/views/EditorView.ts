@@ -28,7 +28,19 @@ module LiveTexyEditor
 		{
 			this.container.find('select[name=panels]').on('change', (e: JQueryEventObject) => {
 				var input = <HTMLInputElement> e.target;
-				this.model.VisiblePanels = input.value.split(' ');
+				var panels = input.value.split(' ');
+				window.location.hash = '#' + panels.join('+');
+				this.model.VisiblePanels = panels;
+			});
+
+			$(window).on('hashchange', () => {
+				var panels = location.hash.substr(1).split('+');
+				var value = panels.join(' ');
+				var select = this.container.find('select');
+				if (/^[a-z ]+$/.test(value) && select.find('option[value="' + value + '"]').length) {
+					select.val(value);
+					this.model.VisiblePanels = panels;
+				}
 			});
 
 			this.container.find('input[name=message]').on('keydown', (e: JQueryKeyEventObject) => {
@@ -138,7 +150,10 @@ module LiveTexyEditor
 
 			this.model.OriginalContent = orig;
 			this.model.Input = this.textarea.val();
-			this.model.VisiblePanels = this.container.find('select[name=panels]').val().split(' ');
+
+			// init visible panels
+			if (location.hash.length > 1) $(window).trigger('hashchange');
+			this.container.find('select[name=panels]').trigger('change');
 
 			// IE preview height hotfix
 			var expectedPreviewHeight = this.main.find('.right').innerHeight();
