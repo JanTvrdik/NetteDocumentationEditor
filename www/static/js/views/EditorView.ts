@@ -28,16 +28,16 @@ module LiveTexyEditor
 		{
 			this.container.find('select[name=panels]').on('change', (e: JQueryEventObject) => {
 				var input = <HTMLInputElement> e.target;
-				var panels = input.value.split(' ');
-				window.location.hash = '#' + panels.join('+');
+				var panels = input.value.split('+');
+				window.location.hash = '#' + input.value;
 				this.model.VisiblePanels = panels;
 			});
 
 			$(window).on('hashchange', () => {
-				var panels = location.hash.substr(1).split('+');
-				var value = panels.join(' ');
+				var value = location.hash.substr(1);
+				var panels = value.split('+');
 				var select = this.container.find('select');
-				if (/^[a-z ]+$/.test(value) && select.find('option[value="' + value + '"]').length) {
+				if (/^[a-z+]+$/.test(value) && select.find('option[value="' + value + '"]').length) {
 					select.val(value);
 					this.model.VisiblePanels = panels;
 				}

@@ -98,7 +98,7 @@ final class EditorPresenter extends UI\Presenter
 		$form = $button->form;
 		if ($id = $this->webRepoMapper->toRepo($form['page']->value)) {
 			list($branch, $path) = $id;
-			$fragment = str_replace(' ', '+', $form['panels']->value);
+			$fragment = $form['panels']->value;
 			$this->redirect('this#' . $fragment, ['branch' => $branch, 'path' => $path]);
 
 		} else {
@@ -218,11 +218,11 @@ final class EditorPresenter extends UI\Presenter
 
 		$form->addSelect('panels', NULL, [
 			'code' => 'code only',
-			'code preview' => 'code and preview',
-			'code diff' => 'code and diff',
+			'code+preview' => 'code and preview',
+			'code+diff' => 'code and diff',
 			'preview' => 'preview only',
 			'diff' => 'diff only',
-		])->setDefaultValue('code preview');
+		])->setDefaultValue('code+preview');
 
 		return $form;
 	}
