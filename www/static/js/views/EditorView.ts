@@ -57,6 +57,11 @@ module LiveTexyEditor
 
 			this.container.on('click', this.closeDropdown.bind(this));
 
+			this.container.find('.dropdown a.fullscreen').on('click', (e) => {
+				e.preventDefault();
+				screenfull.toggle(this.container.get(0));
+			});
+
 			this.container.find('.status button.close').on('click', (e: JQueryEventObject) => {
 				e.preventDefault();
 				$(e.target).closest('.status').remove();

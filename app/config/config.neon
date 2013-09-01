@@ -31,6 +31,7 @@ webloader:
 				- %wwwDir%/static/vendor/jquery/jquery.js
 				- %wwwDir%/static/vendor/nette/nette-forms.js
 				- %wwwDir%/static/vendor/diff-match-patch/diff_match_patch.js
+				- %wwwDir%/static/vendor/screenfull/screenfull.js
 				- %wwwDir%/static/js/main.js
 
 

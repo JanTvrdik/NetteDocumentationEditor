@@ -21,11 +21,12 @@
 				<div class="right">
 					{label panels}View:{/label}&nbsp;
 					{input panels}
-					<div class="dropdown" n:if="$page">
+					<div class="dropdown">
 						<button><img src="{$baseUrl}/static/images/menu.png"></button>
 						<ul>
 							<li n:if="$page"><a n:href="view">View page</a></li>
 							<li n:if="$ghLink"><a href="$ghLink">View on GitHub</a></li>
+							<li><a class="fullscreen" href="#">Fullscreen</a></li>
 							<!--<li><a href="#">Rename page</a></li>-->
 							<!--<li><a href="#">Delete page</a></li>-->
 						</ul>
