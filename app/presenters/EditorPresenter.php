@@ -198,12 +198,15 @@ final class EditorPresenter extends UI\Presenter
 
 	protected function createComponentForm()
 	{
+		$this->session->start();
+
 		$form = new UI\Form();
+		$form->addProtection();
 
 		$form->addText('page')
 			->setRequired('Please specify which page to open.');
 		$form->addSubmit('open')
-			->setValidationScope([$form['page']])
+			->setValidationScope([$form['page'], $form[UI\Form::PROTECTOR_ID]])
 			->onClick[] = $this->processEditorOpen;
 
 		$form->addText('message')
@@ -213,7 +216,7 @@ final class EditorPresenter extends UI\Presenter
 		$form->addHidden('path');
 		$form->addHidden('prevBlobHash');
 		$form->addSubmit('save')
-			->setValidationScope([$form['message'], $form['texyContent']])
+			->setValidationScope([$form['message'], $form['texyContent'], $form[UI\Form::PROTECTOR_ID]])
 			->onClick[] = $this->processEditorSave;
 
 		$form->addSelect('panels', NULL, [
