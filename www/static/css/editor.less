@@ -207,6 +207,7 @@
 			.display(flex);
 
 			textarea {
+				.display(flex); /* for Safari */
 				.flex(1, 1, auto);
 				.tab-size(4);
 				margin: 0;
@@ -224,6 +225,7 @@
 			.flex-grow(1.2); // makes horizontal scrollbar not visible at 1080p
 
 			iframe {
+				.display(flex); /* for Safari */
 				.flex(1, 1, auto);
 				border: none;
 			}
