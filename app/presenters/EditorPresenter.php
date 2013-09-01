@@ -69,6 +69,7 @@ final class EditorPresenter extends UI\Presenter
 
 		$this->template->page = $page;
 		$this->template->enableSave = $enableSave;
+		$this->template->ghLink = $page ? "https://github.com/nette/web-content/blob/{$page->branch}/{$page->path}" : NULL;
 		$this->template->form = $this['form'];
 	}
 

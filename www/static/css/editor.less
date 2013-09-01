@@ -27,7 +27,11 @@
 		.controls {
 			.display(flex);
 
-			padding: 5px;
+			padding: 5px 0;
+
+			label {
+				margin: 0 5px;
+			}
 
 			input, select {
 				line-height: 1.0;
@@ -69,7 +73,7 @@
 
 			select {
 				height: 24px;
-				margin: 5px 0;
+				margin: 5px;
 				padding: 3px;
 				border: none;
 				width: 150px;
@@ -86,6 +90,66 @@
 
 			.right {
 				.flex(0, 0, auto);
+
+				.dropdown {
+					display: inline-block;
+					position: relative;
+					vertical-align: middle;
+
+					button {
+						width: 24px;
+						height: 24px;
+						margin: 0 5px 0 -5px;
+						padding: 0;
+						border: none;
+						background: transparent;
+						cursor: pointer;
+
+						img {
+							opacity: 0.5;
+							&:hover {
+								opacity: 0.8;
+							}
+						}
+					}
+
+					ul {
+						display: none;
+						position: absolute;
+						top: 100%;
+						right: 0;
+						z-index: 100;
+
+						min-width: 160px;
+						margin: 0px 0px;
+						padding: 7px 0;
+
+						list-style-type: none;
+						background-color: darken(@nette-blue, 20%);
+
+						a {
+							display: block;
+							padding: 7px 20px;
+							white-space: nowrap;
+							color: white;
+							text-decoration: none;
+
+							&:hover {
+								background: darken(@nette-blue, 10%);
+							}
+						}
+					}
+
+					&.open {
+						button img {
+							opacity: 0.8;
+						}
+
+						ul {
+							display: block;
+						}
+					}
+				}
 			}
 
 			.nowrap {

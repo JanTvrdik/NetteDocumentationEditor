@@ -37,6 +37,14 @@ module LiveTexyEditor
 				this.container.find('input[name=save]').trigger('click');
 			});
 
+			this.container.find('.dropdown button').on('click', (e: JQueryEventObject) => {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				$(e.target).closest('.dropdown').toggleClass('open');
+			});
+
+			this.container.on('click', this.closeDropdown.bind(this));
+
 			this.container.find('.status button.close').on('click', (e: JQueryEventObject) => {
 				e.preventDefault();
 				$(e.target).closest('.status').remove();
@@ -113,6 +121,7 @@ module LiveTexyEditor
 				var iframeDoc = iframe.contentDocument;
 				iframeDoc.open('text/html', 'replace');
 				iframeDoc.write(this.model.Preview);
+				iframeDoc.addEventListener('click', this.closeDropdown.bind(this));
 				iframeDoc.close();
 				this.syncIframeScrollPosition();
 			});
@@ -151,6 +160,11 @@ module LiveTexyEditor
 			var iframePos = iframeMaximumScrollTop * percent;
 
 			iframeWin.scrollTo(0, iframePos);
+		}
+
+		private closeDropdown()
+		{
+			this.container.find('.dropdown.open').removeClass('open');
 		}
 	}
 }
