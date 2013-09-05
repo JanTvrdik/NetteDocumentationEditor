@@ -1,0 +1,7 @@
+parameters:
+	github:
+		clientId:
+		clientSecret:
+		accessToken:
+		repoOwner: nette
+		repoName: web-content
