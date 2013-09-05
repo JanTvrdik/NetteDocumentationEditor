@@ -91,8 +91,20 @@ class WebRepoMapper extends Nette\Object
 
 	public function toRepo($str)
 	{
-		if (Strings::match($str, '#^([\w.-]+):([\w/.-]+)$#')) {
-			return explode(':', $str);
+		$match = Strings::match($str, '#^
+			(?<branch>[\w.-]+)
+			:
+			(?<path>
+				[\w.-]+
+				(?: / [\w.-]+ )*
+			)
+		$#x');
+
+		if ($match) {
+			$branch = $match['branch'];
+			$path = $match['path'];
+			return [$branch, $path];
+
 		} else {
 			return $this->urlToRepo($str);
 		}
