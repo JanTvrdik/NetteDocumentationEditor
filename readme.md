@@ -1,18 +1,16 @@
-Editor for Nette Documentation
-==============================
+# Editor for Nette Documentation
 
 
-Usage
------
+## Usage
 
-**Opening a page**
+### Opening a page
 
 * Accepted page identifiers are
 	* Page URL on nette.org, e.g. `doc.nette.org/en/components`
 	* Branch and path in repository in format `<branch>:<path>`, e.g. `doc-2.0:cs/homepage.texy`
 * You can open non-existent page, it will be created when you save it for the first time.
 
-**Saving a page**
+### Saving a page
 
 * You need to open a page first to be able to save it.
 * You need to have a push permission to target repository, pull requests are not yet supported.
@@ -20,8 +18,7 @@ Usage
 creating commits. You can [revoke the permission](https://github.com/settings/applications) at any time.
 
 
-Installation
-------------
+## Installation
 
 1. Copy `app/config.local.example.neon` to `app/config.local.neon`.
 2. Create a new GitHub application at https://github.com/settings/applications.
@@ -31,28 +28,26 @@ Installation
 6. Set `repoOwner` and `repoName` in config.
 
 
-Required Tools
---------------
+## Required Tools
 
-**Composer**
+### Composer
 
 * The dependencies are intentionally part of the repository.
 * The dependencies should be updated with command<br>`composer.phar update --prefer-dist --optimize-autoloader`.
 
 
-**TypeScript**
+### TypeScript
 
 * Requires TypeScript compiler version 0.9.1 or newer.
 * Run watch script `./www/static/js/watch.sh`
 * or compile it manually with command<br>`tsc "www/static/js/init" --target ES5 --allowbool --out "www/static/js/main.js"`.
 
-**LESS**
+### LESS
 
 * Compile `www/static/css/screen.less` to `www/static/css/screen.css` using tool of your own choice.
 
 
-License
--------
+## License
 
 The MIT License (MIT)
 
