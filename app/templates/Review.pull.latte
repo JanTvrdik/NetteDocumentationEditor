@@ -1,0 +1,13 @@
+<div n:block="content" class="pr-review">
+
+	<h1><a href="{$pr[html_url]}">#{$pr[number]}</a> {$pr[title]}</h1>
+
+	<ul>
+		<li n:foreach="$files as $file">
+			{$file['status']|substr:0:1}
+			<a n:href="this#code+diff, path => $file[filename]">{$file['filename']}</a>
+			<small>(<a href="{$file[blob_url]}">View on GitHub</a>)</small>
+		</li>
+	</ul>
+
+</div>
