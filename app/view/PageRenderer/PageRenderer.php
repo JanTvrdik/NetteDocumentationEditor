@@ -35,11 +35,11 @@ class PageRenderer extends Nette\Object
 
 		if ($web) {
 			list($book, $lang, $name) = $web;
-			$convertor = new TextConvertor($book, $lang, $name);
-			$convertor->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
-			$convertor->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
-			$convertor->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}/files";
-			$convertor->linkFactory = function (\Text\Link $link) {
+			$converter = new TextConverter($book, $lang, $name);
+			$converter->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
+			$converter->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
+			$converter->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}/files";
+			$converter->linkFactory = function (\Text\Link $link) {
 				$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
 				list($branch, $path) = $this->webRepoMapper->webToRepo($link->book, $link->lang, Strings::webalize($link->name, '/'));
 				return $this->linkFactory->link('Editor:view' . $fragment, [
@@ -48,22 +48,22 @@ class PageRenderer extends Nette\Object
 				]);
 			};
 
-			$convertor->parse($page->content);
+			$converter->parse($page->content);
 
 			if ($forceNewWindow) {
-				$convertor->html = Strings::replace($convertor->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
+				$converter->html = Strings::replace($converter->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
 			}
 
-			$this->template->title = $convertor->title;
-			$this->template->themeIcon = $convertor->themeIcon;
-			$this->template->toc = $convertor->toc;
-			$this->template->theme = $convertor->theme;
-			$this->template->htmlContent = $convertor->html;
+			$this->template->title = $converter->title;
+			$this->template->themeIcon = $converter->themeIcon;
+			$this->template->toc = $converter->toc;
+			$this->template->theme = $converter->theme;
+			$this->template->htmlContent = $converter->html;
 			$this->template->netteOrgLink = $this->webRepoMapper->webToUrl($book, $lang, $name);
 
 			if ($menu) {
-				$convertor->parse($menu->content);
-				$this->template->topMenu = $convertor->html;
+				$converter->parse($menu->content);
+				$this->template->topMenu = $converter->html;
 				$this->template->homepageLink = $this->linkFactory->link('Editor:view', ['branch' => 'www', 'path' => $lang . '/' . 'homepage.texy']);
 			}
 
