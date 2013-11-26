@@ -7,10 +7,9 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
-use WebLoader;
 
 
-final class EditorPresenter extends UI\Presenter
+final class EditorPresenter extends BasePresenter
 {
 
 	/**
@@ -228,22 +227,6 @@ final class EditorPresenter extends UI\Presenter
 		])->setDefaultValue('code+preview');
 
 		return $form;
-	}
-
-	protected function createComponentCss()
-	{
-		return new WebLoader\Nette\CssLoader(
-			$this->context->getService('webloader.cssDefaultCompiler'),
-			$this->template->basePath . '/webtemp'
-		);
-	}
-
-	protected function createComponentJs()
-	{
-		return new WebLoader\Nette\JavaScriptLoader(
-			$this->context->getService('webloader.jsDefaultCompiler'),
-			$this->template->basePath . '/webtemp'
-		);
 	}
 
 }
