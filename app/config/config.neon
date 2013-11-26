@@ -40,7 +40,11 @@ services:
 	- App\LinkFactory
 	- App\WebRepoMapper
 	- App\EditorModel(..., %github.clientId%, %github.clientSecret%, %github.repoOwner%, %github.repoName%, %github.accessToken%)
-	- Github\Client
+
+	ghClient:
+		class: Github\Client
+		setup:
+			- authenticate(%github.clientId%, %github.clientSecret%, Github\Client::AUTH_URL_CLIENT_ID)
 
 	router: @App\RouterFactory::createRouter
 	pageRenderer: App\PageRenderer(@nette.template)
