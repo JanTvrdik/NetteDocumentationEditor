@@ -2,7 +2,7 @@
 /log/*
 /temp/*
 /www/static/css/*.css
-/www/static/js/main.js
+/www/static/js/*.js
 /www/webtemp/*
 
 !.gitignore
