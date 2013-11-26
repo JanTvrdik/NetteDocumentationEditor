@@ -26,7 +26,13 @@ class PageRenderer extends Nette\Object
 
 	public function render(Page $page, Page $menu = NULL, $forceNewWindow = FALSE)
 	{
-		$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
+		if ($page->branch === NULL && $page->path === NULL) {
+			$web = ['xxx', 'en', 'homepage'];
+
+		} else {
+			$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
+		}
+
 		if ($web) {
 			list($book, $lang, $name) = $web;
 			$convertor = new TextConvertor($book, $lang, $name);
