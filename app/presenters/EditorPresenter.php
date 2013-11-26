@@ -61,6 +61,10 @@ final class EditorPresenter extends BasePresenter
 				]);
 			}
 
+			if (!empty($this->request->post['texyContent']) && $this->signal === NULL) {
+				$this['form-texyContent']->setDefaultValue($this->request->post['texyContent']);
+			}
+
 		} else {
 			$enableSave = FALSE;
 			$page = NULL;
