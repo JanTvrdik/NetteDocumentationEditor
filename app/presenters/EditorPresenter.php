@@ -61,8 +61,11 @@ final class EditorPresenter extends BasePresenter
 				]);
 			}
 
-			if (!empty($this->request->post['texyContent']) && $this->signal === NULL) {
-				$this['form-texyContent']->setDefaultValue($this->request->post['texyContent']);
+			if ($this->signal === NULL) {
+				$post = $this->request->post;
+				if (!empty($post['texyContent']) && !empty($post['authorName']) && !empty($post['authorEmail'])) {
+					$this['form']->setDefaults($post);
+				}
 			}
 
 		} else {
@@ -123,6 +126,8 @@ final class EditorPresenter extends BasePresenter
 		$page->prevBlobHash = $values->prevBlobHash;
 		$page->message = $values->message;
 		$page->content = $values->texyContent;
+		$page->authorName = $values->authorName;
+		$page->authorEmail = $values->authorEmail;
 
 		$pageKey = Strings::random(10);
 		$this->getSession(__CLASS__)->pages[$pageKey] = $page;
@@ -215,6 +220,8 @@ final class EditorPresenter extends BasePresenter
 		$form->addText('message')
 			->setRequired('Please fill commit message.');
 		$form->addTextArea('texyContent');
+		$form->addHidden('authorName');
+		$form->addHidden('authorEmail');
 		$form->addHidden('branch');
 		$form->addHidden('path');
 		$form->addHidden('prevBlobHash');

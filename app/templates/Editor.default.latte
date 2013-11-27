@@ -15,7 +15,8 @@
 						<span n:if="$enableSave" class="nowrap">
 							{label message}Commit message:{/label}
 							{input message}
-							{input save, value => "Save"}
+							{var $authorName = $form['authorName']->value}
+							{input save, value => ('Save' . (!empty($authorName) ? ' as ' . $authorName : ''))}
 						</span>
 				</div>
 				<div class="right">
