@@ -21,9 +21,16 @@ final class ReviewPresenter extends BasePresenter
 
 	public function renderPull($issueId, $path)
 	{
-		$api = $this->ghClient->api('pull_requests');
-		$pr = $api->show('nette', 'web-content', $issueId);
-		$files = $api->files('nette', 'web-content', $issueId);
+		try {
+			$gh = $this->context->parameters['github'];
+			$api = $this->ghClient->api('pull_requests');
+			$pr = $api->show($gh['repoOwner'], $gh['repoName'], $issueId);
+			$files = $api->files($gh['repoOwner'], $gh['repoName'], $issueId);
+
+		} catch (Github\Exception\RuntimeException $e) {
+			if ($e->getCode() === 404) $this->error();
+			else throw $e;
+		}
 
 		if ($path !== NULL) {
 			foreach ($files as $file) {
