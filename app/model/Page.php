@@ -25,4 +25,10 @@ class Page extends Nette\Object
 	/** @var string short message describing the change; used as commit message */
 	public $message;
 
+	/** @var string */
+	public $authorName;
+
+	/** @var string */
+	public $authorEmail;
+
 }
