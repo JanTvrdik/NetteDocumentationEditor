@@ -140,6 +140,10 @@ class EditorModel extends Nette\Object
 						'name' => $user['login'],
 						'email' => $user['email'],
 					],
+					'author' => [
+						'name' => $page->authorName ?: $user['login'],
+						'email' => $page->authorEmail ?: $user['email'],
+					],
 				]
 			);
 
