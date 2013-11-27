@@ -21,7 +21,7 @@ class RouterFactory extends Nette\Object
 	{
 		$router = new RouteList();
 
-		$router[] = new Route('review/pull/<issueId>[/<path .+>]', [
+		$router[] = new Route('review/pull/<issueId \d+>[/<path .+>]', [
 			'presenter' => 'Review',
 			'action' => 'pull',
 		]);
