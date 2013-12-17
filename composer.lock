@@ -383,12 +383,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "9f4bb0c406214739b0f6b669f26692ac6c180aba"
+                "reference": "f14c4056f5d9813affff5d468499cd55270113bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/9f4bb0c406214739b0f6b669f26692ac6c180aba",
-                "reference": "9f4bb0c406214739b0f6b669f26692ac6c180aba",
+                "url": "https://api.github.com/repos/nette/nette/zipball/f14c4056f5d9813affff5d468499cd55270113bf",
+                "reference": "f14c4056f5d9813affff5d468499cd55270113bf",
                 "shasum": ""
             },
             "require": {
@@ -452,7 +452,7 @@
                 "neon",
                 "templating"
             ],
-            "time": "2013-12-16 21:50:44"
+            "time": "2013-12-17 00:32:22"
         },
         {
             "name": "symfony/event-dispatcher",
