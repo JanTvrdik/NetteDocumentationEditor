@@ -3,6 +3,8 @@ namespace App;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+class_alias('Nette\DI\CompilerExtension', 'Nette\Config\CompilerExtension');
+
 
 $configurator = new \Nette\Configurator();
 $configurator->enableDebugger(__DIR__ . '/../log');
