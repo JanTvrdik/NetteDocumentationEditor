@@ -2,6 +2,9 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+class_alias('Nette\DI\CompilerExtension', 'Nette\Config\CompilerExtension');
+
+
 if (!class_exists('Tester\Assert')) {
 	echo "Install Nette Tester using `composer update --dev`\n";
 	exit(1);
