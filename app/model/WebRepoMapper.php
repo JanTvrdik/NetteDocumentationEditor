@@ -8,10 +8,8 @@ use Nette\Utils\Strings;
 class WebRepoMapper extends Nette\Object
 {
 
-	private $branch2book = [
-		'doc-2.0' => 'doc',
-		'doc-0.9' => 'doc09',
-	];
+	/** @var string */
+	private $defaultDocBranch = 'doc-2.1';
 
 	/**
 	 * Converts page identification in repository to its web identification.
@@ -27,7 +25,13 @@ class WebRepoMapper extends Nette\Object
 		$m = Strings::match($path, '#^([a-z]{2})/([\w/.-]+)$#');
 		if (!$m) return FALSE;
 		list(, $lang, $name) = $m;
-		$book = $this->branchToBook($branch);
+
+		if ($m = Strings::match($branch, '#^doc-(\d+\.\d+)$#')) {
+			$book = 'doc';
+			$name = $m[1] . '/' . $name;
+		} else {
+			$book = $branch;
+		}
 		return [$book, $lang, $name];
 	}
 
@@ -41,7 +45,17 @@ class WebRepoMapper extends Nette\Object
 	 */
 	public function webToRepo($book, $lang, $name)
 	{
-		$branch = $this->bookToBranch($book);
+		if ($book === 'doc') {
+			if ($m = Strings::match($name, '#^(\d+\.\d+)(?:/|$)#')) {
+				$branch = 'doc-' . $m[1];
+				$name = substr($name, strlen($m[1]) + 1) ?: 'homepage';
+			} else {
+				$branch = $this->defaultDocBranch;
+			}
+		} else {
+			$branch = $book;
+		}
+
 		$path = $lang . '/' . $name . '.texy';
 		return [$branch, $path];
 	}
@@ -108,16 +122,6 @@ class WebRepoMapper extends Nette\Object
 		} else {
 			return $this->urlToRepo($str);
 		}
-	}
-
-	public function bookToBranch($book)
-	{
-		return array_search($book, $this->branch2book) ?: $book;
-	}
-
-	public function branchToBook($branch)
-	{
-		return (isset($this->branch2book[$branch]) ? $this->branch2book[$branch] : $branch);
 	}
 
 }
