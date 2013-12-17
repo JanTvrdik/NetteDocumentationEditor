@@ -105,23 +105,52 @@ class WebRepoMapper extends Nette\Object
 
 	public function toRepo($str)
 	{
-		$match = Strings::match($str, '#^
-			(?<branch>[\w.-]+)
-			:
-			(?<path>
-				[\w.-]+
-				(?: / [\w.-]+ )*
-			)
-		$#x');
+		$patterns = [
+			// doc-2.1:en/arrays.texy
+			'#^
+				(?<branch>[\w.-]+)
+				:
+				(?<path>
+					[\w.-]+
+					(?: / [\w.-]+ )*
+				)
+			$#x',
+			// https://github.com/nette/web-content/blob/doc-2.1/en/arrays.texy
+			'~^
+				(?:https?://)?
+				github.com/nette/web-content/blob/
+				(?<branch>[\w.-]+)
+				/
+				(?<path>
+					[\w.-]+
+					(?: / [\w.-]+ )*
+				)
+				(?: [#?].* )?
+			$~x',
+			// https://raw.github.com/nette/web-content/doc-2.1/readme.md
+			'~^
+				(?:https?://)?
+				raw.github.com/nette/web-content/
+				(?<branch>[\w.-]+)
+				/
+				(?<path>
+					[\w.-]+
+					(?: / [\w.-]+ )*
+				)
+				(?: [#?].* )?
+			$~x',
+		];
 
-		if ($match) {
-			$branch = $match['branch'];
-			$path = $match['path'];
-			return [$branch, $path];
-
-		} else {
-			return $this->urlToRepo($str);
+		foreach ($patterns as $pattern) {
+			$match = Strings::match($str, $pattern);
+			if ($match) {
+				$branch = $match['branch'];
+				$path = $match['path'];
+				return [$branch, $path];
+			}
 		}
+
+		return $this->urlToRepo($str);
 	}
 
 }
