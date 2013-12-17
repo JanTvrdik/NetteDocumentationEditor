@@ -601,219 +601,6 @@
         ]
     },
     {
-        "name": "symfony/event-dispatcher",
-        "version": "v2.4.0",
-        "version_normalized": "2.4.0.0",
-        "target-dir": "Symfony/Component/EventDispatcher",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/EventDispatcher.git",
-            "reference": "acd1707236f6eb96fbb8d58f63d289b72ebc2f6e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/acd1707236f6eb96fbb8d58f63d289b72ebc2f6e",
-            "reference": "acd1707236f6eb96fbb8d58f63d289b72ebc2f6e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "require-dev": {
-            "symfony/dependency-injection": "~2.0"
-        },
-        "suggest": {
-            "symfony/dependency-injection": "",
-            "symfony/http-kernel": ""
-        },
-        "time": "2013-12-03 14:52:22",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Symfony\\Component\\EventDispatcher\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "http://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony EventDispatcher Component",
-        "homepage": "http://symfony.com"
-    },
-    {
-        "name": "guzzle/guzzle",
-        "version": "v3.8.0",
-        "version_normalized": "3.8.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/guzzle/guzzle.git",
-            "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
-            "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "php": ">=5.3.3",
-            "symfony/event-dispatcher": ">=2.1"
-        },
-        "replace": {
-            "guzzle/batch": "self.version",
-            "guzzle/cache": "self.version",
-            "guzzle/common": "self.version",
-            "guzzle/http": "self.version",
-            "guzzle/inflection": "self.version",
-            "guzzle/iterator": "self.version",
-            "guzzle/log": "self.version",
-            "guzzle/parser": "self.version",
-            "guzzle/plugin": "self.version",
-            "guzzle/plugin-async": "self.version",
-            "guzzle/plugin-backoff": "self.version",
-            "guzzle/plugin-cache": "self.version",
-            "guzzle/plugin-cookie": "self.version",
-            "guzzle/plugin-curlauth": "self.version",
-            "guzzle/plugin-error-response": "self.version",
-            "guzzle/plugin-history": "self.version",
-            "guzzle/plugin-log": "self.version",
-            "guzzle/plugin-md5": "self.version",
-            "guzzle/plugin-mock": "self.version",
-            "guzzle/plugin-oauth": "self.version",
-            "guzzle/service": "self.version",
-            "guzzle/stream": "self.version"
-        },
-        "require-dev": {
-            "doctrine/cache": "*",
-            "monolog/monolog": "1.*",
-            "phpunit/phpunit": "3.7.*",
-            "psr/log": "1.0.*",
-            "symfony/class-loader": "*",
-            "zendframework/zend-cache": "2.0.*",
-            "zendframework/zend-log": "2.0.*"
-        },
-        "time": "2013-12-05 23:39:20",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Guzzle\\Tests": "tests/",
-                "Guzzle": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Michael Dowling",
-                "email": "mtdowling@gmail.com",
-                "homepage": "https://github.com/mtdowling"
-            },
-            {
-                "name": "Guzzle Community",
-                "homepage": "https://github.com/guzzle/guzzle/contributors"
-            }
-        ],
-        "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
-        "homepage": "http://guzzlephp.org/",
-        "keywords": [
-            "client",
-            "curl",
-            "framework",
-            "http",
-            "http client",
-            "rest",
-            "web service"
-        ]
-    },
-    {
-        "name": "knplabs/github-api",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/KnpLabs/php-github-api.git",
-            "reference": "acd9db400b76d9599df06c86785e64b798c8ccf1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/acd9db400b76d9599df06c86785e64b798c8ccf1",
-            "reference": "acd9db400b76d9599df06c86785e64b798c8ccf1",
-            "shasum": ""
-        },
-        "require": {
-            "ext-curl": "*",
-            "guzzle/guzzle": ">=3.7",
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": ">=3.6.0"
-        },
-        "suggest": {
-            "knplabs/gaufrette": "Needed for optional Gaufrette cache"
-        },
-        "time": "2013-12-09 12:21:59",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Github\\": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Thibault Duplessis",
-                "email": "thibault.duplessis@gmail.com",
-                "homepage": "http://ornicar.github.com"
-            },
-            {
-                "name": "KnpLabs Team",
-                "homepage": "http://knplabs.com"
-            }
-        ],
-        "description": "GitHub API v3 client",
-        "homepage": "https://github.com/KnpLabs/php-github-api",
-        "keywords": [
-            "api",
-            "gh",
-            "gist",
-            "github"
-        ]
-    },
-    {
         "name": "neeckeloo/closure-compiler-php",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -908,6 +695,116 @@
             "javascript",
             "nette",
             "webloader"
+        ]
+    },
+    {
+        "name": "kriswallsmith/buzz",
+        "version": "v0.10",
+        "version_normalized": "0.10.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kriswallsmith/Buzz.git",
+            "reference": "759432d66387e3433d3b06cb6f773b97225b9b17"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/759432d66387e3433d3b06cb6f773b97225b9b17",
+            "reference": "759432d66387e3433d3b06cb6f773b97225b9b17",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "suggest": {
+            "ext-curl": "*"
+        },
+        "time": "2013-05-19 03:41:15",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Buzz": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kris Wallsmith",
+                "email": "kris.wallsmith@gmail.com",
+                "homepage": "http://kriswallsmith.net/"
+            }
+        ],
+        "description": "Lightweight HTTP client",
+        "homepage": "https://github.com/kriswallsmith/Buzz",
+        "keywords": [
+            "curl",
+            "http client"
+        ]
+    },
+    {
+        "name": "knplabs/github-api",
+        "version": "1.1.5",
+        "version_normalized": "1.1.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/KnpLabs/php-github-api.git",
+            "reference": "c7401170bfc7473f095d148427fe0e7d88527442"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/c7401170bfc7473f095d148427fe0e7d88527442",
+            "reference": "c7401170bfc7473f095d148427fe0e7d88527442",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "kriswallsmith/buzz": ">=0.7",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": ">=3.6.0"
+        },
+        "time": "2013-10-22 15:36:13",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.2.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Github\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Thibault Duplessis",
+                "email": "thibault.duplessis@gmail.com",
+                "homepage": "http://ornicar.github.com"
+            },
+            {
+                "name": "KnpLabs Team",
+                "homepage": "http://knplabs.com"
+            }
+        ],
+        "description": "GitHub API v3 client",
+        "homepage": "https://github.com/KnpLabs/php-github-api",
+        "keywords": [
+            "api",
+            "gh",
+            "gist",
+            "github"
         ]
     }
 ]

@@ -8,7 +8,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getApiMock()
     {
-        $httpClient = $this->getMock('Guzzle\Http\Client', array('send'));
+        $httpClient = $this->getMock('Buzz\Client\ClientInterface', array('setTimeout', 'setVerifyPeer', 'send'));
+        $httpClient
+            ->expects($this->any())
+            ->method('setTimeout')
+            ->with(10);
+        $httpClient
+            ->expects($this->any())
+            ->method('setVerifyPeer')
+            ->with(false);
         $httpClient
             ->expects($this->any())
             ->method('send');
@@ -19,7 +27,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $client->setHttpClient($mock);
 
         return $this->getMockBuilder($this->getApiClass())
-            ->setMethods(array('get', 'post', 'postRaw', 'patch', 'delete', 'put'))
+            ->setMethods(array('get', 'post', 'patch', 'delete', 'put'))
             ->setConstructorArgs(array($client))
             ->getMock();
     }

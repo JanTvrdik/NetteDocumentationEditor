@@ -5,7 +5,7 @@ namespace Github\Tests\Functional;
 /**
  * @group functional
  */
-class UserTest extends TestCase
+class UsetTest extends TestCase
 {
     /**
      * @test
@@ -58,7 +58,7 @@ class UserTest extends TestCase
      */
     public function shouldGetFollowersUsers()
     {
-        $username = 'cursedcoder';
+        $username = 'KnpLabs';
 
         $users = $this->client->api('user')->followers($username);
         $user = array_pop($users);

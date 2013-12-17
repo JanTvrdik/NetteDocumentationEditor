@@ -2,15 +2,13 @@
 
 namespace Github\Tests\Mock;
 
-use Guzzle\Http\Message\Response;
-
-class TestResponse extends Response
+class TestResponse
 {
     protected $loopCount;
 
     protected $content;
 
-    public function __construct($loopCount, array $content = array())
+    public function __construct( $loopCount, array $content = array() )
     {
         $this->loopCount = $loopCount;
         $this->content   = $content;
@@ -19,21 +17,28 @@ class TestResponse extends Response
     /**
      * {@inheritDoc}
      */
-    public function getBody($asString = false)
+    public function getContent()
     {
-        return json_encode($this->content);
+        return $this->content;
     }
 
-    public function getHeader($header = null)
+    /**
+     * @return array|null
+     */
+    public function getPagination()
     {
         if ($this->loopCount) {
-            $header = sprintf('<https://api.github.com/%d>; rel="next"', $this->loopCount);
+            $returnArray = array(
+                'next' => 'http://github.com/' . $this->loopCount
+            );
         } else {
-            $header = '<https://api.github.com/prev>; rel="prev"';
+            $returnArray = array(
+                'prev' => 'http://github.com/prev'
+            );
         }
 
         $this->loopCount--;
 
-        return $header;
+        return $returnArray;
     }
 }

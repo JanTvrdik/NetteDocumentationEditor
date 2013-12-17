@@ -77,16 +77,6 @@ class CurrentUser extends AbstractApi
     }
 
     /**
-     * @link http://developer.github.com/v3/orgs/#list-user-organizations
-     *
-     * @return array
-     */
-    public function organizations()
-    {
-        return $this->get('user/orgs');
-    }
-
-    /**
      * @link http://developer.github.com/v3/repos/#list-your-repositories
      *
      * @return array

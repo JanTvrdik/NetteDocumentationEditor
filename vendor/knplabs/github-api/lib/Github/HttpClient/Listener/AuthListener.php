@@ -2,24 +2,44 @@
 
 namespace Github\HttpClient\Listener;
 
-use Guzzle\Common\Event;
 use Github\Client;
-use Github\Exception\RuntimeException;
+use Github\Exception\InvalidArgumentException;
 
-class AuthListener
+use Buzz\Listener\ListenerInterface;
+use Buzz\Message\MessageInterface;
+use Buzz\Message\RequestInterface;
+use Buzz\Util\Url;
+
+/**
+ * @author Joseph Bielawski <stloyd@gmail.com>
+ */
+class AuthListener implements ListenerInterface
 {
-    private $tokenOrLogin;
-    private $password;
+    /**
+     * @var string
+     */
     private $method;
+    /**
+     * @var array
+     */
+    private $options;
 
-    public function __construct($tokenOrLogin, $password = null, $method)
+    /**
+     * @param string $method
+     * @param array  $options
+     */
+    public function __construct($method, array $options)
     {
-        $this->tokenOrLogin = $tokenOrLogin;
-        $this->password = $password;
-        $this->method = $method;
+        $this->method  = $method;
+        $this->options = $options;
     }
 
-    public function onRequestBeforeSend(Event $event)
+    /**
+     * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
+     */
+    public function preSend(RequestInterface $request)
     {
         // Skip by default
         if (null === $this->method) {
@@ -28,41 +48,71 @@ class AuthListener
 
         switch ($this->method) {
             case Client::AUTH_HTTP_PASSWORD:
-                $event['request']->setHeader(
-                    'Authorization',
-                    sprintf('Basic %s', base64_encode($this->tokenOrLogin . ':' . $this->password))
-                );
+                if (!isset($this->options['tokenOrLogin'], $this->options['password'])) {
+                    throw new InvalidArgumentException('You need to set username with password!');
+                }
+
+                $request->addHeader('Authorization: Basic '. base64_encode($this->options['tokenOrLogin'] .':'. $this->options['password']));
                 break;
 
             case Client::AUTH_HTTP_TOKEN:
-                $event['request']->setHeader('Authorization', sprintf('token %s', $this->tokenOrLogin));
+                if (!isset($this->options['tokenOrLogin'])) {
+                    throw new InvalidArgumentException('You need to set OAuth token!');
+                }
+
+                $request->addHeader('Authorization: token '. $this->options['tokenOrLogin']);
                 break;
 
             case Client::AUTH_URL_CLIENT_ID:
-                $url = $event['request']->getUrl();
+                if (!isset($this->options['tokenOrLogin'], $this->options['password'])) {
+                    throw new InvalidArgumentException('You need to set client_id and client_secret!');
+                }
 
-                $parameters = array(
-                    'client_id'     => $this->tokenOrLogin,
-                    'client_secret' => $this->password,
+                $this->setRequestUrl(
+                    $request,
+                    array(
+                        'client_id'     => $this->options['tokenOrLogin'],
+                        'client_secret' => $this->options['password'],
+                    )
                 );
-
-                $url .= (false === strpos($url, '?') ? '?' : '&');
-                $url .= utf8_encode(http_build_query($parameters, '', '&'));
-
-                $event['request']->setUrl($url);
                 break;
 
             case Client::AUTH_URL_TOKEN:
-                $url = $event['request']->getUrl();
-                $url .= (false === strpos($url, '?') ? '?' : '&');
-                $url .= utf8_encode(http_build_query(array('access_token' => $this->tokenOrLogin), '', '&'));
+                if (!isset($this->options['tokenOrLogin'])) {
+                    throw new InvalidArgumentException('You need to set OAuth token!');
+                }
 
-                $event['request']->setUrl($url);
+                $this->setRequestUrl(
+                    $request,
+                    array(
+                        'access_token' => $this->options['tokenOrLogin'],
+                    )
+                );
                 break;
 
             default:
-                throw new RuntimeException(sprintf('%s not yet implemented', $this->method));
-                break;
+                throw new InvalidArgumentException(sprintf('Unknown method called "%s".', $this->method));
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function postSend(RequestInterface $request, MessageInterface $response)
+    {
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param array            $parameters
+     *
+     * @return Url
+     */
+    private function setRequestUrl(RequestInterface $request, array $parameters = array())
+    {
+        $url  = $request->getUrl();
+        $url .= (false === strpos($url, '?') ? '?' : '&').utf8_encode(http_build_query($parameters, '', '&'));
+
+        $request->fromUrl(new Url($url));
     }
 }

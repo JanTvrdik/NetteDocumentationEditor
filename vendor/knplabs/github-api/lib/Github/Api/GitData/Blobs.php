@@ -15,7 +15,7 @@ class Blobs extends AbstractApi
     {
         if ('raw' == $bodyType) {
             $this->client->setHeaders(array(
-                'Accept' => sprintf('application/vnd.github.%s.raw', $this->client->getOption('api_version'))
+                sprintf('Accept: application/vnd.github.%s.raw', $this->client->getOption('api_version'))
             ));
         }
     }

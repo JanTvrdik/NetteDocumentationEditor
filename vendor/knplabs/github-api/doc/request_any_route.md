@@ -5,9 +5,8 @@ The method you need does not exist yet? You can access any GitHub route by using
 For example:
 
 ```php
-$client   = new Github\Client();
-$response = $client->getHttpClient()->get('repos/KnpLabs/php-github-api');
-$repo     = Github\HttpClient\Message\ResponseMediator::getContent($response);
+$client = new Github\Client();
+$repo   = $client->getHttpClient()->get('repos/KnpLabs/php-github-api');
 ```
 
 Returns an array describing the "php-github-api" repository.

@@ -2,10 +2,9 @@
 
 namespace Github\HttpClient\Listener;
 
-use Github\HttpClient\Message\ResponseMediator;
-use Guzzle\Common\Event;
-use Guzzle\Http\Message\Response;
-
+use Buzz\Listener\ListenerInterface;
+use Buzz\Message\MessageInterface;
+use Buzz\Message\RequestInterface;
 use Github\Exception\ApiLimitExceedException;
 use Github\Exception\ErrorException;
 use Github\Exception\RuntimeException;
@@ -14,7 +13,7 @@ use Github\Exception\ValidationFailedException;
 /**
  * @author Joseph Bielawski <stloyd@gmail.com>
  */
-class ErrorListener
+class ErrorListener implements ListenerInterface
 {
     /**
      * @var array
@@ -32,20 +31,24 @@ class ErrorListener
     /**
      * {@inheritDoc}
      */
-    public function onRequestError(Event $event)
+    public function preSend(RequestInterface $request)
     {
-        /** @var $request \Guzzle\Http\Message\Request */
-        $request = $event['request'];
-        $response = $request->getResponse();
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function postSend(RequestInterface $request, MessageInterface $response)
+    {
+        /** @var $response \Github\HttpClient\Message\Response */
         if ($response->isClientError() || $response->isServerError()) {
-            $remaining = (string) $response->getHeader('X-RateLimit-Remaining');
+            $remaining = $response->getHeader('X-RateLimit-Remaining');
 
-            if (null != $remaining && 1 > $remaining && 'rate_limit' !== substr($request->getResource(), 1, 10)) {
+            if (null !== $remaining && 1 > $remaining && 'rate_limit' !== substr($request->getResource(), 1, 10)) {
                 throw new ApiLimitExceedException($this->options['api_limit']);
             }
 
-            $content = ResponseMediator::getContent($response);
+            $content = $response->getContent();
             if (is_array($content) && isset($content['message'])) {
                 if (400 == $response->getStatusCode()) {
                     throw new ErrorException($content['message'], 400);
@@ -81,6 +84,6 @@ class ErrorListener
             }
 
             throw new RuntimeException(isset($content['message']) ? $content['message'] : $content, $response->getStatusCode());
-        };
+        }
     }
 }

@@ -60,10 +60,10 @@ class ResultPagerTest extends \PHPUnit_Framework_TestCase
      */
     public function shouldGetSomeResults()
     {
-        $pagination     = array('next' => 'http://github.com/next');
-        $resultContent  = 'organization test';
+        $pagination    = array('next' => 'http://github.com/next');
+        $resultContent = 'organization test';
 
-        $responseMock = $this->getResponseMock('<http://github.com/next>; rel="next"');
+        $responseMock = $this->getResponseMock($pagination);
         $httpClient   = $this->getHttpClientMock($responseMock);
         $client       = $this->getClientMock($httpClient);
 
@@ -89,13 +89,6 @@ class ResultPagerTest extends \PHPUnit_Framework_TestCase
      */
     public function postFetch()
     {
-        $header = <<<TEXT
-<http://github.com>; rel="first",
-<http://github.com>; rel="next",
-<http://github.com>; rel="prev",
-<http://github.com>; rel="last",
-TEXT;
-
         $pagination = array(
             'first' => 'http://github.com',
             'next'  => 'http://github.com',
@@ -104,12 +97,11 @@ TEXT;
         );
 
         // response mock
-        $responseMock = $this->getMock('Guzzle\Http\Message\Response', array(), array(200));
+        $responseMock = $this->getMock('Github\HttpClient\Message\Response');
         $responseMock
             ->expects($this->any())
-            ->method('getHeader')
-            ->with('Link')
-            ->will($this->returnValue($header));
+            ->method('getPagination')
+            ->will($this->returnValue($pagination));
 
         $httpClient = $this->getHttpClientMock($responseMock);
         $client     = $this->getClientMock($httpClient);
@@ -127,20 +119,18 @@ TEXT;
      */
     public function fetchNext()
     {
-        $header        = '<http://github.com/next>; rel="next"';
         $pagination    = array('next' => 'http://github.com/next');
         $resultContent = 'fetch test';
 
-        $responseMock = $this->getResponseMock($header);
+        $responseMock = $this->getResponseMock($pagination);
         $responseMock
             ->expects($this->once())
-            ->method('getBody')
+            ->method('getContent')
             ->will($this->returnValue($resultContent));
         // Expected 2 times, 1 for setup and 1 for the actual test
         $responseMock
             ->expects($this->exactly(2))
-            ->method('getHeader')
-            ->with('Link');
+            ->method('getPagination');
 
         $httpClient = $this->getHttpClientMock($responseMock);
 
@@ -165,7 +155,7 @@ TEXT;
      */
     public function shouldHaveNext()
     {
-        $responseMock = $this->getResponseMock('<http://github.com/next>; rel="next"');
+        $responseMock = $this->getResponseMock(array('next'  => 'http://github.com/next'));
         $httpClient   = $this->getHttpClientMock($responseMock);
         $client       = $this->getClientMock($httpClient);
 
@@ -183,7 +173,7 @@ TEXT;
      */
     public function shouldHavePrevious()
     {
-        $responseMock = $this->getResponseMock('<http://github.com/previous>; rel="prev"');
+        $responseMock = $this->getResponseMock(array('prev'  => 'http://github.com/previous'));
         $httpClient   = $this->getHttpClientMock($responseMock);
         $client       = $this->getClientMock($httpClient);
 
@@ -194,15 +184,14 @@ TEXT;
         $this->assertEquals($paginator->hasNext(), false);
     }
 
-    protected function getResponseMock($header)
+    protected function getResponseMock(array $pagination)
     {
         // response mock
-        $responseMock = $this->getMock('Guzzle\Http\Message\Response', array(), array(200));
+        $responseMock = $this->getMock('Github\HttpClient\Message\Response');
         $responseMock
             ->expects($this->any())
-            ->method('getHeader')
-            ->with('Link')
-            ->will($this->returnValue($header));
+            ->method('getPagination')
+            ->will($this->returnValue($pagination));
 
         return $responseMock;
     }
@@ -223,7 +212,15 @@ TEXT;
     protected function getHttpClientMock($responseMock = null)
     {
         // mock the client interface
-        $clientInterfaceMock = $this->getMock('Guzzle\Http\Client', array('send'));
+        $clientInterfaceMock = $this->getMock('Buzz\Client\ClientInterface', array('setTimeout', 'setVerifyPeer', 'send'));
+        $clientInterfaceMock
+            ->expects($this->any())
+            ->method('setTimeout')
+            ->with(10);
+        $clientInterfaceMock
+            ->expects($this->any())
+            ->method('setVerifyPeer')
+            ->with(false);
         $clientInterfaceMock
             ->expects($this->any())
             ->method('send');

@@ -2,7 +2,7 @@
 
 namespace Github\HttpClient\Cache;
 
-use Guzzle\Http\Message\Response;
+use Github\HttpClient\Message\Response;
 
 /**
  * Caches github api responses

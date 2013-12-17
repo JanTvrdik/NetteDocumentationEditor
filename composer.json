@@ -9,7 +9,7 @@
 	"require": {
 		"php": ">= 5.4.0",
 		"nette/nette": "2.2.*@dev",
-		"knplabs/github-api": "@dev",
+		"knplabs/github-api": "1.1.*@dev",
 		"jantvrdik/nette-doc-convertor": "@dev",
 		"janmarek/webloader": "@dev",
 		"neeckeloo/closure-compiler-php": "@dev",

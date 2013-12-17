@@ -15,9 +15,7 @@ $asset = $client->api('repo')->releases()->assets()->show('twbs', 'bootstrap', $
 
 ### Create an asset
 
-```php
-$asset = $client->api('repo')->releases()->assets()->show('twbs', 'bootstrap', $releaseId, $name, $contentType, $content);
-```
+This feature is not implemented because require usage of `uploads.github.com` subdomain.
 
 ### Edit an asset
 

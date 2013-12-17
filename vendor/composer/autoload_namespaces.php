@@ -13,10 +13,8 @@ return array(
     'Zend\\Http\\' => array($vendorDir . '/zendframework/zend-http'),
     'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper'),
     'WebLoader' => array($vendorDir . '/janmarek/webloader'),
-    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
-    'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
-    'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
     'Github\\' => array($vendorDir . '/knplabs/github-api/lib'),
     'FSHL' => array($vendorDir . '/kukulich/fshl'),
     'Closure' => array($vendorDir . '/neeckeloo/closure-compiler-php/src'),
+    'Buzz' => array($vendorDir . '/kriswallsmith/buzz/lib'),
 );

@@ -3,7 +3,7 @@
 namespace Github;
 
 use Github\Api\ApiInterface;
-use Github\HttpClient\Message\ResponseMediator;
+use Github\HttpClient\HttpClient;
 
 /**
  * Pager class for supporting pagination in github classes
@@ -14,7 +14,7 @@ use Github\HttpClient\Message\ResponseMediator;
 class ResultPager implements ResultPagerInterface
 {
     /**
-     * @var \Github\Client client
+     * @var Github\Client client
      */
     protected $client;
 
@@ -89,7 +89,7 @@ class ResultPager implements ResultPagerInterface
      */
     public function postFetch()
     {
-        $this->pagination = ResponseMediator::getPagination($this->client->getHttpClient()->getLastResponse());
+        $this->pagination = $this->client->getHttpClient()->getLastResponse()->getPagination();
     }
 
     /**
@@ -157,7 +157,7 @@ class ResultPager implements ResultPagerInterface
             $result = $this->client->getHttpClient()->get($this->pagination[$key]);
             $this->postFetch();
 
-            return ResponseMediator::getContent($result);
+            return $result->getContent();
         }
     }
 }
