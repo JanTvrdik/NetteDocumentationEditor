@@ -135,9 +135,9 @@ class PhpWriter extends Nette\Object
 	 * Formats macro arguments to PHP array. (It advances tokenizer to the end as a side effect.)
 	 * @return string
 	 */
-	public function formatArray()
+	public function formatArray(MacroTokens $tokens = NULL)
 	{
-		$tokens = $this->preprocess();
+		$tokens = $this->preprocess($tokens);
 		$tokens = $this->expandFilter($tokens);
 		$tokens = $this->quoteFilter($tokens);
 		return $tokens->joinAll();
@@ -188,7 +188,7 @@ class PhpWriter extends Nette\Object
 
 
 	/**
-	 * Simplified ternary expressions withnout third part.
+	 * Simplified ternary expressions without third part.
 	 * @return MacroTokens
 	 */
 	public function shortTernaryFilter(MacroTokens $tokens)
@@ -245,6 +245,7 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Pseudocast (expand).
+	 * @return MacroTokens
 	 */
 	public function expandFilter(MacroTokens $tokens)
 	{
@@ -278,8 +279,8 @@ class PhpWriter extends Nette\Object
 		$res = new MacroTokens;
 		while ($tokens->nextToken()) {
 			$res->append($tokens->isCurrent(MacroTokens::T_SYMBOL)
-				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', '='))
-				&& (!$tokens->isNext() || $tokens->isNext(',', ')', ']', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||'))
+				&& (!$tokens->isPrev() || $tokens->isPrev(',', '(', '[', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', '=', 'and', 'or', 'xor'))
+				&& (!$tokens->isNext() || $tokens->isNext(',', ';', ')', ']', '=>', ':', '?', '.', '<', '>', '<=', '>=', '===', '!==', '==', '!=', '<>', '&&', '||', 'and', 'or', 'xor'))
 				? "'" . $tokens->currentValue() . "'"
 				: $tokens->currentToken()
 			);
@@ -290,6 +291,9 @@ class PhpWriter extends Nette\Object
 
 	/**
 	 * Formats modifiers calling.
+	 * @param  MacroTokens
+	 * @param  string
+	 * @throws CompileException
 	 * @return MacroTokens
 	 */
 	public function modifiersFilter(MacroTokens $tokens, $var)
@@ -360,14 +364,26 @@ class PhpWriter extends Nette\Object
 						return $tokens;
 					case Compiler::CONTEXT_COMMENT:
 						return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
-						return;
 					case Compiler::CONTENT_JS:
 					case Compiler::CONTENT_CSS:
 						return $tokens->prepend('Nette\Templating\Helpers::escape' . ucfirst($context[0]) . '(')->append(')');
 					default:
 						return $tokens->prepend('Nette\Templating\Helpers::escapeHtml(')->append(', ENT_NOQUOTES)');
 				}
+
 			case Compiler::CONTENT_XML:
+				$context = $this->compiler->getContext();
+				switch ($context[0]) {
+					case Compiler::CONTEXT_COMMENT:
+						return $tokens->prepend('Nette\Templating\Helpers::escapeHtmlComment(')->append(')');
+					default:
+						$tokens->prepend('Nette\Templating\Helpers::escapeXml(')->append(')');
+						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
+							$tokens->prepend("'\"' . ")->append(" . '\"'");
+						}
+						return $tokens;
+				}
+
 			case Compiler::CONTENT_JS:
 			case Compiler::CONTENT_CSS:
 			case Compiler::CONTENT_ICAL:

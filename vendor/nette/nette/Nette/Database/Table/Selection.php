@@ -253,13 +253,9 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchPairs($key, $value = NULL)
+	public function fetchPairs($key = NULL, $value = NULL)
 	{
-		$return = array();
-		foreach ($this as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
-		}
-		return $return;
+		return Nette\Database\Helpers::toPairs(iterator_to_array($this), $key, $value);
 	}
 
 
@@ -285,16 +281,6 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$this->emptyResultSet();
 		call_user_func_array(array($this->sqlBuilder, 'addSelect'), func_get_args());
 		return $this;
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function find($key)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use $selection->wherePrimary() instead.', E_USER_DEPRECATED);
-		return $this->wherePrimary($key);
 	}
 
 
@@ -382,8 +368,11 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	 * @param  int
 	 * @return self
 	 */
-	public function page($page, $itemsPerPage)
+	public function page($page, $itemsPerPage, & $numOfPages = NULL)
 	{
+		if (func_get_args() > 2) {
+			$numOfPages = (int) ceil($this->count('*') / $itemsPerPage);
+		}
 		return $this->limit($itemsPerPage, ($page - 1) * $itemsPerPage);
 	}
 
@@ -396,13 +385,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 	public function group($columns)
 	{
 		$this->emptyResultSet();
-		if (func_num_args() === 2 && strpos($columns, '?') === FALSE) {
-			trigger_error('Calling ' . __METHOD__ . '() with second argument is deprecated; use $selection->having() instead.', E_USER_DEPRECATED);
-			$this->having(func_get_arg(1));
-			$this->sqlBuilder->setGroup($columns);
-		} else {
-			call_user_func_array(array($this->sqlBuilder, 'setGroup'), func_get_args());
-		}
+		call_user_func_array(array($this->sqlBuilder, 'setGroup'), func_get_args());
 		return $this;
 	}
 
@@ -566,6 +549,7 @@ class Selection extends Nette\Object implements \Iterator, IRowContainer, \Array
 		$this->rows = NULL;
 		$this->specificCacheKey = NULL;
 		$this->generalCacheKey = NULL;
+		$this->refCache['referencingPrototype'] = array();
 	}
 
 

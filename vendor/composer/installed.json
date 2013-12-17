@@ -303,82 +303,6 @@
         ]
     },
     {
-        "name": "nette/nette",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nette/nette.git",
-            "reference": "5aad1de5c5fe84ce58ac5fb7cafdbe3a4b4c198a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nette/nette/zipball/5aad1de5c5fe84ce58ac5fb7cafdbe3a4b4c198a",
-            "reference": "5aad1de5c5fe84ce58ac5fb7cafdbe3a4b4c198a",
-            "shasum": ""
-        },
-        "require": {
-            "ext-iconv": "*",
-            "ext-tokenizer": "*",
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "nette/tester": "@dev"
-        },
-        "suggest": {
-            "ext-fileinfo": "*",
-            "ext-gd": "*",
-            "ext-mbstring": "*",
-            "ext-memcache": "*",
-            "ext-pdo": "*"
-        },
-        "time": "2013-08-29 12:44:52",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.1-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "Nette/loader.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "http://davidgrudl.com"
-            },
-            {
-                "name": "Nette Community",
-                "homepage": "http://nette.org/contributors"
-            }
-        ],
-        "description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
-        "homepage": "http://nette.org",
-        "keywords": [
-            "Forms",
-            "database",
-            "dbal",
-            "debugging",
-            "framework",
-            "images",
-            "latte",
-            "mailing",
-            "micro",
-            "mvc",
-            "neon",
-            "templating"
-        ]
-    },
-    {
         "name": "JanMarek/WebLoader",
         "version": "dev-nette-master",
         "version_normalized": "dev-nette-master",
@@ -804,6 +728,85 @@
         "keywords": [
             "css",
             "minify"
+        ]
+    },
+    {
+        "name": "nette/nette",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/nette.git",
+            "reference": "9f4bb0c406214739b0f6b669f26692ac6c180aba"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/nette/zipball/9f4bb0c406214739b0f6b669f26692ac6c180aba",
+            "reference": "9f4bb0c406214739b0f6b669f26692ac6c180aba",
+            "shasum": ""
+        },
+        "require": {
+            "ext-iconv": "*",
+            "ext-tokenizer": "*",
+            "php": ">=5.3.1"
+        },
+        "require-dev": {
+            "nette/tester": "@dev"
+        },
+        "suggest": {
+            "ext-fileinfo": "*",
+            "ext-gd": "*",
+            "ext-mbstring": "*",
+            "ext-memcache": "*",
+            "ext-pdo": "*"
+        },
+        "time": "2013-12-16 21:50:44",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "Nette/"
+            ],
+            "files": [
+                "Nette/common/shortcuts.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
+        "homepage": "http://nette.org",
+        "keywords": [
+            "Forms",
+            "database",
+            "dbal",
+            "debugging",
+            "framework",
+            "images",
+            "latte",
+            "mailing",
+            "micro",
+            "mvc",
+            "neon",
+            "templating"
         ]
     }
 ]

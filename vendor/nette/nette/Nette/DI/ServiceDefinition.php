@@ -48,6 +48,9 @@ class ServiceDefinition extends Nette\Object
 	/** @var string  interface name */
 	public $implement;
 
+	/** @internal @var string  create | get */
+	public $implementType;
+
 
 	public function setClass($class, array $args = array())
 	{
@@ -77,9 +80,9 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
-	public function addSetup($target, $args = NULL)
+	public function addSetup($target, array $args = array())
 	{
-		$this->setup[] = new Statement($target, is_array($args) ? $args : array_slice(func_get_args(), 1));
+		$this->setup[] = new Statement($target, $args);
 		return $this;
 	}
 
@@ -106,6 +109,7 @@ class ServiceDefinition extends Nette\Object
 	}
 
 
+	/** @deprecated */
 	public function setShared($on)
 	{
 		$this->shared = (bool) $on;

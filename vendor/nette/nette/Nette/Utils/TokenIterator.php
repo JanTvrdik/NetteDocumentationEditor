@@ -18,6 +18,7 @@ use Nette;
  * Traversing helper. Internal class.
  *
  * @author     David Grudl
+ * @internal
  */
 class TokenIterator extends Nette\Object
 {
@@ -189,7 +190,7 @@ class TokenIterator extends Nette\Object
 	 * Looks for (first) (not) wanted tokens.
 	 * @return mixed
 	 */
-	private function scan($wanted, $onlyFirst, $advance, $strings = FALSE, $until = FALSE, $prev = FALSE)
+	final protected function scan($wanted, $onlyFirst, $advance, $strings = FALSE, $until = FALSE, $prev = FALSE)
 	{
 		$res = $onlyFirst ? NULL : ($strings ? '' : array());
 		$pos = $this->position + ($prev ? -1 : 1);

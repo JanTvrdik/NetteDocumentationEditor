@@ -366,13 +366,18 @@ $counter = 0;
 
 	bs.onclick = function(e) {
 		e = e || window.event;
+		if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
+			return;
+		}
+
 		for (var link = e.target || e.srcElement; link && (!link.tagName || link.className.indexOf('nette-toggle') < 0); link = link.parentNode) {}
 		if (!link) {
 			return true;
 		}
 
 		var collapsed = link.className.indexOf('nette-toggle-collapsed') > -1,
-			ref = link.getAttribute('data-ref') || link.getAttribute('href', 2);
+			ref = link.getAttribute('data-ref') || link.getAttribute('href', 2),
+			dest;
 
 		if (ref && ref !== '#') {
 			dest = document.getElementById(ref.substring(1));

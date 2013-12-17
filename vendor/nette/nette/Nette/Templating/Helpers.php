@@ -118,7 +118,7 @@ final class Helpers
 
 
 	/**
-	 * Escapes string for use inside JavaScript template.
+	 * Escapes variables for use inside <script>.
 	 * @param  mixed  UTF-8 encoding
 	 * @return string
 	 */
@@ -127,7 +127,7 @@ final class Helpers
 		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
 			$s = $s->__toString(TRUE);
 		}
-		return str_replace(']]>', ']]\x3E', Nette\Utils\Json::encode($s));
+		return str_replace(array(']]>', '<!'), array(']]\x3E', '\x3C!'), Nette\Utils\Json::encode($s));
 	}
 
 
@@ -140,6 +140,17 @@ final class Helpers
 	{
 		// http://www.ietf.org/rfc/rfc5545.txt
 		return addcslashes(preg_replace('#[\x00-\x08\x0B\x0C-\x1F]+#', '', $s), "\";\\,:\n");
+	}
+
+
+	/**
+	 * Sanitizes string for use inside href attribute.
+	 * @param  string
+	 * @return string
+	 */
+	public static function safeUrl($s)
+	{
+		return preg_match('#^(https?://.+|ftp://.+|mailto:.+|[^:]+)\z#i', $s) ? $s : '';
 	}
 
 
@@ -281,7 +292,7 @@ final class Helpers
 	 * @param  mixed
 	 * @return string
 	 */
-	public static function null($value)
+	public static function null()
 	{
 		return '';
 	}

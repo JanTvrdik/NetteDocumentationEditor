@@ -51,23 +51,22 @@ class CoreMacros extends MacroSet
 		$me = new static($compiler);
 
 		$me->addMacro('if', array($me, 'macroIf'), array($me, 'macroEndIf'));
-		$me->addMacro('elseif', 'elseif (%node.args):');
+		$me->addMacro('elseif', '} elseif (%node.args) {');
 		$me->addMacro('else', array($me, 'macroElse'));
-		$me->addMacro('ifset', 'if (isset(%node.args)):', 'endif');
-		$me->addMacro('elseifset', 'elseif (isset(%node.args)):');
+		$me->addMacro('ifset', 'if (isset(%node.args)) {', '}');
+		$me->addMacro('elseifset', '} elseif (isset(%node.args)) {');
 		$me->addMacro('ifcontent', array($me, 'macroIfContent'), array($me, 'macroEndIfContent'));
 
 		$me->addMacro('foreach', '', array($me, 'macroEndForeach'));
-		$me->addMacro('for', 'for (%node.args):', 'endfor');
-		$me->addMacro('while', 'while (%node.args):', 'endwhile');
+		$me->addMacro('for', 'for (%node.args) {', '}');
+		$me->addMacro('while', 'while (%node.args) {', '}');
 		$me->addMacro('continueIf', array($me, 'macroBreakContinueIf'));
 		$me->addMacro('breakIf', array($me, 'macroBreakContinueIf'));
-		$me->addMacro('first', 'if ($iterator->isFirst(%node.args)):', 'endif');
-		$me->addMacro('last', 'if ($iterator->isLast(%node.args)):', 'endif');
-		$me->addMacro('sep', 'if (!$iterator->isLast(%node.args)):', 'endif');
+		$me->addMacro('first', 'if ($iterator->isFirst(%node.args)) {', '}');
+		$me->addMacro('last', 'if ($iterator->isLast(%node.args)) {', '}');
+		$me->addMacro('sep', 'if (!$iterator->isLast(%node.args)) {', '}');
 
 		$me->addMacro('var', array($me, 'macroVar'));
-		$me->addMacro('assign', array($me, 'macroVar')); // deprecated
 		$me->addMacro('default', array($me, 'macroVar'));
 		$me->addMacro('dump', array($me, 'macroDump'));
 		$me->addMacro('debugbreak', array($me, 'macroDebugbreak'));
@@ -83,7 +82,7 @@ class CoreMacros extends MacroSet
 		$me->addMacro('use', array($me, 'macroUse'));
 
 		$me->addMacro('class', NULL, NULL, array($me, 'macroClass'));
-		$me->addMacro('attr', array($me, 'macroOldAttr'), '', array($me, 'macroAttr'));
+		$me->addMacro('attr', NULL, NULL, array($me, 'macroAttr'));
 		$me->addMacro('href', NULL); // TODO: placeholder
 	}
 
@@ -111,9 +110,9 @@ class CoreMacros extends MacroSet
 			return 'ob_start()';
 		}
 		if ($node->prefix === $node::PREFIX_TAG) {
-			return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->ifs)):' : 'if ($_l->ifs[] = (%node.args)):');
+			return $writer->write($node->htmlNode->closing ? 'if (array_pop($_l->ifs)) {' : 'if ($_l->ifs[] = (%node.args)) {');
 		}
-		return $writer->write('if (%node.args):');
+		return $writer->write('if (%node.args) {');
 	}
 
 
@@ -132,7 +131,7 @@ class CoreMacros extends MacroSet
 				. (isset($node->data->else) ? '{ $_else = ob_get_contents(); ob_end_clean(); ob_end_clean(); echo $_else; }' : 'ob_end_clean();')
 			);
 		}
-		return 'endif';
+		return '}';
 	}
 
 
@@ -149,7 +148,7 @@ class CoreMacros extends MacroSet
 			$ifNode->data->else = TRUE;
 			return 'ob_start()';
 		}
-		return 'else:';
+		return '} else {';
 	}
 
 
@@ -256,11 +255,11 @@ class CoreMacros extends MacroSet
 	{
 		if (preg_match('#\W(\$iterator|include|require|get_defined_vars)\W#', $this->getCompiler()->expandTokens($node->content))) {
 			$node->openingCode = '<?php $iterations = 0; foreach ($iterator = $_l->its[] = new Nette\Iterators\CachingIterator('
-			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $writer->formatArgs(), 1) . '): ?>';
-			$node->closingCode = '<?php $iterations++; endforeach; array_pop($_l->its); $iterator = end($_l->its) ?>';
+			. preg_replace('#(.*)\s+as\s+#i', '$1) as ', $writer->formatArgs(), 1) . ') { ?>';
+			$node->closingCode = '<?php $iterations++; } array_pop($_l->its); $iterator = end($_l->its) ?>';
 		} else {
-			$node->openingCode = '<?php $iterations = 0; foreach (' . $writer->formatArgs() . '): ?>';
-			$node->closingCode = '<?php $iterations++; endforeach ?>';
+			$node->openingCode = '<?php $iterations = 0; foreach (' . $writer->formatArgs() . ') { ?>';
+			$node->closingCode = '<?php $iterations++; } ?>';
 		}
 	}
 
@@ -298,17 +297,6 @@ class CoreMacros extends MacroSet
 
 
 	/**
-	 * {attr ...}
-	 * @deprecated
-	 */
-	public function macroOldAttr(MacroNode $node)
-	{
-		trigger_error('Macro {attr} is deprecated; use n:attr="..." instead.', E_USER_DEPRECATED);
-		return Nette\Utils\Strings::replace($node->args . ' ', '#\)\s+#', ')->');
-	}
-
-
-	/**
 	 * {dump ...}
 	 */
 	public function macroDump(MacroNode $node, PhpWriter $writer)
@@ -335,10 +323,6 @@ class CoreMacros extends MacroSet
 	 */
 	public function macroVar(MacroNode $node, PhpWriter $writer)
 	{
-		if ($node->name === 'assign') {
-			trigger_error('Macro {assign} is deprecated; use {var} instead.', E_USER_DEPRECATED);
-		}
-
 		$var = TRUE;
 		$tokens = $writer->preprocess();
 		$res = new Latte\MacroTokens;

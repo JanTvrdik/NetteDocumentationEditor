@@ -67,7 +67,8 @@ class Form extends Container
 	// file upload
 	const MAX_FILE_SIZE = ':fileSize',
 		MIME_TYPE = ':mimeType',
-		IMAGE = ':image';
+		IMAGE = ':image',
+		MAX_POST_SIZE = ':maxPostSize';
 
 	/** method */
 	const GET = 'get',
@@ -99,7 +100,7 @@ class Form extends Container
 	/** @var array */
 	private $httpData;
 
-	/** @var Html  <form> element */
+	/** @var Nette\Utils\Html  <form> element */
 	private $element;
 
 	/** @var IFormRenderer */
@@ -131,8 +132,8 @@ class Form extends Container
 
 		$this->monitor(__CLASS__);
 		if ($name !== NULL) {
-			$tracker = new Controls\HiddenField;
-			$tracker->setValue($name)->setOmitted()->unmonitor(__CLASS__);
+			$tracker = new Controls\HiddenField($name);
+			$tracker->setOmitted();
 			$this[self::TRACKER_ID] = $tracker;
 		}
 		parent::__construct(NULL, $name);
@@ -365,9 +366,9 @@ class Form extends Container
 
 	/**
 	 * Returns submitted HTTP data.
-	 * @return array
+	 * @return mixed
 	 */
-	final public function getHttpData($htmlName = NULL, $type = self::DATA_TEXT)
+	final public function getHttpData($type = NULL, $htmlName = NULL)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
@@ -392,8 +393,11 @@ class Form extends Container
 	{
 		if (!$this->isSubmitted()) {
 			return;
+		}
 
-		} elseif ($this->submittedBy instanceof ISubmitterControl) {
+		$this->validate();
+
+		if ($this->submittedBy instanceof ISubmitterControl) {
 			if ($this->isValid()) {
 				$this->submittedBy->onClick($this->submittedBy);
 			} else {
@@ -401,9 +405,15 @@ class Form extends Container
 			}
 		}
 
-		if ($this->isValid()) {
-			$this->onSuccess($this);
-		} else {
+		if ($this->onSuccess) {
+			foreach ($this->onSuccess as $handler) {
+				if (!$this->isValid()) {
+					$this->onError($this);
+					break;
+				}
+				Nette\Utils\Callback::invoke($handler, $this);
+			}
+		} elseif (!$this->isValid()) {
 			$this->onError($this);
 		}
 		$this->onSubmit($this);
@@ -445,10 +455,28 @@ class Form extends Container
 
 	public function validate(array $controls = NULL)
 	{
+		$this->cleanErrors();
 		if ($controls === NULL && $this->submittedBy instanceof ISubmitterControl) {
 			$controls = $this->submittedBy->getValidationScope();
 		}
+		$this->validateMaxPostSize();
 		parent::validate($controls);
+	}
+
+
+	public function validateMaxPostSize()
+	{
+		if (!$this->submittedBy || strcasecmp($this->getMethod(), 'POST') || empty($_SERVER['CONTENT_LENGTH'])) {
+			return;
+		}
+		$maxSize = ini_get('post_max_size');
+		$units = array('k' => 10, 'm' => 20, 'g' => 30);
+		if (isset($units[$ch = strtolower(substr($maxSize, -1))])) {
+			$maxSize <<= $units[$ch];
+		}
+		if ($maxSize > 0 && $maxSize < $_SERVER['CONTENT_LENGTH']) {
+			$this->addError(sprintf(Validator::$messages[self::MAX_FILE_SIZE], $maxSize));
+		}
 	}
 
 

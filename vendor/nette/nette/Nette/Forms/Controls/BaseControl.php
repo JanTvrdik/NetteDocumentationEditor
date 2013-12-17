@@ -121,17 +121,17 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	 */
 	public function loadHttpData()
 	{
-		$this->setValue($this->getHttpData());
+		$this->setValue($this->getHttpData(Form::DATA_TEXT));
 	}
 
 
 	/**
 	 * Loads HTTP data.
-	 * @return void
+	 * @return mixed
 	 */
-	public function getHttpData($type = Form::DATA_TEXT, $htmlTail = NULL)
+	public function getHttpData($type, $htmlTail = NULL)
 	{
-		return $this->getForm()->getHttpData($this->getHtmlName() . $htmlTail, $type);
+		return $this->getForm()->getHttpData($type, $this->getHtmlName() . $htmlTail);
 	}
 
 
@@ -363,16 +363,21 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 
 	/**
 	 * Returns translated string.
-	 * @param  string
+	 * @param  mixed
 	 * @param  int      plural count
 	 * @return string
 	 */
-	public function translate($s, $count = NULL)
+	public function translate($value, $count = NULL)
 	{
-		$translator = $this->getTranslator();
-		return $translator === NULL || $s == NULL || $s instanceof Html  // intentionally ==
-			? $s
-			: $translator->translate((string) $s, $count);
+		if ($translator = $this->getTranslator()) {
+			$tmp = is_array($value) ? array(& $value) : array(array(& $value));
+			foreach ($tmp[0] as & $v) {
+				if ($v != NULL && !$v instanceof Html) { // intentionally ==
+					$v = $translator->translate((string) $v, $count);
+				}
+			}
+		}
+		return $value;
 	}
 
 

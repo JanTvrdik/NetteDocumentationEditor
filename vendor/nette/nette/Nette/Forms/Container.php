@@ -43,7 +43,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Fill-in with default values.
-	 * @param  array|Traversable  values used to fill the form
+	 * @param  array|\Traversable  values used to fill the form
 	 * @param  bool     erase other default values?
 	 * @return self
 	 */
@@ -59,7 +59,7 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 	/**
 	 * Fill-in with values.
-	 * @param  array|Traversable  values used to fill the form
+	 * @param  array|\Traversable  values used to fill the form
 	 * @param  bool     erase other controls?
 	 * @return self
 	 */
@@ -334,6 +334,16 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 
 
 	/**
+	 * Adds set of checkbox controls to the form.
+	 * @return Nette\Forms\Controls\CheckboxList
+	 */
+	public function addCheckboxList($name, $label = NULL, array $items = NULL)
+	{
+		return $this[$name] = new Controls\CheckboxList($label, $items);
+	}
+
+
+	/**
 	 * Adds select box control that allows single item selection.
 	 * @param  string  control name
 	 * @param  string  label
@@ -343,7 +353,11 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new Controls\SelectBox($label, $items, $size);
+		$control = new Controls\SelectBox($label, $items);
+		if ($size > 1) {
+			$control->setAttribute('size', (int) $size);
+		}
+		return $this[$name] = $control;
 	}
 
 
@@ -357,7 +371,11 @@ class Container extends Nette\ComponentModel\Container implements \ArrayAccess
 	 */
 	public function addMultiSelect($name, $label = NULL, array $items = NULL, $size = NULL)
 	{
-		return $this[$name] = new Controls\MultiSelectBox($label, $items, $size);
+		$control = new Controls\MultiSelectBox($label, $items);
+		if ($size > 1) {
+			$control->setAttribute('size', (int) $size);
+		}
+		return $this[$name] = $control;
 	}
 
 

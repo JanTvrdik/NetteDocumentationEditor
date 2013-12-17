@@ -39,6 +39,7 @@ class Validator extends Nette\Object
 		Form::FLOAT => 'Please enter a valid number.',
 		Form::RANGE => 'Please enter a value between %d and %d.',
 		Form::MAX_FILE_SIZE => 'The size of the uploaded file can be up to %d bytes.',
+		Form::MAX_POST_SIZE => 'The uploaded data exceeds the limit of %d bytes.',
 		Form::IMAGE => 'The uploaded file must be image in format JPEG, GIF or PNG.',
 		Nette\Forms\Controls\SelectBox::VALID => 'Please select a valid option.',
 	);
@@ -54,7 +55,7 @@ class Validator extends Nette\Object
 			$message = static::$messages[$rule->validator];
 
 		} elseif ($message == NULL) { // intentionally ==
-			trigger_error("Missing validation message for control '{$rule->control->name}'.", E_USER_WARNING);
+			trigger_error("Missing validation message for control '{$rule->control->getName()}'.", E_USER_WARNING);
 		}
 
 		if ($translator = $rule->control->getForm()->getTranslator()) {
@@ -90,11 +91,12 @@ class Validator extends Nette\Object
 		foreach ((is_array($value) ? $value : array($value)) as $val) {
 			foreach ((is_array($arg) ? $arg : array($arg)) as $item) {
 				if ((string) $val === (string) $item) {
-					return TRUE;
+					continue 2;
 				}
 			}
+			return FALSE;
 		}
-		return FALSE;
+		return TRUE;
 	}
 
 
@@ -208,15 +210,14 @@ class Validator extends Nette\Object
 	 */
 	public static function validateUrl(IControl $control)
 	{
-		return Validators::isUrl($control->getValue()) || Validators::isUrl('http://' . $control->getValue());
-	}
+		if (Validators::isUrl($value = $control->getValue())) {
+			return TRUE;
 
-
-	/** @deprecated */
-	public static function validateRegexp(IControl $control, $regexp)
-	{
-		trigger_error('Validator REGEXP is deprecated; use PATTERN instead (which is matched against the entire value and is case sensitive).', E_USER_DEPRECATED);
-		return (bool) Strings::match($control->getValue(), $regexp);
+		} elseif (Validators::isUrl($value = "http://$value")) {
+			$control->setValue($value);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
@@ -236,7 +237,13 @@ class Validator extends Nette\Object
 	 */
 	public static function validateInteger(IControl $control)
 	{
-		return Validators::isNumericInt($control->getValue());
+		if (Validators::isNumericInt($value = $control->getValue())) {
+			if (!is_float($tmp = $value * 1)) { // bigint leave as string
+				$control->setValue($tmp);
+			}
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 
@@ -246,7 +253,12 @@ class Validator extends Nette\Object
 	 */
 	public static function validateFloat(IControl $control)
 	{
-		return Validators::isNumeric(str_replace(array(' ', ','), array('', '.'), $control->getValue()));
+		$value = str_replace(array(' ', ','), array('', '.'), $control->getValue());
+		if (Validators::isNumeric($value)) {
+			$control->setValue((float) $value);
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 

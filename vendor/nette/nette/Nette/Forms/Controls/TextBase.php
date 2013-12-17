@@ -30,6 +30,9 @@ abstract class TextBase extends BaseControl
 	/** @var array */
 	protected $filters = array();
 
+	/** @var mixed unfiltered submitted value */
+	protected $rawValue = '';
+
 
 	/**
 	 * Sets control's value.
@@ -38,10 +41,12 @@ abstract class TextBase extends BaseControl
 	 */
 	public function setValue($value)
 	{
-		if (!is_scalar($value) && $value !== NULL && !method_exists($value, '__toString')) {
+		if ($value === NULL) {
+			$value = '';
+		} elseif (!is_scalar($value) && !method_exists($value, '__toString')) {
 			throw new Nette\InvalidArgumentException('Value must be scalar or NULL, ' . gettype($value) . ' given.');
 		}
-		$this->value = (string) $value;
+		$this->rawValue = $this->value = $value;
 		return $this;
 	}
 
@@ -52,7 +57,7 @@ abstract class TextBase extends BaseControl
 	 */
 	public function getValue()
 	{
-		$value = (string) $this->value;
+		$value = $this->value;
 		if (!empty($this->control->maxlength)) {
 			$value = Nette\Utils\Strings::substring($value, 0, $this->control->maxlength);
 		}
@@ -112,17 +117,7 @@ abstract class TextBase extends BaseControl
 
 	public function addRule($validator, $message = NULL, $arg = NULL)
 	{
-		if ($validator === Form::FLOAT) {
-			$this->addFilter(function($s) {
-				return str_replace(array(' ', ','), array('', '.'), $s);
-			});
-
-		} elseif ($validator === Form::URL) {
-			$this->addFilter(function($s) {
-				return Nette\Utils\Validators::isUrl('http://' . $s) ? 'http://' . $s : $s;
-			});
-
-		} elseif ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
+		if ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
 			$this->control->maxlength = is_scalar($tmp) ? $tmp : NULL;
 		}

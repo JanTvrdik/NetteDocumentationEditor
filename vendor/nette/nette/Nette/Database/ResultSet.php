@@ -12,8 +12,7 @@
 namespace Nette\Database;
 
 use Nette,
-	PDO,
-	Nette\ObjectMixin;
+	PDO;
 
 
 /**
@@ -28,6 +27,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 {
 	/** @var Connection */
 	private $connection;
+
+	/** @var ISupplementalDriver */
+	private $supplementalDriver;
 
 	/** @var \PDOStatement|NULL */
 	private $pdoStatement;
@@ -58,6 +60,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	{
 		$time = microtime(TRUE);
 		$this->connection = $connection;
+		$this->supplementalDriver = $connection->getSupplementalDriver();
 		$this->queryString = $queryString;
 		$this->params = $params;
 
@@ -144,7 +147,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	public function normalizeRow($row)
 	{
 		if ($this->types === NULL) {
-			$this->types = (array) $this->connection->getSupplementalDriver()->getColumnTypes($this->pdoStatement);
+			$this->types = (array) $this->supplementalDriver->getColumnTypes($this->pdoStatement);
 		}
 
 		foreach ($this->types as $key => $type) {
@@ -177,7 +180,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 			}
 		}
 
-		return $this->connection->getSupplementalDriver()->normalizeRow($row);
+		return $this->supplementalDriver->normalizeRow($row);
 	}
 
 
@@ -275,13 +278,9 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 	/**
 	 * @inheritDoc
 	 */
-	public function fetchPairs($key, $value = NULL)
+	public function fetchPairs($key = NULL, $value = NULL)
 	{
-		$return = array();
-		foreach ($this->fetchAll() as $row) {
-			$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
-		}
-		return $return;
+		return Helpers::toPairs($this->fetchAll(), $key, $value);
 	}
 
 
@@ -293,24 +292,7 @@ class ResultSet extends Nette\Object implements \Iterator, IRowContainer
 		if ($this->results === NULL) {
 			$this->results = iterator_to_array($this);
 		}
-
 		return $this->results;
-	}
-
-
-	/** @deprecated */
-	function columnCount()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getColumnCount() instead.', E_USER_DEPRECATED);
-		return $this->getColumnCount();
-	}
-
-
-	/** @deprecated */
-	function rowCount()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getRowCount() instead.', E_USER_DEPRECATED);
-		return $this->getRowCount();
 	}
 
 }

@@ -13,8 +13,7 @@ namespace Nette\Forms;
 
 use Nette,
 	Nette\Utils\Strings,
-	Nette\Utils\Html,
-	Nette\Localization\ITranslator;
+	Nette\Utils\Html;
 
 
 /**
@@ -24,6 +23,11 @@ use Nette,
  */
 class Helpers extends Nette\Object
 {
+	private static $unsafeNames = array(
+		'attributes', 'children', 'elements', 'focus', 'length', 'reset', 'style', 'submit', 'onsubmit', 'form',
+		'presenter', 'action',
+	);
+
 
 	/**
 	 * Extracts and sanitizes submitted form data for single control.
@@ -79,7 +83,7 @@ class Helpers extends Nette\Object
 		if ($count) {
 			$name = substr_replace($name, '', strpos($name, ']'), 1) . ']';
 		}
-		if (is_numeric($name) || in_array($name, array('attributes','children','elements','focus','length','reset','style','submit','onsubmit'))) {
+		if (is_numeric($name) || in_array($name, self::$unsafeNames)) {
 			$name = '_' . $name;
 		}
 		return $name;
@@ -131,13 +135,15 @@ class Helpers extends Nette\Object
 	/**
 	 * @return string
 	 */
-	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, ITranslator $translator = NULL, $separator = NULL)
+	public static function createInputList(array $items, array $inputAttrs = NULL, array $labelAttrs = NULL, $wrapper = NULL)
 	{
 		list($inputAttrs, $inputTag) = self::prepareAttrs($inputAttrs, 'input');
 		list($labelAttrs, $labelTag) = self::prepareAttrs($labelAttrs, 'label');
 		$res = '';
 		$input = Html::el();
 		$label = Html::el();
+		list($wrapper, $wrapperEnd) = $wrapper instanceof Html ? array($wrapper->startTag(), $wrapper->endTag()) : array((string) $wrapper, '');
+
 		foreach ($items as $value => $caption) {
 			foreach ($inputAttrs as $k => $v) {
 				$input->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
@@ -146,11 +152,12 @@ class Helpers extends Nette\Object
 				$label->attrs[$k] = isset($v[$value]) ? $v[$value] : NULL;
 			}
 			$input->value = $value;
-			$res .= $labelTag . $label->attributes() . '>'
+			$res .= ($res === '' && $wrapperEnd === '' ? '' : $wrapper)
+				. $labelTag . $label->attributes() . '>'
 				. $inputTag . $input->attributes() . (Html::$xhtml ? ' />' : '>')
-				. ($caption instanceof Html ? $caption : htmlspecialchars($translator ? $translator->translate($caption) : $caption))
+				. ($caption instanceof Html ? $caption : htmlspecialchars($caption))
 				. '</label>'
-				. $separator;
+				. $wrapperEnd;
 		}
 		return $res;
 	}
@@ -159,14 +166,14 @@ class Helpers extends Nette\Object
 	/**
 	 * @return Nette\Utils\Html
 	 */
-	public static function createSelectBox(array $items, array $optionAttrs = NULL, ITranslator $translator = NULL)
+	public static function createSelectBox(array $items, array $optionAttrs = NULL)
 	{
 		list($optionAttrs, $optionTag) = self::prepareAttrs($optionAttrs, 'option');
 		$option = Html::el();
 		$res = $tmp = '';
 		foreach ($items as $group => $subitems) {
 			if (is_array($subitems)) {
-				$res .= Html::el('optgroup')->label($translator ? $translator->translate($group) : $group)->startTag();
+				$res .= Html::el('optgroup')->label($group)->startTag();
 				$tmp = '</optgroup>';
 			} else {
 				$subitems = array($group => $subitems);
@@ -181,7 +188,7 @@ class Helpers extends Nette\Object
 					$res .= $caption->setName('option')->addAttributes($option->attrs);
 				} else {
 					$res .= $optionTag . $option->attributes() . '>'
-						. htmlspecialchars($translator ? $translator->translate($caption) : $caption)
+						. htmlspecialchars($caption)
 						. '</option>';
 				}
 			}
@@ -196,17 +203,16 @@ class Helpers extends Nette\Object
 	{
 		$dynamic = array();
 		foreach ((array) $attrs as $k => $v) {
-			$parts = explode('|', $k);
-			if (!isset($parts[1])) {
-				continue;
-			}
-			unset($attrs[$k], $attrs[$parts[0]]);
-			if ($parts[1] === '?') {
-				$dynamic[$parts[0]] = array_fill_keys((array) $v, TRUE);
-			} elseif (is_array($v)) { // *
-				$dynamic[$parts[0]] = $v;
-			} else {
-				$attrs[$parts[0]] = $v;
+			$p = str_split($k, strlen($k) - 1);
+			if ($p[1] === '?' || $p[1] === ':') {
+				unset($attrs[$k], $attrs[$p[0]]);
+				if ($p[1] === '?') {
+					$dynamic[$p[0]] = array_fill_keys((array) $v, TRUE);
+				} elseif (is_array($v) && $v) {
+					$dynamic[$p[0]] = $v;
+				} else {
+					$attrs[$p[0]] = $v;
+				}
 			}
 		}
 		return array($dynamic, '<' . $name . Html::el(NULL, $attrs)->attributes());

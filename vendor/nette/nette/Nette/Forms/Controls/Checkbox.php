@@ -21,6 +21,9 @@ use Nette;
  */
 class Checkbox extends BaseControl
 {
+	/** @var Nette\Utils\Html  wrapper element template */
+	private $wrapper;
+
 
 	/**
 	 * @param  string  label
@@ -29,6 +32,7 @@ class Checkbox extends BaseControl
 	{
 		parent::__construct($label);
 		$this->control->type = 'checkbox';
+		$this->wrapper = Nette\Utils\Html::el();
 	}
 
 
@@ -63,7 +67,45 @@ class Checkbox extends BaseControl
 	 */
 	public function getControl()
 	{
+		return $this->wrapper->setHtml($this->getLabelPart()->insert(0, $this->getControlPart()));
+	}
+
+
+	/**
+	 * Bypasses label generation.
+	 * @return void
+	 */
+	public function getLabel($caption = NULL)
+	{
+		return NULL;
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getControlPart()
+	{
 		return parent::getControl()->checked($this->value);
+	}
+
+
+	/**
+	 * @return Nette\Utils\Html
+	 */
+	public function getLabelPart()
+	{
+		return parent::getLabel();
+	}
+
+
+	/**
+	 * Returns wrapper HTML element template.
+	 * @return Nette\Utils\Html
+	 */
+	public function getSeparatorPrototype()
+	{
+		return $this->wrapper;
 	}
 
 }

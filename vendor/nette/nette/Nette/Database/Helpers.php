@@ -83,7 +83,7 @@ class Helpers
 	public static function dumpSql($sql, array $params = NULL)
 	{
 		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|INNER\s+JOIN|TRUNCATE';
-		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|LIKE|RLIKE|REGEXP|TRUE|FALSE';
+		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|[RI]?LIKE|REGEXP|TRUE|FALSE';
 
 		// insert new lines
 		$sql = " $sql ";
@@ -220,6 +220,43 @@ class Helpers
 		$panel->name = $name;
 		Nette\Diagnostics\Debugger::getBar()->addPanel($panel);
 		return $panel;
+	}
+
+
+	/**
+	 * Reformat source to key -> value pairs.
+	 * @return array
+	 */
+	public static function toPairs(array $rows, $key = NULL, $value = NULL)
+	{
+		if (!$rows) {
+			return array();
+		}
+
+		$keys = array_keys((array) reset($rows));
+		if (!count($keys)) {
+			throw new \LogicException('Result set does not contain any column.');
+
+		} elseif ($key === NULL && $value === NULL) {
+			if (count($keys) === 1) {
+				list($value) = $keys;
+			} else {
+				list($key, $value) = $keys;
+			}
+		}
+
+		$return = array();
+		if ($key === NULL) {
+			foreach ($rows as $row) {
+				$return[] = ($value === NULL ? $row : $row[$value]);
+			}
+		} else {
+			foreach ($rows as $row) {
+				$return[is_object($row[$key]) ? (string) $row[$key] : $row[$key]] = ($value === NULL ? $row : $row[$value]);
+			}
+		}
+
+		return $return;
 	}
 
 }

@@ -16,7 +16,7 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.0",
+		"php": ">=5.3.1",
 		"ext-iconv": "*",
 		"ext-tokenizer": "*"
 	},
@@ -31,11 +31,12 @@
 		"nette/tester": "@dev"
 	},
 	"autoload": {
-		"files": ["Nette/loader.php"]
+		"classmap": ["Nette/"],
+		"files": ["Nette/common/shortcuts.php"]
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.1-dev"
+			"dev-master": "2.2-dev"
 		}
 	}
 }

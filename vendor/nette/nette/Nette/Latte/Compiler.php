@@ -64,6 +64,7 @@ class Compiler extends Nette\Object
 		CONTENT_XML = 'xml',
 		CONTENT_JS = 'js',
 		CONTENT_CSS = 'css',
+		CONTENT_URL = 'url',
 		CONTENT_ICAL = 'ical',
 		CONTENT_TEXT = 'text';
 
@@ -313,8 +314,9 @@ class Compiler extends Nette\Object
 			$htmlNode->closing = TRUE;
 		}
 
-		if (!$htmlNode->closing && (strcasecmp($htmlNode->name, 'script') === 0 || strcasecmp($htmlNode->name, 'style') === 0)) {
-			$this->setContext(strcasecmp($htmlNode->name, 'style') ? self::CONTENT_JS : self::CONTENT_CSS);
+		$lower = strtolower($htmlNode->name);
+		if (!$htmlNode->closing && ($lower === 'script' || $lower === 'style')) {
+			$this->setContext($lower === 'script' ? self::CONTENT_JS : self::CONTENT_CSS);
 		} else {
 			$this->setContext(NULL);
 			if ($htmlNode->closing) {
@@ -335,20 +337,26 @@ class Compiler extends Nette\Object
 				throw new CompileException("Macro-attributes must not appear inside macro; found $token->name inside {{$this->macroNode->name}}.", 0, $token->line);
 			}
 			$this->htmlNode->macroAttrs[$name] = $token->value;
+			return;
+		}
 
-		} else {
-			$this->htmlNode->attrs[$token->name] = TRUE;
-			$this->output .= $token->text;
-			if ($token->value) { // quoted
-				$context = NULL;
-				if (strncasecmp($token->name, 'on', 2) === 0) {
-					$context = self::CONTENT_JS;
-				} elseif ($token->name === 'style') {
-					$context = self::CONTENT_CSS;
-				}
-				$this->setContext($token->value, $context);
+		$this->htmlNode->attrs[$token->name] = TRUE;
+		$this->output .= $token->text;
+
+		$context = NULL;
+		if (in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) {
+			$lower = strtolower($token->name);
+			if (substr($lower, 0, 2) === 'on') {
+				$context = self::CONTENT_JS;
+			} elseif ($lower === 'style') {
+				$context = self::CONTENT_CSS;
+			} elseif (in_array($lower, array('href', 'src', 'action', 'formaction'))
+				|| ($lower === 'data' && strtolower($this->htmlNode->name) === 'object')
+			) {
+				$context = self::CONTENT_URL;
 			}
 		}
+		$this->setContext($token->value ?: self::CONTEXT_UNQUOTED_ATTR, $context);
 	}
 
 
@@ -448,7 +456,6 @@ class Compiler extends Nette\Object
 	{
 		$attrs = $this->htmlNode->macroAttrs;
 		$left = $right = array();
-		$attrCode = '';
 
 		foreach ($this->macros as $name => $foo) {
 			$attrName = MacroNode::PREFIX_INNER . "-$name";
@@ -531,8 +538,15 @@ class Compiler extends Nette\Object
 			throw new CompileException("Unknown macro {{$name}}" . ($cdata ? " (in JavaScript or CSS, try to put a space after bracket.)" : ''));
 		}
 
-		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $modifiers, -1, $noescape);
-		if (!$noescape && strpbrk($name, '=~%^&_')) {
+		if ($this->context[1] === self::CONTENT_URL) {
+			$modifiers = preg_replace('#\|nosafeurl\s?(?=\||\z)#i', '', $modifiers, -1, $found);
+			if (!$found) {
+				$modifiers .= '|safeurl';
+			}
+		}
+
+		$modifiers = preg_replace('#\|noescape\s?(?=\||\z)#i', '', $modifiers, -1, $found);
+		if (!$found && strpbrk($name, '=~%^&_')) {
 			$modifiers .= '|escape';
 		}
 

@@ -79,9 +79,6 @@ final class Debugger
 	/** @var bool {@link Debugger::enable()} */
 	private static $enabled = FALSE;
 
-	/** @var mixed {@link Debugger::tryError()} FALSE means catching is disabled */
-	private static $lastError = FALSE;
-
 	/** @internal */
 	public static $errorTypes = array(
 		E_ERROR => 'Fatal Error',
@@ -239,7 +236,7 @@ final class Debugger
 						. ($e->sourceLine ? BlueScreen::highlightFile($e->sourceFile, $e->sourceLine) : '')
 					);
 				} elseif ($e instanceof Nette\Utils\NeonException && preg_match('#line (\d+)#', $e->getMessage(), $m)) {
-					if ($item = Helpers::findTrace($e->getTrace(), 'Nette\Config\Adapters\NeonAdapter::load')) {
+					if ($item = Helpers::findTrace($e->getTrace(), 'Nette\DI\Config\Adapters\NeonAdapter::load')) {
 						return array(
 							'tab' => 'NEON',
 							'panel' => '<p><b>File:</b> ' . Helpers::editorLink($item['args'][0], $m[1]) . '</p>'
@@ -493,11 +490,6 @@ final class Debugger
 			error_reporting(E_ALL | E_STRICT);
 		}
 
-		if (self::$lastError !== FALSE && ($severity & error_reporting()) === $severity) { // tryError mode
-			self::$lastError = new \ErrorException($message, 0, $severity, $file, $line);
-			return NULL;
-		}
-
 		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
 			if (Helpers::findTrace(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE), '*::__toString')) {
 				$previous = isset($context['e']) && $context['e'] instanceof \Exception ? $context['e'] : NULL;
@@ -524,45 +516,8 @@ final class Debugger
 
 		} else {
 			self::fireLog(new \ErrorException($message, 0, $severity, $file, $line));
-			return self::isHtmlMode() ? NULL : FALSE;
+			return self::isHtmlMode() ? NULL : FALSE; // FALSE calls normal error handler
 		}
-
-		return FALSE; // call normal error handler
-	}
-
-
-	/** @deprecated */
-	public static function toStringException(\Exception $exception)
-	{
-		if (self::$enabled) {
-			self::_exceptionHandler($exception);
-		} else {
-			trigger_error($exception->getMessage(), E_USER_ERROR);
-		}
-	}
-
-
-	/** @deprecated */
-	public static function tryError()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use own error handler instead.', E_USER_DEPRECATED);
-		if (!self::$enabled && self::$lastError === FALSE) {
-			set_error_handler(array(__CLASS__, '_errorHandler'));
-		}
-		self::$lastError = NULL;
-	}
-
-
-	/** @deprecated */
-	public static function catchError(& $error)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use own error handler instead.', E_USER_DEPRECATED);
-		if (!self::$enabled && self::$lastError !== FALSE) {
-			restore_error_handler();
-		}
-		$error = self::$lastError;
-		self::$lastError = FALSE;
-		return (bool) $error;
 	}
 
 
@@ -616,16 +571,17 @@ final class Debugger
 	 * Dumps information about a variable in Nette Debug Bar.
 	 * @param  mixed  variable to dump
 	 * @param  string optional title
+	 * @param  array  dumper options
 	 * @return mixed  variable itself
 	 */
-	public static function barDump($var, $title = NULL)
+	public static function barDump($var, $title = NULL, array $options = NULL)
 	{
 		if (!self::$productionMode) {
-			$dump = array();
-			foreach ((is_array($var) ? $var : array('' => $var)) as $key => $val) {
-				$dump[$key] = Dumper::toHtml($val);
-			}
-			self::getBar()->getPanel(__CLASS__ . ':dumps')->data[] = array('title' => $title, 'dump' => $dump);
+			self::getBar()->getPanel(__CLASS__ . ':dumps')->data[] = array('title' => $title, 'dump' => Dumper::toHtml($var, (array) $options + array(
+				Dumper::DEPTH => self::$maxDepth,
+				Dumper::TRUNCATE => self::$maxLen,
+				Dumper::LOCATION => self::$showLocation,
+			)));
 		}
 		return $var;
 	}

@@ -622,10 +622,6 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function terminate()
 	{
-		if (func_num_args() !== 0) {
-			trigger_error(__METHOD__ . ' is not intended to send a Application\Response; use sendResponse() instead.', E_USER_WARNING);
-			$this->sendResponse(func_get_arg(0));
-		}
 		throw new Application\AbortException();
 	}
 
@@ -975,9 +971,9 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 		// make URL relative if possible
 		if ($mode === 'link' && $scheme === FALSE && !$this->absoluteUrls) {
-			$hostUrl = $refUrl->getHostUrl();
+			$hostUrl = $refUrl->getHostUrl() . '/';
 			if (strncmp($url, $hostUrl, strlen($hostUrl)) === 0) {
-				$url = substr($url, strlen($hostUrl));
+				$url = substr($url, strlen($hostUrl) - 1);
 			}
 		}
 
@@ -1078,7 +1074,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * Restores current request to session.
+	 * Restores request from session.
 	 * @param  string key
 	 * @return void
 	 */
@@ -1318,20 +1314,11 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * Gets the context.
 	 * @return \SystemContainer|Nette\DI\Container
+	 * @deprecated
 	 */
 	final public function getContext()
 	{
 		return $this->context;
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	final public function getService($name)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use dependency injection instead.', E_USER_DEPRECATED);
-		return $this->context->getService($name);
 	}
 
 
@@ -1354,27 +1341,8 @@ abstract class Presenter extends Control implements Application\IPresenter
 
 
 	/**
-	 * @deprecated
-	 */
-	protected function getHttpContext()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use dependency injection instead.', E_USER_DEPRECATED);
-		return $this->httpContext;
-	}
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getApplication()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use dependency injection instead.', E_USER_DEPRECATED);
-		return $this->application;
-	}
-
-
-	/**
-	 * @return Nette\Http\Session
+	 * @param  string
+	 * @return Nette\Http\Session|Nette\Http\SessionSection
 	 */
 	public function getSession($namespace = NULL)
 	{
