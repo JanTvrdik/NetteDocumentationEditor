@@ -75,7 +75,7 @@ abstract class WebLoader extends \Nette\Application\UI\Control
 
 		if ($hasArgs) {
 			$backup = $this->compiler->getFileCollection();
-			$newFiles = new FileCollection($backup->getRoot(), $backup->getSuffixes());
+			$newFiles = new FileCollection($backup->getRoot());
 			$newFiles->addFiles(func_get_args());
 			$this->compiler->setFileCollection($newFiles);
 		}
@@ -96,7 +96,7 @@ abstract class WebLoader extends \Nette\Application\UI\Control
 
 	protected function getGeneratedFilePath($file)
 	{
-		return $this->tempPath . '/' . $file->file;
+		return $this->tempPath . '/' . $file->file . '?' . $file->lastModified;
 	}
 
 }

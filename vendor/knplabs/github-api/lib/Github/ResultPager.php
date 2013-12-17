@@ -3,9 +3,7 @@
 namespace Github;
 
 use Github\Api\ApiInterface;
-use Github\Exception\InvalidArgumentException;
-use Github\HttpClient\HttpClient;
-use Github\HttpClient\HttpClientInterface;
+use Github\HttpClient\Message\ResponseMediator;
 
 /**
  * Pager class for supporting pagination in github classes
@@ -16,7 +14,7 @@ use Github\HttpClient\HttpClientInterface;
 class ResultPager implements ResultPagerInterface
 {
     /**
-     * @var Github\Client client
+     * @var \Github\Client client
      */
     protected $client;
 
@@ -25,7 +23,6 @@ class ResultPager implements ResultPagerInterface
      * Comes from pagination headers in Github API results
      */
     protected $pagination;
-
 
     /**
      * The Github client to use for pagination. This must be the same
@@ -92,7 +89,7 @@ class ResultPager implements ResultPagerInterface
      */
     public function postFetch()
     {
-        $this->pagination = $this->client->getHttpClient()->getLastResponse()->getPagination();
+        $this->pagination = ResponseMediator::getPagination($this->client->getHttpClient()->getLastResponse());
     }
 
     /**
@@ -160,7 +157,7 @@ class ResultPager implements ResultPagerInterface
             $result = $this->client->getHttpClient()->get($this->pagination[$key]);
             $this->postFetch();
 
-            return $result->getContent();
+            return ResponseMediator::getContent($result);
         }
     }
 }

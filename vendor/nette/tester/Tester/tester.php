@@ -32,7 +32,7 @@ Tester\Environment::setup();
 
 
 $cmd = new Cmd("
-Nette Tester (v0.9.3)
+Nette Tester (v0.9.4)
 ---------------------
 Usage:
 	tester.php [options] [<test file> | <directory>]...
@@ -51,7 +51,7 @@ Options:
 
 ", array(
 	'-c' => array(Cmd::REALPATH => TRUE),
-	'--watch' => array(Cmd::REALPATH => TRUE),
+	'--watch' => array(Cmd::REPEATABLE => TRUE, Cmd::REALPATH => TRUE),
 	'paths' => array(Cmd::REPEATABLE => TRUE, Cmd::VALUE => getcwd()),
 	'--debug' => array(),
 ));
@@ -70,7 +70,7 @@ if ($cmd->isEmpty() || $options['--help']) {
 	exit;
 }
 
-$phpArgs = $options['-c'] ? '-c ' . escapeshellarg($options['-c']) : '-n';
+$phpArgs = $options['-c'] ? '-n -c ' . escapeshellarg($options['-c']) : '-n';
 foreach ($options['-d'] as $item) {
 	$phpArgs .= ' -d ' . escapeshellarg($item);
 }
@@ -101,15 +101,17 @@ $prev = array();
 $counter = 0;
 while (TRUE) {
 	$state = array();
-	foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($options['--watch'])) as $file) {
-		if (substr($file->getExtension(), 0, 3) === 'php') {
-			$state[(string) $file] = md5_file((string) $file);
+	foreach ($options['--watch'] as $directory) {
+		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory)) as $file) {
+			if (substr($file->getExtension(), 0, 3) === 'php') {
+				$state[(string) $file] = md5_file((string) $file);
+			}
 		}
 	}
 	if ($state !== $prev) {
 		$prev = $state;
 		$runner->run();
 	}
-	echo "Watching {$options['--watch']} " . str_repeat('.', ++$counter % 5) . "    \r";
+	echo "Watching " . implode(', ', $options['--watch']) . " " . str_repeat('.', ++$counter % 5) . "    \r";
 	sleep(2);
 }

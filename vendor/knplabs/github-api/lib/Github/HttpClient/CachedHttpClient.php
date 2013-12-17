@@ -42,9 +42,9 @@ class CachedHttpClient extends HttpClient
     /**
      * {@inheritdoc}
      */
-    public function request($path, array $parameters = array(), $httpMethod = 'GET', array $headers = array())
+    public function request($path, $body = null, $httpMethod = 'GET', array $headers = array(), array $options = array())
     {
-        $response = parent::request($path, $parameters, $httpMethod, $headers);
+        $response = parent::request($path, $body, $httpMethod, $headers, $options);
 
         $key = trim($this->options['base_url'].$path, '/');
         if (304 == $response->getStatusCode()) {
@@ -61,15 +61,18 @@ class CachedHttpClient extends HttpClient
      *
      * {@inheritdoc}
      */
-    protected function createRequest($httpMethod, $url)
+    protected function createRequest($httpMethod, $path, $body = null, array $headers = array(), array $options = array())
     {
-        $request = parent::createRequest($httpMethod, $url);
+        $request = parent::createRequest($httpMethod, $path, $body, $headers = array(), $options);
 
-        if ($modifiedAt = $this->getCache()->getModifiedSince($url)) {
+        if ($modifiedAt = $this->getCache()->getModifiedSince($path)) {
             $modifiedAt = new \DateTime('@'.$modifiedAt);
             $modifiedAt->setTimezone(new \DateTimeZone('GMT'));
 
-            $request->addHeader(sprintf('If-Modified-Since: %s GMT', $modifiedAt->format('l, d-M-y H:i:s')));
+            $request->addHeader(
+                'If-Modified-Since',
+                sprintf('%s GMT', $modifiedAt->format('l, d-M-y H:i:s'))
+            );
         }
 
         return $request;

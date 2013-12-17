@@ -2,7 +2,7 @@
 
 namespace Github\HttpClient\Cache;
 
-use Github\HttpClient\Message\Response;
+use Guzzle\Http\Message\Response;
 
 class FilesystemCache implements CacheInterface
 {
@@ -67,4 +67,3 @@ class FilesystemCache implements CacheInterface
         return sprintf('%s%s%s', rtrim($this->path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR, md5($id));
     }
 }
-

@@ -3,20 +3,112 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "d1505a099da26b9758891999bed112cc",
+    "hash": "61433ae9171360ad9e009d195855f906",
     "packages": [
         {
-            "name": "JanMarek/WebLoader",
-            "version": "dev-nette-master",
+            "name": "guzzle/guzzle",
+            "version": "v3.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Mordred/WebLoader.git",
-                "reference": "1f7340f5275ff585a9157563842732ce866277ca"
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Mordred/WebLoader/zipball/1f7340f5275ff585a9157563842732ce866277ca",
-                "reference": "1f7340f5275ff585a9157563842732ce866277ca",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
+                "reference": "b4a3ce8c05e777fa18b802956d5d0e38ad338a69",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "*",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "1.0.*",
+                "symfony/class-loader": "*",
+                "zendframework/zend-cache": "2.0.*",
+                "zendframework/zend-log": "2.0.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Tests": "tests/",
+                    "Guzzle": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2013-12-05 23:39:20"
+        },
+        {
+            "name": "janmarek/webloader",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/janmarek/WebLoader.git",
+                "reference": "b51478e2d302aa98cc9c64a9f55779071621f2c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/b51478e2d302aa98cc9c64a9f55779071621f2c9",
+                "reference": "b51478e2d302aa98cc9c64a9f55779071621f2c9",
                 "shasum": ""
             },
             "require": {
@@ -26,23 +118,25 @@
                 "mockery/mockery": "0.7.*",
                 "phpunit/phpunit": "3.7.*"
             },
+            "suggest": {
+                "leafo/lessphp": "Lessphp is a composer for LESS written in PHP."
+            },
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "WebLoader": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
                     "name": "Jan Marek",
-                    "email": "mail@janmarek.net"
-                },
-                {
-                    "name": "Martin Jantošovič",
-                    "email": "martin.jantosovic@freya.sk"
+                    "email": "mail@janmarek.net",
+                    "homepage": "http://www.janmarek.net/",
+                    "role": "Author"
                 }
             ],
             "description": "Tool for loading or deploying CSS and JS files into web pages",
@@ -54,10 +148,7 @@
                 "nette",
                 "webloader"
             ],
-            "support": {
-                "source": "https://github.com/Mordred/WebLoader/tree/nette-master"
-            },
-            "time": "2013-08-08 07:32:17"
+            "time": "2013-11-24 01:08:23"
         },
         {
             "name": "jantvrdik/nette-doc-convertor",
@@ -107,23 +198,29 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "8a8f304e91a5dbd5ca86fb703675dd060cc5d560"
+                "reference": "acd9db400b76d9599df06c86785e64b798c8ccf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/8a8f304e91a5dbd5ca86fb703675dd060cc5d560",
-                "reference": "8a8f304e91a5dbd5ca86fb703675dd060cc5d560",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/acd9db400b76d9599df06c86785e64b798c8ccf1",
+                "reference": "acd9db400b76d9599df06c86785e64b798c8ccf1",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "kriswallsmith/buzz": ">=0.7",
+                "guzzle/guzzle": ">=3.7",
                 "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.6.0"
+            },
+            "suggest": {
+                "knplabs/gaufrette": "Needed for optional Gaufrette cache"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -154,55 +251,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2013-07-31 13:28:53"
-        },
-        {
-            "name": "kriswallsmith/buzz",
-            "version": "v0.10",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "759432d66387e3433d3b06cb6f773b97225b9b17"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/759432d66387e3433d3b06cb6f773b97225b9b17",
-                "reference": "759432d66387e3433d3b06cb6f773b97225b9b17",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "suggest": {
-                "ext-curl": "*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Buzz": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kris Wallsmith",
-                    "email": "kris.wallsmith@gmail.com",
-                    "homepage": "http://kriswallsmith.net/"
-                }
-            ],
-            "description": "Lightweight HTTP client",
-            "homepage": "https://github.com/kriswallsmith/Buzz",
-            "keywords": [
-                "curl",
-                "http client"
-            ],
-            "time": "2013-05-19 03:41:15"
+            "time": "2013-12-09 12:21:59"
         },
         {
             "name": "kukulich/fshl",
@@ -294,12 +343,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/neeckeloo/ClosureCompilerPHP.git",
-                "reference": "3d630304cc6d2a924d8969bac565a7ada972ac3d"
+                "reference": "1fb9e6e0c952b35f4e84b3a1d42ce3ac814aaf49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/3d630304cc6d2a924d8969bac565a7ada972ac3d",
-                "reference": "3d630304cc6d2a924d8969bac565a7ada972ac3d",
+                "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/1fb9e6e0c952b35f4e84b3a1d42ce3ac814aaf49",
+                "reference": "1fb9e6e0c952b35f4e84b3a1d42ce3ac814aaf49",
                 "shasum": ""
             },
             "require": {
@@ -312,6 +361,7 @@
                     "Closure": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -325,11 +375,7 @@
             "keywords": [
                 "closure compiler"
             ],
-            "support": {
-                "source": "https://github.com/neeckeloo/ClosureCompilerPHP/tree/master",
-                "issues": "https://github.com/neeckeloo/ClosureCompilerPHP/issues"
-            },
-            "time": "2012-12-27 11:32:57"
+            "time": "2013-10-22 11:55:50"
         },
         {
             "name": "nette/nette",
@@ -409,6 +455,60 @@
             "time": "2013-12-16 21:50:44"
         },
         {
+            "name": "symfony/event-dispatcher",
+            "version": "v2.4.0",
+            "target-dir": "Symfony/Component/EventDispatcher",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/EventDispatcher.git",
+                "reference": "acd1707236f6eb96fbb8d58f63d289b72ebc2f6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/acd1707236f6eb96fbb8d58f63d289b72ebc2f6e",
+                "reference": "acd1707236f6eb96fbb8d58f63d289b72ebc2f6e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "symfony/dependency-injection": "~2.0"
+            },
+            "suggest": {
+                "symfony/dependency-injection": "",
+                "symfony/http-kernel": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony EventDispatcher Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-12-03 14:52:22"
+        },
+        {
             "name": "texy/texy",
             "version": "v2.3",
             "source": {
@@ -463,7 +563,7 @@
         },
         {
             "name": "zendframework/zend-escaper",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "target-dir": "Zend/Escaper",
             "source": {
                 "type": "git",
@@ -503,17 +603,17 @@
         },
         {
             "name": "zendframework/zend-http",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "target-dir": "Zend/Http",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendHttp.git",
-                "reference": "23c58ffd0929dc328c62f1fe12e7a343638c70c8"
+                "reference": "5b8745a7f857fbf3bd989b2ccaebd6778de7c25a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendHttp/zipball/23c58ffd0929dc328c62f1fe12e7a343638c70c8",
-                "reference": "23c58ffd0929dc328c62f1fe12e7a343638c70c8",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendHttp/zipball/5b8745a7f857fbf3bd989b2ccaebd6778de7c25a",
+                "reference": "5b8745a7f857fbf3bd989b2ccaebd6778de7c25a",
                 "shasum": ""
             },
             "require": {
@@ -544,28 +644,25 @@
                 "http",
                 "zf2"
             ],
-            "time": "2013-08-21 17:08:02"
+            "time": "2013-10-23 15:00:05"
         },
         {
             "name": "zendframework/zend-loader",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "target-dir": "Zend/Loader",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendLoader.git",
-                "reference": "11a952589d37879d92fee78e70eed731c1073ed3"
+                "reference": "9e3537a6012dc0b184f66f8668e6c33fd805f0eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendLoader/zipball/11a952589d37879d92fee78e70eed731c1073ed3",
-                "reference": "11a952589d37879d92fee78e70eed731c1073ed3",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendLoader/zipball/9e3537a6012dc0b184f66f8668e6c33fd805f0eb",
+                "reference": "9e3537a6012dc0b184f66f8668e6c33fd805f0eb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
-            },
-            "suggest": {
-                "zendframework/zend-stdlib": "Zend\\Stdlib component"
             },
             "type": "library",
             "extra": {
@@ -587,21 +684,21 @@
                 "loader",
                 "zf2"
             ],
-            "time": "2013-08-21 17:07:14"
+            "time": "2013-10-20 06:00:17"
         },
         {
             "name": "zendframework/zend-stdlib",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "target-dir": "Zend/Stdlib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-                "reference": "7c87ce4e840957596bf3401fa4ae4fb0355682e2"
+                "reference": "f440ecfc828d61d620662a03987c8287e1e4801e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/7c87ce4e840957596bf3401fa4ae4fb0355682e2",
-                "reference": "7c87ce4e840957596bf3401fa4ae4fb0355682e2",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/f440ecfc828d61d620662a03987c8287e1e4801e",
+                "reference": "f440ecfc828d61d620662a03987c8287e1e4801e",
                 "shasum": ""
             },
             "require": {
@@ -631,11 +728,11 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2013-08-21 17:08:07"
+            "time": "2013-10-20 06:00:20"
         },
         {
             "name": "zendframework/zend-uri",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "target-dir": "Zend/Uri",
             "source": {
                 "type": "git",
@@ -678,17 +775,17 @@
         },
         {
             "name": "zendframework/zend-validator",
-            "version": "2.2.4",
+            "version": "2.2.5",
             "target-dir": "Zend/Validator",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/Component_ZendValidator.git",
-                "reference": "3aa2c87ee3d36763b30087b1188f42a6c95f414f"
+                "reference": "8c23193a617a03dd7ee6c25049132c942f31ec28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/Component_ZendValidator/zipball/3aa2c87ee3d36763b30087b1188f42a6c95f414f",
-                "reference": "3aa2c87ee3d36763b30087b1188f42a6c95f414f",
+                "url": "https://api.github.com/repos/zendframework/Component_ZendValidator/zipball/8c23193a617a03dd7ee6c25049132c942f31ec28",
+                "reference": "8c23193a617a03dd7ee6c25049132c942f31ec28",
                 "shasum": ""
             },
             "require": {
@@ -707,7 +804,8 @@
                 "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages as well as to use the various Date validators",
                 "zendframework/zend-math": "Zend\\Math component",
                 "zendframework/zend-resources": "Translations of validator messages",
-                "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains"
+                "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
+                "zendframework/zend-uri": "Zend\\Uri component, required by the Uri and Sitemap\\Loc validators"
             },
             "type": "library",
             "extra": {
@@ -730,29 +828,30 @@
                 "validator",
                 "zf2"
             ],
-            "time": "2013-08-21 17:07:51"
+            "time": "2013-10-20 06:00:22"
         }
     ],
     "packages-dev": [
         {
             "name": "nette/tester",
-            "version": "v0.9.3",
+            "version": "v0.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "6729cd04e70761c51f77bdb46e2916220f18ee56"
+                "reference": "6a66b714cf9eb23548af2418085bed30daea8903"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/6729cd04e70761c51f77bdb46e2916220f18ee56",
-                "reference": "6729cd04e70761c51f77bdb46e2916220f18ee56",
+                "url": "https://api.github.com/repos/nette/tester/zipball/6a66b714cf9eb23548af2418085bed30daea8903",
+                "reference": "6a66b714cf9eb23548af2418085bed30daea8903",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
             "bin": [
-                "Tester/tester"
+                "Tester/tester",
+                "Tester/coverage-report"
             ],
             "type": "library",
             "autoload": {
@@ -783,7 +882,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2013-08-07 08:59:53"
+            "time": "2013-12-11 17:10:48"
         }
     ],
     "aliases": [

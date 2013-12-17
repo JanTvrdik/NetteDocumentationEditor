@@ -85,18 +85,18 @@ class ContentsTest extends TestCase
 
         $this->assertEquals($expectedValue, $api->archive('KnpLabs', 'php-github-api', 'zipball'));
     }
-    
+
     /**
      * @test
      */
     public function shouldDownloadForGivenPath()
     {
         // The show() method return
-        $getValue = include 'ContentsDownloadFixture.php';
-        
+        $getValue = include __DIR__.'/fixtures/ContentsDownloadFixture.php';
+
         // The download() method return
         $expectedValue = base64_decode($getValue['content']);
-        
+
         $api = $this->getApiMock();
         $api->expects($this->once())
             ->method('get')
@@ -104,6 +104,26 @@ class ContentsTest extends TestCase
             ->will($this->returnValue($getValue));
 
         $this->assertEquals($expectedValue, $api->download('KnpLabs', 'php-github-api', 'test/Github/Tests/Api/Repository/ContentsTest.php'));
+    }
+
+    /**
+     * @test
+     */
+    public function shouldDownloadForSpacedPath()
+    {
+        // The show() method return
+        $getValue = include __DIR__.'/fixtures/ContentsDownloadSpacedFixture.php';
+
+        // The download() method return
+        $expectedValue = base64_decode($getValue['content']);
+
+        $api = $this->getApiMock();
+        $api->expects($this->once())
+            ->method('get')
+            ->with('repos/mads379/scala.tmbundle/contents/Syntaxes%2FSimple%20Build%20Tool.tmLanguage', array('ref' => null))
+            ->will($this->returnValue($getValue));
+
+        $this->assertEquals($expectedValue, $api->download('mads379', 'scala.tmbundle', 'Syntaxes/Simple Build Tool.tmLanguage'));
     }
 
     protected function getApiClass()

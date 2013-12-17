@@ -5,7 +5,7 @@ namespace WebLoader\Nette;
 /**
  * @author Jan Marek
  */
-class Extension extends \Nette\DI\CompilerExtension
+class Extension extends \Nette\Config\CompilerExtension
 {
 
 	const EXTENSION_NAME = 'webloader';
@@ -15,7 +15,6 @@ class Extension extends \Nette\DI\CompilerExtension
 		return array(
 			'jsDefaults' => array(
 				'sourceDir' => '%wwwDir%/js',
-				'extensions' => array('js'),
 				'tempDir' => '%wwwDir%/webtemp',
 				'tempPath' => 'webtemp',
 				'files' => array(),
@@ -27,7 +26,6 @@ class Extension extends \Nette\DI\CompilerExtension
 			),
 			'cssDefaults' => array(
 				'sourceDir' => '%wwwDir%/css',
-				'extensions' => array('css'),
 				'tempDir' => '%wwwDir%/webtemp',
 				'tempPath' => 'webtemp',
 				'files' => array(),
@@ -73,7 +71,7 @@ class Extension extends \Nette\DI\CompilerExtension
 
 		$files = $builder->addDefinition($filesServiceName)
 			->setClass('WebLoader\FileCollection')
-			->setArguments(array($config['sourceDir'], $config['extensions']));
+			->setArguments(array($config['sourceDir']));
 
 		foreach ($config['files'] as $file) {
 			// finder support
@@ -108,20 +106,20 @@ class Extension extends \Nette\DI\CompilerExtension
 				$config['tempDir'],
 			));
 
-		$compiler->addSetup('setJoinFiles', $config['joinFiles']);
+		$compiler->addSetup('setJoinFiles', array($config['joinFiles']));
 
 		foreach ($config['filters'] as $filter) {
-			$compiler->addSetup('addFilter', $filter);
+			$compiler->addSetup('addFilter', array($filter));
 		}
 
 		foreach ($config['fileFilters'] as $filter) {
-			$compiler->addSetup('addFileFilter', $filter);
+			$compiler->addSetup('addFileFilter', array($filter));
 		}
 
 		// todo css media
 	}
 
-	public function install(\Nette\Configurator $configurator)
+	public function install(\Nette\Config\Configurator $configurator)
 	{
 		$self = $this;
 		$configurator->onCompile[] = function ($configurator, $compiler) use ($self) {

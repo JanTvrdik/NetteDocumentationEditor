@@ -77,6 +77,16 @@ class CurrentUser extends AbstractApi
     }
 
     /**
+     * @link http://developer.github.com/v3/orgs/#list-user-organizations
+     *
+     * @return array
+     */
+    public function organizations()
+    {
+        return $this->get('user/orgs');
+    }
+
+    /**
      * @link http://developer.github.com/v3/repos/#list-your-repositories
      *
      * @return array
@@ -97,6 +107,16 @@ class CurrentUser extends AbstractApi
     public function watched($page = 1)
     {
         return $this->get('user/watched', array(
+            'page' => $page
+        ));
+    }
+
+    /**
+     *  @link http://developer.github.com/changes/2012-9-5-watcher-api/
+     */
+    public function starred($page = 1)
+    {
+        return $this->get('user/starred', array(
             'page' => $page
         ));
     }

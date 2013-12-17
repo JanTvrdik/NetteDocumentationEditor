@@ -11,21 +11,11 @@
 		"nette/nette": "2.2.*@dev",
 		"knplabs/github-api": "@dev",
 		"jantvrdik/nette-doc-convertor": "@dev",
-		"janmarek/webloader": "dev-nette-master",
+		"janmarek/webloader": "@dev",
 		"neeckeloo/closure-compiler-php": "@dev",
 		"natxet/cssmin": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "~0.9"
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/Mordred/WebLoader"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/neeckeloo/ClosureCompilerPHP"
-		}
-	]
+	}
 }

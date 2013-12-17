@@ -42,7 +42,7 @@ class CssUrlsFilter
 	public function absolutizeUrl($url, $quote, $cssFile)
 	{
 		// is already absolute
-		if (preg_match("/^([a-z]+:\/)?\//", $url)) {
+		if (preg_match('/^([a-z]+:\/)?\//', $url)) {
 			return $url;
 		}
 
@@ -70,8 +70,7 @@ class CssUrlsFilter
 	{
 		$path = strtr($path, DIRECTORY_SEPARATOR, '/');
 
-		$pathArr = [];
-
+		$pathArr = array();
 		foreach (explode('/', $path) as $i => $name) {
 			if ($name === '.' || ($name === '' && $i > 0)) continue;
 

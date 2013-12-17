@@ -58,7 +58,7 @@ class TestCase
 				$data[] = array();
 			}
 
-			foreach ($data as $key => $args) {
+			foreach ($data as $args) {
 				try {
 					if ($info['throws']) {
 						$tmp = $this;
@@ -91,7 +91,11 @@ class TestCase
 			call_user_func_array(array($this, $name), $args);
 		} catch (\Exception $e) {
 		}
-		$this->tearDown();
+		try {
+			$this->tearDown();
+		} catch (\Exception $tearDownEx) {
+			throw isset($e) ? $e : $tearDownEx;
+		}
 		if (isset($e)) {
 			throw $e;
 		}

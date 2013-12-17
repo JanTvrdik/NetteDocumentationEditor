@@ -2,9 +2,10 @@
 
 namespace Github\HttpClient\Listener;
 
-use Buzz\Listener\ListenerInterface;
-use Buzz\Message\MessageInterface;
-use Buzz\Message\RequestInterface;
+use Github\HttpClient\Message\ResponseMediator;
+use Guzzle\Common\Event;
+use Guzzle\Http\Message\Response;
+
 use Github\Exception\ApiLimitExceedException;
 use Github\Exception\ErrorException;
 use Github\Exception\RuntimeException;
@@ -13,7 +14,7 @@ use Github\Exception\ValidationFailedException;
 /**
  * @author Joseph Bielawski <stloyd@gmail.com>
  */
-class ErrorListener implements ListenerInterface
+class ErrorListener
 {
     /**
      * @var array
@@ -31,23 +32,20 @@ class ErrorListener implements ListenerInterface
     /**
      * {@inheritDoc}
      */
-    public function preSend(RequestInterface $request)
+    public function onRequestError(Event $event)
     {
-    }
+        /** @var $request \Guzzle\Http\Message\Request */
+        $request = $event['request'];
+        $response = $request->getResponse();
 
-    /**
-     * {@inheritDoc}
-     */
-    public function postSend(RequestInterface $request, MessageInterface $response)
-    {
-        /** @var $response \Github\HttpClient\Message\Response */
         if ($response->isClientError() || $response->isServerError()) {
-            $remaining = $response->getHeader('X-RateLimit-Remaining');
-            if (null !== $remaining && 1 > $remaining) {
+            $remaining = (string) $response->getHeader('X-RateLimit-Remaining');
+
+            if (null != $remaining && 1 > $remaining && 'rate_limit' !== substr($request->getResource(), 1, 10)) {
                 throw new ApiLimitExceedException($this->options['api_limit']);
             }
 
-            $content = $response->getContent();
+            $content = ResponseMediator::getContent($response);
             if (is_array($content) && isset($content['message'])) {
                 if (400 == $response->getStatusCode()) {
                     throw new ErrorException($content['message'], 400);
@@ -56,7 +54,7 @@ class ErrorListener implements ListenerInterface
                     foreach ($content['errors'] as $error) {
                         switch ($error['code']) {
                             case 'missing':
-                                $errors[] = sprintf('Resource "%s" not exists anymore', $error['resource']);
+                                $errors[] = sprintf('The %s %s does not exist, for resource "%s"', $error['field'], $error['value'], $error['resource']);
                                 break;
 
                             case 'missing_field':
@@ -83,6 +81,6 @@ class ErrorListener implements ListenerInterface
             }
 
             throw new RuntimeException(isset($content['message']) ? $content['message'] : $content, $response->getStatusCode());
-        }
+        };
     }
 }

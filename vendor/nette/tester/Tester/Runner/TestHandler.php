@@ -56,7 +56,8 @@ class TestHandler
 			if ($res === TRUE) {
 				$job = TRUE;
 			} elseif ($res) {
-				return $this->runner->writeResult($testName, $res[0], $res[1]);
+				$this->runner->writeResult($testName, $res[0], $res[1]);
+				return;
 			}
 		}
 
@@ -80,7 +81,8 @@ class TestHandler
 
 		foreach (array_intersect_key($this->assessments, $options) as $name => $method) {
 			if ($res = $this->$method($job, $options[$name])) {
-				return $this->runner->writeResult($testName, $res[0], $res[1]);
+				$this->runner->writeResult($testName, $res[0], $res[1]);
+				return;
 			}
 		}
 		$this->runner->writeResult($testName, Runner::PASSED);
@@ -115,7 +117,7 @@ class TestHandler
 
 	private function initiateDataProvider($provider, PhpExecutable $php, $file)
 	{
-		if (!preg_match('#^(\??)\s*([^,]+)\s*,?\s*(\S.*)?()#', $provider, $matches)) {
+		if (!preg_match('#^(\??)\s*([^,\s]+)\s*,?\s*(\S.*)?()#', $provider, $matches)) {
 			return array(Runner::FAILED, 'Invalid @dataprovider value.');
 		}
 		try {

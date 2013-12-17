@@ -8,10 +8,6 @@
 		{
 			"name": "Jan Marek",
 			"email": "mail@janmarek.net"
-		},
-		{
-			"name": "Martin Jantošovič",
-			"email": "martin.jantosovic@freya.sk"
 		}
 	],
 	"autoload": {
@@ -21,6 +17,9 @@
 	},
 	"require": {
 		"nette/nette": "~2.0"
+	},
+	"suggest": {
+		"leafo/lessphp": "Lessphp is a composer for LESS written in PHP."
 	},
 	"require-dev": {
 		"mockery/mockery": "0.7.*",

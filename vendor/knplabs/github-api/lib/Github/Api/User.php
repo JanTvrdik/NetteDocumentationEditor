@@ -15,97 +15,97 @@ class User extends AbstractApi
      * Search users by username:
      * @link http://developer.github.com/v3/search/#search-users
      *
-     * @param  string $keyword the keyword to search
+     * @param string $keyword the keyword to search
      *
-     * @return array           list of users found
+     * @return array list of users found
      */
     public function find($keyword)
     {
-        return $this->get('legacy/user/search/'.urlencode($keyword));
+        return $this->get('legacy/user/search/'.rawurlencode($keyword));
     }
 
     /**
      * Get extended information about a user by its username
      * @link http://developer.github.com/v3/users/
      *
-     * @param  string  $username         the username to show
-     * @return array                     informations about the user
+     * @param  string $username the username to show
+     * @return array  informations about the user
      */
     public function show($username)
     {
-        return $this->get('users/'.urlencode($username));
+        return $this->get('users/'.rawurlencode($username));
     }
 
     /**
      * Request the users that a specific user is following
      * @link http://developer.github.com/v3/users/followers/
      *
-     * @param  string  $username         the username
-     * @return array                     list of followed users
+     * @param  string $username the username
+     * @return array  list of followed users
      */
     public function following($username)
     {
-        return $this->get('users/'.urlencode($username).'/following');
+        return $this->get('users/'.rawurlencode($username).'/following');
     }
 
     /**
      * Request the users following a specific user
      * @link http://developer.github.com/v3/users/followers/
      *
-     * @param  string  $username         the username
-     * @return array                     list of following users
+     * @param  string $username the username
+     * @return array  list of following users
      */
     public function followers($username)
     {
-        return $this->get('users/'.urlencode($username).'/followers');
+        return $this->get('users/'.rawurlencode($username).'/followers');
     }
 
     /**
      * Request the repository that a specific user is watching
      * @link http://developer.github.com/v3/repos/watching/
      *
-     * @param  string  $username         the username
-     * @return array                     list of watched repositories
+     * @param  string $username the username
+     * @return array  list of watched repositories
      */
     public function watched($username)
     {
-        return $this->get('users/'.urlencode($username).'/watched');
+        return $this->get('users/'.rawurlencode($username).'/watched');
     }
 
     /**
      * Get the repositories of a user
      * @link http://developer.github.com/v3/repos/
      *
-     * @param  string  $username         the username
-     * @return array                     list of the user repositories
+     * @param  string $username the username
+     * @return array  list of the user repositories
      */
     public function repositories($username)
     {
-        return $this->get('users/'.urlencode($username).'/repos');
+        return $this->get('users/'.rawurlencode($username).'/repos');
     }
 
     /**
      * Get the public gists for a user
      * @link http://developer.github.com/v3/gists/
      *
-     * @param  string  $username         the username
-     * @return array                     list of the user gists
+     * @param  string $username the username
+     * @return array  list of the user gists
      */
     public function gists($username)
     {
-        return $this->get('users/'.urlencode($username).'/gists');
+        return $this->get('users/'.rawurlencode($username).'/gists');
     }
 
     /**
      * Get the public keys for a user
      * @link http://developer.github.com/v3/users/keys/#list-public-keys-for-a-user
      *
-     * @param  string  $username         the username
-     * @return array                     list of the user public keys
+     * @param  string $username the username
+     * @return array  list of the user public keys
      */
     public function keys($username)
     {
-        return $this->get('users/'.urlencode($username).'/keys');
+        return $this->get('users/'.rawurlencode($username).'/keys');
     }
 
     /**
@@ -119,6 +119,6 @@ class User extends AbstractApi
      */
     public function publicEvents($username)
     {
-        return $this->get('users/' . urlencode($username) . '/events/public');
+        return $this->get('users/'.rawurlencode($username) . '/events/public');
     }
 }

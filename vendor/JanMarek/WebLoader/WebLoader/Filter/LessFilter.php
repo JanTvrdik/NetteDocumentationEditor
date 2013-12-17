@@ -3,17 +3,20 @@
 namespace WebLoader\Filter;
 
 /**
- * Convert LESS to CSS
+ * Less CSS filter
  *
- * Add to composer.json "https://github.com/Mordred/less.php"
- *
- * @author Mgr. Martin Jantošovič <martin.jantosovic@freya.sk>
+ * @author Jan Marek
+ * @license MIT
  */
-class LessFilter extends \Nette\Object {
-
-	const RE_STRING = '\'(?:\\\\.|[^\'\\\\])*\'|"(?:\\\\.|[^"\\\\])*"';
+class LessFilter
+{
 
 	private $lc;
+
+	public function __construct(\lessc $lc = NULL)
+	{
+		$this->lc = $lc;
+	}
 
 	/**
 	 * @return \lessc
@@ -30,33 +33,19 @@ class LessFilter extends \Nette\Object {
 
 	/**
 	 * Invoke filter
-	 * @param string code
-	 * @param WebLoader loader
-	 * @param string file
+	 * @param string $code
+	 * @param \WebLoader\Compiler $loader
+	 * @param string $file
 	 * @return string
 	 */
-	public function __invoke($code, \WebLoader\Compiler $loader, $file = null)
+	public function __invoke($code, \WebLoader\Compiler $loader, $file)
 	{
-		$info = pathinfo($file);
-		// Iba na LESS subory
-		if (strtolower($info['extension']) != 'less') {
-			return $code;
+		if (pathinfo($file, PATHINFO_EXTENSION) === 'less') {
+			$this->getLessC()->importDir = pathinfo($file, PATHINFO_DIRNAME) . '/';
+			return $this->getLessC()->parse($code);
 		}
 
-		$dir = dirname($file);
-		$dependencies = [];
-		foreach (\Nette\Utils\Strings::matchAll($code, '/@import ('.self::RE_STRING.');/') as $match) {
-			$dependedFile = $dir . '/' . substr($match[1], 1, strlen($match[1]) - 2);
-			if (is_file($dependedFile))
-				$dependencies[] = $dependedFile;
-		}
-		if ($dependencies)
-			$loader->setDependedFiles($file, $dependencies);
-
-		$lessc = $this->getLessC();
-
-		$lessc->importDir = [ $info['dirname'], '' ];
-		return $lessc->parse($code);
+		return $code;
 	}
 
 }

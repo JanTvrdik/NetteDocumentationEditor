@@ -58,7 +58,11 @@ class RemoteCompiler extends AbstractCompiler
     public function getRequestHandler()
     {
         if (!isset($this->requestHandler)) {
-            $this->setRequestHandler(new \Zend\Http\Client());
+            $requestHandler = new \Zend\Http\Client();
+            $requestHandler->setOptions(array(
+                'timeout'=> 60
+            ));
+            $this->setRequestHandler($requestHandler);
         }
 
         return $this->requestHandler;

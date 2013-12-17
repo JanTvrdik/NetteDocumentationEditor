@@ -95,11 +95,9 @@ class DefaultOutputNamingConvention implements IOutputNamingConvention
 		return $this->prefix . $name . $this->suffix;
 	}
 
-	protected function createHash(array $files, \WebLoader\Compiler $compiler)
+	protected function createHash(array $files, Compiler $compiler)
 	{
-		$token = implode("|", $files)
-			. $compiler->getLastModified($files);
-		return substr(md5($token), 0, 12);
+		return substr(md5(implode("|", $files)), 0, 12);
 	}
 
 }
