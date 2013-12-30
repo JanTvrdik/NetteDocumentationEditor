@@ -22,6 +22,13 @@ test(function () {
 	$mapper = new WebRepoMapper();
 	Assert::same( ['doc-0.9', 'cs/quickstart/model.texy'], $mapper->webToRepo('doc-0.9', 'cs', 'quickstart/model') );
 });
+
+test(function () {
+	$mapper = new WebRepoMapper();
+	Assert::same( 'http://doc.nette.org/cs/0.9/quickstart/model', $mapper->webToUrl('doc-0.9', 'cs', 'quickstart/model') );
+	Assert::same( 'http://pla.nette.org/en/', $mapper->webToUrl('pla', 'en', 'homepage') );
+	Assert::same( 'http://nette.org/cs/about', $mapper->webToUrl('www', 'cs', 'about') );
+	Assert::same( 'http://nette.org/cs/', $mapper->webToUrl('www', 'cs', 'homepage') );
 });
 
 test(function () {

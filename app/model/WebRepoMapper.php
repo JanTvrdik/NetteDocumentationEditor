@@ -79,11 +79,11 @@ class WebRepoMapper extends Nette\Object
 
 	public function webToUrl($book, $lang, $name)
 	{
-		list($book) = $parts = explode('-', $book);
-		$sub = ($book === 'www' ? '' : $book . '.');
+		$parts = explode('-', $book);
+		$sub = ($parts[0] === 'www' ? '' : $parts[0] . '.');
 		$version = isset($parts[1]) ? '/' . $parts[1] : '';
 		$name = ($name === 'homepage' ? '' : $name);
-		return 'http://' . $sub . 'nette.org/' . $lang . '/' . $version . $name;
+		return 'http://' . $sub . 'nette.org/' . $lang . $version . '/' . $name;
 	}
 
 	/**
