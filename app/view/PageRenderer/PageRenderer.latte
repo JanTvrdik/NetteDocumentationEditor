@@ -22,7 +22,7 @@
 	<header n:ifset="$topMenu" id="header">
 		<a id="logo" title="Homepage" href="{$homepageLink}"><span>Homepage</span></a>
 		<nav id="menu">
-			{!$topMenu}
+			{$topMenu|noescape}
 		</nav>
 	</header>
 	<div n:ifset="$topMenu" id="wikimenu">
@@ -38,7 +38,7 @@
 	</div>
 	<div id="main" n:class="$toc ? sidebar">
 		<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>
-		<div id="content" n:class="$theme ? $theme">{!$htmlContent}</div>
+		<div id="content" n:class="$theme ? $theme">{$htmlContent|noescape}</div>
 		{if $toc}
 			<aside id="sidebar">
 				<div id="toc">
