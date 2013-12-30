@@ -158,7 +158,7 @@ class Form extends Container
 	 * Returns self.
 	 * @return Form
 	 */
-	final public function getForm($need = TRUE)
+	public function getForm($need = TRUE)
 	{
 		return $this;
 	}
@@ -311,7 +311,7 @@ class Form extends Container
 	 * Returns translate adapter.
 	 * @return Nette\Localization\ITranslator|NULL
 	 */
-	final public function getTranslator()
+	public function getTranslator()
 	{
 		return $this->translator;
 	}
@@ -334,7 +334,7 @@ class Form extends Container
 	 * Tells if the form was submitted.
 	 * @return ISubmitterControl|FALSE  submittor control
 	 */
-	final public function isSubmitted()
+	public function isSubmitted()
 	{
 		if ($this->submittedBy === NULL) {
 			$this->getHttpData();
@@ -347,7 +347,7 @@ class Form extends Container
 	 * Tells if the form was submitted and successfully validated.
 	 * @return bool
 	 */
-	final public function isSuccess()
+	public function isSuccess()
 	{
 		return $this->isSubmitted() && $this->isValid();
 	}
@@ -368,7 +368,7 @@ class Form extends Container
 	 * Returns submitted HTTP data.
 	 * @return mixed
 	 */
-	final public function getHttpData($type = NULL, $htmlName = NULL)
+	public function getHttpData($type = NULL, $htmlName = NULL)
 	{
 		if ($this->httpData === NULL) {
 			if (!$this->isAnchored()) {
@@ -497,7 +497,7 @@ class Form extends Container
 	 */
 	public function getErrors()
 	{
-		return array_unique($this->errors);
+		return array_unique(array_merge($this->errors, parent::getErrors()));
 	}
 
 
@@ -520,12 +520,20 @@ class Form extends Container
 
 
 	/**
-	 * Returns all validation errors.
+	 * Returns form's validation errors.
 	 * @return array
 	 */
+	public function getOwnErrors()
+	{
+		return array_unique($this->errors);
+	}
+
+
+	/** @deprecated */
 	public function getAllErrors()
 	{
-		return array_unique(array_merge($this->errors, parent::getAllErrors()));
+		trigger_error(__METHOD__ . '() is deprecated; use getErrors() instead.', E_USER_DEPRECATED);
+		return $this->errors();
 	}
 
 
@@ -557,7 +565,7 @@ class Form extends Container
 	 * Returns form renderer.
 	 * @return IFormRenderer
 	 */
-	final public function getRenderer()
+	public function getRenderer()
 	{
 		if ($this->renderer === NULL) {
 			$this->renderer = new Rendering\DefaultFormRenderer;

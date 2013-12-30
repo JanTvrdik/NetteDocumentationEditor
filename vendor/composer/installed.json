@@ -193,12 +193,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/nette/nette.git",
-            "reference": "f14c4056f5d9813affff5d468499cd55270113bf"
+            "reference": "441e41bcd0838c6be8fd3484564361c39594ef4e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/nette/zipball/f14c4056f5d9813affff5d468499cd55270113bf",
-            "reference": "f14c4056f5d9813affff5d468499cd55270113bf",
+            "url": "https://api.github.com/repos/nette/nette/zipball/441e41bcd0838c6be8fd3484564361c39594ef4e",
+            "reference": "441e41bcd0838c6be8fd3484564361c39594ef4e",
             "shasum": ""
         },
         "require": {
@@ -213,10 +213,9 @@
             "ext-fileinfo": "*",
             "ext-gd": "*",
             "ext-mbstring": "*",
-            "ext-memcache": "*",
             "ext-pdo": "*"
         },
-        "time": "2013-12-17 00:32:22",
+        "time": "2013-12-30 15:40:20",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -253,15 +252,10 @@
         "keywords": [
             "Forms",
             "database",
-            "dbal",
             "debugging",
             "framework",
-            "images",
-            "latte",
             "mailing",
-            "micro",
             "mvc",
-            "neon",
             "templating"
         ]
     },
@@ -643,61 +637,6 @@
         ]
     },
     {
-        "name": "janmarek/webloader",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/janmarek/WebLoader.git",
-            "reference": "b51478e2d302aa98cc9c64a9f55779071621f2c9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/b51478e2d302aa98cc9c64a9f55779071621f2c9",
-            "reference": "b51478e2d302aa98cc9c64a9f55779071621f2c9",
-            "shasum": ""
-        },
-        "require": {
-            "nette/nette": "~2.0"
-        },
-        "require-dev": {
-            "mockery/mockery": "0.7.*",
-            "phpunit/phpunit": "3.7.*"
-        },
-        "suggest": {
-            "leafo/lessphp": "Lessphp is a composer for LESS written in PHP."
-        },
-        "time": "2013-11-24 01:08:23",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "WebLoader": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jan Marek",
-                "email": "mail@janmarek.net",
-                "homepage": "http://www.janmarek.net/",
-                "role": "Author"
-            }
-        ],
-        "description": "Tool for loading or deploying CSS and JS files into web pages",
-        "homepage": "http://addons.nette.org/cs/webloader",
-        "keywords": [
-            "assets",
-            "css",
-            "javascript",
-            "nette",
-            "webloader"
-        ]
-    },
-    {
         "name": "kriswallsmith/buzz",
         "version": "v0.10",
         "version_normalized": "0.10.0.0",
@@ -805,6 +744,61 @@
             "gh",
             "gist",
             "github"
+        ]
+    },
+    {
+        "name": "janmarek/webloader",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/janmarek/WebLoader.git",
+            "reference": "713df0c0cb3a01604254032923a96d21c37abfd7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/713df0c0cb3a01604254032923a96d21c37abfd7",
+            "reference": "713df0c0cb3a01604254032923a96d21c37abfd7",
+            "shasum": ""
+        },
+        "require": {
+            "nette/nette": "~2.0@rc"
+        },
+        "require-dev": {
+            "mockery/mockery": "0.7.*",
+            "phpunit/phpunit": "3.7.*"
+        },
+        "suggest": {
+            "leafo/lessphp": "Lessphp is a composer for LESS written in PHP."
+        },
+        "time": "2013-12-30 01:11:51",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "WebLoader": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Marek",
+                "email": "mail@janmarek.net",
+                "homepage": "http://www.janmarek.net/",
+                "role": "Author"
+            }
+        ],
+        "description": "Tool for loading or deploying CSS and JS files into web pages",
+        "homepage": "http://addons.nette.org/cs/webloader",
+        "keywords": [
+            "assets",
+            "css",
+            "javascript",
+            "nette",
+            "webloader"
         ]
     }
 ]
