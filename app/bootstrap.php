@@ -1,12 +1,12 @@
 <?php
 namespace App;
 
+use Nette;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-class_alias('Nette\DI\CompilerExtension', 'Nette\Config\CompilerExtension');
 
-
-$configurator = new \Nette\Configurator();
+$configurator = new Nette\Configurator();
 $configurator->enableDebugger(__DIR__ . '/../log');
 $configurator->setTempDirectory(__DIR__ . '/../temp');
 $configurator->createRobotLoader()->addDirectory(__DIR__)->register();
