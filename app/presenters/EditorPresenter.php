@@ -87,7 +87,7 @@ final class EditorPresenter extends BasePresenter
 		$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
 		if ($web) {
 			$lang = $web[1];
-			$menu = $this->editorModel->loadPage('meta', $lang . '/menu.texy');
+			$menu = $this->editorModel->loadPage('nette.org', 'meta/' . $lang . '/menu.texy');
 		}
 
 		$content = $this->pageRenderer->render($page, isset($menu) ? $menu : NULL);
