@@ -70,7 +70,7 @@ class WebRepoMapper extends Nette\Object
 		if (!$m) return FALSE;
 		$book = (!empty($m['book']) ? $m['book'] : 'www');
 		if ($book === 'doc') {
-			$book .= '-' . ($m['version'] ?: $this->defaultDocVersion);
+			$book .= '-' . (!empty($m['version']) ? $m['version'] : $this->defaultDocVersion);
 		}
 		$lang = !empty($m['lang']) ? $m['lang'] : 'en';
 		$name = !empty($m['name']) ? rtrim($m['name'], '/') : 'homepage';
