@@ -38,7 +38,7 @@ class PageRenderer extends Nette\Object
 			$converter = new TextConverter($book, $lang, $name);
 			$converter->paths['apiUrl'] = 'http://api.nette.org/' . $this->getApiVersion($page->branch);
 			$converter->paths['profileUrl'] = 'http://forum.nette.org/cs/profile.php?id=';
-			$converter->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}/files";
+			$converter->imageRoot = "https://raw.github.com/nette/web-content/{$page->branch}" . (($page->branch === 'nette.org') ? "/$book" : '') . "/files";
 			$converter->linkFactory = function (\Text\Link $link) {
 				$fragment = ($link->fragment ? ('#' . $link->fragment) : '');
 				list($branch, $path) = $this->webRepoMapper->webToRepo($link->book, $link->lang, Strings::webalize($link->name, '/.'));
