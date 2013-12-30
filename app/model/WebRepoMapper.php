@@ -9,7 +9,10 @@ class WebRepoMapper extends Nette\Object
 {
 
 	/** @var string */
-	private $defaultDocBranch = 'doc-2.1';
+	private $defaultBranch = 'nette.org';
+
+	/** @var string */
+	private $defaultDocVersion = '2.1';
 
 	/**
 	 * Converts page identification in repository to its web identification.
@@ -20,19 +23,13 @@ class WebRepoMapper extends Nette\Object
 	 */
 	public function repoToWeb($branch, $path)
 	{
-		if (substr($path, -5) !== '.texy') return FALSE;
-		$path = substr($path, 0, -5);
-		$m = Strings::match($path, '#^([a-z]{2})/([\w/.-]+)$#');
-		if (!$m) return FALSE;
-		list(, $lang, $name) = $m;
-
-		if ($m = Strings::match($branch, '#^doc-(\d+\.\d+)$#')) {
-			$book = 'doc';
-			$name = $m[1] . '/' . $name;
+		if (strpos($branch, '-')) {
+			$m = Strings::match($path, '#^()([a-z]{2})/([\w/.-]+)\.texy$#');
 		} else {
-			$book = $branch;
+			$m = Strings::match($path, '#^([a-z]{3,})/([a-z]{2})/([\w/.-]+)\.texy$#');
 		}
-		return [$book, $lang, $name];
+		if (!$m) return FALSE;
+		return [$m[1] ?: $branch, $m[2], $m[3]];
 	}
 
 	/**
@@ -45,19 +42,13 @@ class WebRepoMapper extends Nette\Object
 	 */
 	public function webToRepo($book, $lang, $name)
 	{
-		if ($book === 'doc') {
-			if ($m = Strings::match($name, '#^(\d+\.\d+)(?:/|$)#')) {
-				$branch = 'doc-' . $m[1];
-				$name = substr($name, strlen($m[1]) + 1) ?: 'homepage';
-			} else {
-				$branch = $this->defaultDocBranch;
-			}
+		$name = $name ?: 'homepage';
+		if (strpos($book, '-')) {
+			return [$book, $lang . '/' . $name . '.texy'];
 		} else {
-			$branch = $book;
+			return [$this->defaultBranch, $book . '/' . $lang . '/' . $name . '.texy'];
 		}
 
-		$path = $lang . '/' . $name . '.texy';
-		return [$branch, $path];
 	}
 
 	/**
@@ -73,11 +64,15 @@ class WebRepoMapper extends Nette\Object
 			(?: (?<book> [\w-]+ ) \. )?
 			nette\.org
 			(?: / (?<lang> [a-z]{2} ) )?
+			(?: / (?<version> \d\.\d ) )?
 			(?: / (?<name> [\w/.-]*  ) )?
 			(?: [#?].* )?
 		$~x');
 		if (!$m) return FALSE;
-		$book = !empty($m['book']) ? $m['book'] : 'www';
+		$book = (!empty($m['book']) ? $m['book'] : 'www');
+		if ($book === 'doc') {
+			$book .= '-' . ($m['version'] ?: $this->defaultDocVersion);
+		}
 		$lang = !empty($m['lang']) ? $m['lang'] : 'en';
 		$name = !empty($m['name']) ? rtrim($m['name'], '/') : 'homepage';
 		return [$book, $lang, $name];
@@ -85,9 +80,11 @@ class WebRepoMapper extends Nette\Object
 
 	public function webToUrl($book, $lang, $name)
 	{
+		list($book) = $parts = explode('-', $book);
 		$sub = ($book === 'www' ? '' : $book . '.');
+		$version = isset($parts[1]) ? '/' . $parts[1] : '';
 		$name = ($name === 'homepage' ? '' : $name);
-		return 'http://' . $sub . 'nette.org/' . $lang . '/' . $name;
+		return 'http://' . $sub . 'nette.org/' . $lang . '/' . $version . $name;
 	}
 
 	/**
