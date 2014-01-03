@@ -2,11 +2,7 @@
 
 /**
  * Nette Tester.
- *
  * Copyright (c) 2009 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -32,7 +28,7 @@ Tester\Environment::setup();
 
 
 $cmd = new Cmd("
-Nette Tester (v0.9.4)
+Nette Tester (v0.9.5)
 ---------------------
 Usage:
 	tester.php [options] [<test file> | <directory>]...

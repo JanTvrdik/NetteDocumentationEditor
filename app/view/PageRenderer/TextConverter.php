@@ -4,7 +4,7 @@ namespace App;
 use Nette;
 use Text\Link;
 
-class TextConverter extends \Text\Convertor
+class TextConverter extends \Text\Converter
 {
 
 	/** @var callback (Text\Link) */

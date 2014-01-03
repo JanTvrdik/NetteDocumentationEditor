@@ -7,15 +7,19 @@
 		}
 	],
 	"require": {
-		"php": ">= 5.4.0",
-		"nette/nette": "2.2.*@dev",
-		"knplabs/github-api": "1.1.*@dev",
-		"jantvrdik/nette-doc-convertor": "@dev",
-		"janmarek/webloader": "@dev",
+		"php": "~5.4",
+		"nette/nette": "~2.2.0@dev",
+		"knplabs/github-api": "~1.1.5",
+		"jantvrdik/nette-doc-converter": "~1.0.0",
+		"janmarek/webloader": "~2.2",
 		"neeckeloo/closure-compiler-php": "@dev",
-		"natxet/cssmin": "@dev"
+		"natxet/cssmin": "~3.0.0"
 	},
 	"require-dev": {
 		"nette/tester": "~0.9"
+	},
+	"config": {
+		"autoloader-suffix": "NetteDocEditor",
+		"preferred-install": "dist"
 	}
 }

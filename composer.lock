@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a620aaa032d9006633435d009ea62ab7",
+    "hash": "6e04a472c491184f51f21ec3b8a16baa",
     "packages": [
         {
             "name": "janmarek/webloader",
-            "version": "dev-master",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janmarek/WebLoader.git",
-                "reference": "713df0c0cb3a01604254032923a96d21c37abfd7"
+                "reference": "5e62831fe7ba5779b97ebd0c23439dbcef80d102"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/713df0c0cb3a01604254032923a96d21c37abfd7",
-                "reference": "713df0c0cb3a01604254032923a96d21c37abfd7",
+                "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/5e62831fe7ba5779b97ebd0c23439dbcef80d102",
+                "reference": "5e62831fe7ba5779b97ebd0c23439dbcef80d102",
                 "shasum": ""
             },
             "require": {
@@ -56,20 +56,20 @@
                 "nette",
                 "webloader"
             ],
-            "time": "2013-12-30 01:11:51"
+            "time": "2014-01-01 16:54:25"
         },
         {
-            "name": "jantvrdik/nette-doc-convertor",
-            "version": "dev-master",
+            "name": "jantvrdik/nette-doc-converter",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/JanTvrdik/NetteDocumentationConvertor.git",
-                "reference": "9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9"
+                "url": "https://github.com/JanTvrdik/NetteDocumentationConverter.git",
+                "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConvertor/zipball/9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9",
-                "reference": "9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9",
+                "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConverter/zipball/6613726f19a403109e359c0614dfc8e0bd8b965f",
+                "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +98,7 @@
                     "name": "Jan Tvrdik"
                 }
             ],
-            "time": "2013-08-20 17:32:31"
+            "time": "2014-01-03 13:00:24"
         },
         {
             "name": "knplabs/github-api",
@@ -250,7 +250,7 @@
         },
         {
             "name": "natxet/CssMin",
-            "version": "dev-master",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/natxet/CssMin.git",
@@ -336,12 +336,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "441e41bcd0838c6be8fd3484564361c39594ef4e"
+                "reference": "4ef8410351bfb204c3e591b0910ee5d59b9f705b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/441e41bcd0838c6be8fd3484564361c39594ef4e",
-                "reference": "441e41bcd0838c6be8fd3484564361c39594ef4e",
+                "url": "https://api.github.com/repos/nette/nette/zipball/4ef8410351bfb204c3e591b0910ee5d59b9f705b",
+                "reference": "4ef8410351bfb204c3e591b0910ee5d59b9f705b",
                 "shasum": ""
             },
             "require": {
@@ -399,7 +399,7 @@
                 "mvc",
                 "templating"
             ],
-            "time": "2013-12-30 15:40:20"
+            "time": "2014-01-02 16:30:37"
         },
         {
             "name": "texy/texy",
@@ -727,16 +727,16 @@
     "packages-dev": [
         {
             "name": "nette/tester",
-            "version": "v0.9.4",
+            "version": "v0.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "6a66b714cf9eb23548af2418085bed30daea8903"
+                "reference": "812b5ab2f59b0d742dd30035865467ec0b2f6ee7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/6a66b714cf9eb23548af2418085bed30daea8903",
-                "reference": "6a66b714cf9eb23548af2418085bed30daea8903",
+                "url": "https://api.github.com/repos/nette/tester/zipball/812b5ab2f59b0d742dd30035865467ec0b2f6ee7",
+                "reference": "812b5ab2f59b0d742dd30035865467ec0b2f6ee7",
                 "shasum": ""
             },
             "require": {
@@ -775,7 +775,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2013-12-11 17:10:48"
+            "time": "2013-12-30 23:49:37"
         }
     ],
     "aliases": [
@@ -784,14 +784,10 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "nette/nette": 20,
-        "knplabs/github-api": 20,
-        "jantvrdik/nette-doc-convertor": 20,
-        "janmarek/webloader": 20,
-        "neeckeloo/closure-compiler-php": 20,
-        "natxet/cssmin": 20
+        "neeckeloo/closure-compiler-php": 20
     },
     "platform": {
-        "php": ">= 5.4.0"
+        "php": "~5.4"
     },
     "platform-dev": [
 

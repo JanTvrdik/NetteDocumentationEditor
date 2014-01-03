@@ -2,11 +2,7 @@
 
 /**
  * This file is part of the Nette Tester.
- *
  * Copyright (c) 2009 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 namespace Tester;
@@ -85,6 +81,20 @@ class Helpers
 	public static function setup()
 	{
 		Environment::setup();
+	}
+
+
+	/**
+	 * @internal
+	 */
+	public static function errorTypeToString($type)
+	{
+		$consts = get_defined_constants(TRUE);
+		foreach ($consts['Core'] as $name => $val) {
+			if ($type === $val && substr($name, 0, 2) === 'E_') {
+				return $name;
+			}
+		}
 	}
 
 }

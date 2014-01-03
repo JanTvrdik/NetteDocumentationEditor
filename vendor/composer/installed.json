@@ -99,106 +99,18 @@
         ]
     },
     {
-        "name": "jantvrdik/nette-doc-convertor",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JanTvrdik/NetteDocumentationConvertor.git",
-            "reference": "9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConvertor/zipball/9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9",
-            "reference": "9c01a7e0e2eaa29bcb98d822ce35b1104c40dae9",
-            "shasum": ""
-        },
-        "require": {
-            "kukulich/fshl": "~2.1",
-            "texy/texy": "~2.3"
-        },
-        "require-dev": {
-            "nette/tester": "~0.9"
-        },
-        "time": "2013-08-20 17:32:31",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "http://davidgrudl.com"
-            },
-            {
-                "name": "Jan Tvrdik"
-            }
-        ]
-    },
-    {
-        "name": "natxet/CssMin",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/natxet/CssMin.git",
-            "reference": "afdcdbdb5fc332313f47a79ae60346df3e69a572"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/natxet/CssMin/zipball/afdcdbdb5fc332313f47a79ae60346df3e69a572",
-            "reference": "afdcdbdb5fc332313f47a79ae60346df3e69a572",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.0"
-        },
-        "time": "2013-07-02 20:53:35",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Joe Scylla",
-                "email": "joe.scylla@gmail.com",
-                "homepage": "https://profiles.google.com/joe.scylla"
-            }
-        ],
-        "description": "Minifying CSS",
-        "homepage": "http://code.google.com/p/cssmin/",
-        "keywords": [
-            "css",
-            "minify"
-        ]
-    },
-    {
         "name": "nette/nette",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/nette/nette.git",
-            "reference": "441e41bcd0838c6be8fd3484564361c39594ef4e"
+            "reference": "4ef8410351bfb204c3e591b0910ee5d59b9f705b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nette/nette/zipball/441e41bcd0838c6be8fd3484564361c39594ef4e",
-            "reference": "441e41bcd0838c6be8fd3484564361c39594ef4e",
+            "url": "https://api.github.com/repos/nette/nette/zipball/4ef8410351bfb204c3e591b0910ee5d59b9f705b",
+            "reference": "4ef8410351bfb204c3e591b0910ee5d59b9f705b",
             "shasum": ""
         },
         "require": {
@@ -215,7 +127,7 @@
             "ext-mbstring": "*",
             "ext-pdo": "*"
         },
-        "time": "2013-12-30 15:40:20",
+        "time": "2014-01-02 16:30:37",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -257,60 +169,6 @@
             "mailing",
             "mvc",
             "templating"
-        ]
-    },
-    {
-        "name": "nette/tester",
-        "version": "v0.9.4",
-        "version_normalized": "0.9.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nette/tester.git",
-            "reference": "6a66b714cf9eb23548af2418085bed30daea8903"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nette/tester/zipball/6a66b714cf9eb23548af2418085bed30daea8903",
-            "reference": "6a66b714cf9eb23548af2418085bed30daea8903",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2013-12-11 17:10:48",
-        "bin": [
-            "Tester/tester",
-            "Tester/coverage-report"
-        ],
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "Tester/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "http://davidgrudl.com"
-            },
-            {
-                "name": "Nette Community",
-                "homepage": "http://nette.org/contributors"
-            }
-        ],
-        "description": "An easy-to-use PHP Unit Testing framework.",
-        "homepage": "http://nette.org",
-        "keywords": [
-            "nette",
-            "testing",
-            "unit"
         ]
     },
     {
@@ -747,18 +605,116 @@
         ]
     },
     {
-        "name": "janmarek/webloader",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "name": "nette/tester",
+        "version": "v0.9.5",
+        "version_normalized": "0.9.5.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/janmarek/WebLoader.git",
-            "reference": "713df0c0cb3a01604254032923a96d21c37abfd7"
+            "url": "https://github.com/nette/tester.git",
+            "reference": "812b5ab2f59b0d742dd30035865467ec0b2f6ee7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/713df0c0cb3a01604254032923a96d21c37abfd7",
-            "reference": "713df0c0cb3a01604254032923a96d21c37abfd7",
+            "url": "https://api.github.com/repos/nette/tester/zipball/812b5ab2f59b0d742dd30035865467ec0b2f6ee7",
+            "reference": "812b5ab2f59b0d742dd30035865467ec0b2f6ee7",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2013-12-30 23:49:37",
+        "bin": [
+            "Tester/tester",
+            "Tester/coverage-report"
+        ],
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "Tester/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "An easy-to-use PHP Unit Testing framework.",
+        "homepage": "http://nette.org",
+        "keywords": [
+            "nette",
+            "testing",
+            "unit"
+        ]
+    },
+    {
+        "name": "jantvrdik/nette-doc-converter",
+        "version": "v1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JanTvrdik/NetteDocumentationConverter.git",
+            "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConverter/zipball/6613726f19a403109e359c0614dfc8e0bd8b965f",
+            "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f",
+            "shasum": ""
+        },
+        "require": {
+            "kukulich/fshl": "~2.1",
+            "texy/texy": "~2.3"
+        },
+        "require-dev": {
+            "nette/tester": "~0.9"
+        },
+        "time": "2014-01-03 13:00:24",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Jan Tvrdik"
+            }
+        ]
+    },
+    {
+        "name": "janmarek/webloader",
+        "version": "2.2.0",
+        "version_normalized": "2.2.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/janmarek/WebLoader.git",
+            "reference": "5e62831fe7ba5779b97ebd0c23439dbcef80d102"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/5e62831fe7ba5779b97ebd0c23439dbcef80d102",
+            "reference": "5e62831fe7ba5779b97ebd0c23439dbcef80d102",
             "shasum": ""
         },
         "require": {
@@ -771,7 +727,7 @@
         "suggest": {
             "leafo/lessphp": "Lessphp is a composer for LESS written in PHP."
         },
-        "time": "2013-12-30 01:11:51",
+        "time": "2014-01-01 16:54:25",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -799,6 +755,50 @@
             "javascript",
             "nette",
             "webloader"
+        ]
+    },
+    {
+        "name": "natxet/CssMin",
+        "version": "3.0.2",
+        "version_normalized": "3.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/natxet/CssMin.git",
+            "reference": "afdcdbdb5fc332313f47a79ae60346df3e69a572"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/natxet/CssMin/zipball/afdcdbdb5fc332313f47a79ae60346df3e69a572",
+            "reference": "afdcdbdb5fc332313f47a79ae60346df3e69a572",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.0"
+        },
+        "time": "2013-07-02 20:53:35",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Joe Scylla",
+                "email": "joe.scylla@gmail.com",
+                "homepage": "https://profiles.google.com/joe.scylla"
+            }
+        ],
+        "description": "Minifying CSS",
+        "homepage": "http://code.google.com/p/cssmin/",
+        "keywords": [
+            "css",
+            "minify"
         ]
     }
 ]

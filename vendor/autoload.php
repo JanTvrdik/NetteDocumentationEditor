@@ -4,4 +4,4 @@
 
 require_once __DIR__ . '/composer' . '/autoload_real.php';
 
-return ComposerAutoloaderInit2564bb29301105177f16364cd80b40a5::getLoader();
+return ComposerAutoloaderInitNetteDocEditor::getLoader();
