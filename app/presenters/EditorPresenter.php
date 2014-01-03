@@ -43,7 +43,7 @@ final class EditorPresenter extends BasePresenter
 	public $path;
 
 
-	public function renderDefault($branch, $path)
+	public function renderDefault($branch, $path, $pageKey)
 	{
 		if ($branch && $path) {
 			$this['form']->setDefaults([
@@ -53,7 +53,22 @@ final class EditorPresenter extends BasePresenter
 			]);
 
 			$enableSave = TRUE;
-			$page = $this->editorModel->loadPage($branch, $path);
+			if ($pageKey) {
+				$session = $this->getSession(__CLASS__);
+				if (!isset($session->pages[$pageKey])) {
+					$this->flashMessage('Invalid page key.', 'error');
+					$this->redirect('default');
+				}
+				$page = $session->pages[$pageKey];
+				if ($page->branch !== $branch || $page->path !== $path) {
+					$this->flashMessage('Invalid page key.', 'error');
+					$this->redirect('default');
+				}
+
+			} else {
+				$page = $this->editorModel->loadPage($branch, $path);
+			}
+
 			if ($page) {
 				$this['form']->setDefaults([
 					'prevBlobHash' => $page->prevBlobHash,
@@ -155,21 +170,22 @@ final class EditorPresenter extends BasePresenter
 		$accessToken = $this->editorModel->getAccessToken($code);
 		if ($accessToken === FALSE) {
 			$this->flashMessage('Failed to acquire user access token.', 'error');
-			$this->redirect('default');
+			$this->redirect('default', ['pageKey' => $pageKey]);
 		}
 
 		try {
 			$response = $this->editorModel->savePage($page, $accessToken);
+			unset($session->pages[$pageKey]);
 
 		} catch (PermissionDeniedException $e) {
 			$ghParams = $this->context->parameters['github'];
 			$repo = $ghParams['repoOwner'] . '/' . $ghParams['repoName'];
 			$this->flashMessage("You don't have permissions to commit to $repo and pull request support is not implemented.", 'error');
-			$this->redirect('default');
+			$this->redirect('default', ['pageKey' => $pageKey]);
 
 		} catch (PageSaveConflictException $e) {
 			$this->flashMessage('Unable to save page, because someone has changed it before you. Please reopen the page to get up to date content.', 'error');
-			$this->redirect('default');
+			$this->redirect('default', ['pageKey' => $pageKey]);
 		}
 
 		// build flash message
