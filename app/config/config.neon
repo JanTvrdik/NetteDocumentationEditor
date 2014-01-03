@@ -15,6 +15,7 @@ nette:
 			*: App\*Module\*Presenter
 	session:
 		autoStart: no
+		name: NetteWebEditorSessionId
 
 	security:
 		debugger: no
