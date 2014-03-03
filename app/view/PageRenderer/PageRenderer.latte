@@ -2,59 +2,60 @@
 <meta name="robots" content="noindex, nofollow">
 <title>{if $title}{$title} | {/if}Nette Web Editor</title>
 <link rel="stylesheet" href="http://files.nette.org/css/combined.css">
+
 <style>
 	body { background-image: none; }
-
 	{if !isset($topMenu)}
 		#page { padding: 20px; }
-		#wikimenu { top: 0; right: 25px; }
-	{else}
-		#wikimenu { right: 5px; }
 	{/if}
-
-	#wikimenu > ul > li { border: none; }
-	#wikimenu a { margin-right: 3px; }
-	#wikimenu a:hover { background-color: transparent; }
-
 </style>
 
-<div id="page">
-	<header n:ifset="$topMenu" id="header">
-		<a id="logo" title="Homepage" href="{$homepageLink}"><span>Homepage</span></a>
-		<nav id="menu">
-			{$topMenu|noescape}
-		</nav>
-	</header>
-	<div n:ifset="$topMenu" id="wikimenu">
-		<ul>
-			<li><a href="#">Wiki&nbsp;<span>▼</span></a>
-				<ul>
-					<li><a href="{$editLink}">Edit</a></li>
-					<li><a href="{$ghLink}">View on GitHub</a></li>
-					<li n:ifset="$netteOrgLink"><a href="{$netteOrgLink}">View on nette.org</a></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-	<div id="main" n:class="$toc ? sidebar">
-		<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>
-		<div id="content" n:class="$theme ? $theme">{$htmlContent|noescape}</div>
-		{if $toc}
-			<aside id="sidebar">
-				<div id="toc">
-					<h3>Contents</h3>
+<script>document.documentElement.className+=' js'</script>
+<script>window._gaq = false;</script>
+<script src="http://files.nette.org/js/combined.js"></script>
+
+<body class="nette-org">
+	<div id="page">
+		<header n:ifset="$topMenu" id="header">
+			<a id="logo" title="Homepage" href="{$homepageLink}"><span>Homepage</span></a>
+			<nav id="menu">
+				{$topMenu|noescape}
+			</nav>
+		</header>
+		<div n:ifset="$topMenu" id="wikimenu">
+			<ul>
+				<li><a href="#">Wiki&nbsp;<span>▼</span></a>
 					<ul>
-						{foreach $toc as $heading}
-							<li><a href="#{$heading->id}">{$heading->title}</a>
-							{if $next = $iterator->nextValue}
-								{if $next->level === $heading->level}</li>
-								{elseif $next->level > $heading->level}<ul>
-								{else}</ul></li>{/if}
-							{/if}
-						{/foreach}
+						<li><a href="{$editLink}">Edit</a></li>
+						<li><a href="{$ghLink}">View on GitHub</a></li>
+						<li n:ifset="$netteOrgLink"><a href="{$netteOrgLink}">View on nette.org</a></li>
 					</ul>
-				</div>
-			</aside>
-		{/if}
+				</li>
+			</ul>
+		</div>
+		<div n:ifset="$docMenu" id="docmenu">
+			{$docMenu|noescape}
+		</div>
+		<div id="main" n:class="">
+			<!--<div n:if="$themeIcon"><img src="{$themeIcon}" id="themeicon"></div>-->
+			<div id="content" n:class="$theme ? $theme, $toc ? sidebar">{$htmlContent|noescape}</div>
+			{if $toc}
+				<aside id="sidebar">
+					<div>
+						<h3>Contents</h3>
+						<ul id="toc">
+							{foreach $toc as $heading}
+								<li><a href="#{$heading->id}">{$heading->title}</a>
+								{if $next = $iterator->nextValue}
+									{if $next->level === $heading->level}</li>
+									{elseif $next->level > $heading->level}<ul>
+									{else}</ul></li>{/if}
+								{/if}
+							{/foreach}
+						</ul>
+					</div>
+				</aside>
+			{/if}
+		</div>
 	</div>
-</div>
+</body>

@@ -99,13 +99,7 @@ final class EditorPresenter extends BasePresenter
 		$page = $this->editorModel->loadPage($branch, $path);
 		if (!$page) $this->error();
 
-		$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
-		if ($web) {
-			$lang = $web[1];
-			$menu = $this->editorModel->loadPage('nette.org', 'meta/' . $lang . '/menu.texy');
-		}
-
-		$content = $this->pageRenderer->render($page, isset($menu) ? $menu : NULL);
+		$content = $this->pageRenderer->render($page);
 		$this->sendResponse(new TextResponse($content));
 	}
 
@@ -211,7 +205,7 @@ final class EditorPresenter extends BasePresenter
 		$page->path = $path;
 		$page->content = $texyContent;
 
-		$htmlContent = $this->pageRenderer->render($page, NULL, TRUE);
+		$htmlContent = $this->pageRenderer->render($page, FALSE, TRUE);
 
 		$this->payload->htmlContent = $htmlContent;
 		$this->sendPayload();

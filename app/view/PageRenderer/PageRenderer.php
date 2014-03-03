@@ -17,14 +17,18 @@ class PageRenderer extends Nette\Object
 	/** @var WebRepoMapper */
 	private $webRepoMapper;
 
-	public function __construct(Nette\Templating\FileTemplate $template, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper)
+	/** @var EditorModel */
+	private $model;
+
+	public function __construct(Nette\Templating\FileTemplate $template, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper, EditorModel $model)
 	{
 		$this->template = $template;
 		$this->linkFactory = $linkFactory;
 		$this->webRepoMapper = $webRepoMapper;
+		$this->model = $model;
 	}
 
-	public function render(Page $page, Page $menu = NULL, $forceNewWindow = FALSE)
+	public function render(Page $page, $header = TRUE, $forceNewWindow = FALSE)
 	{
 		if ($page->branch === NULL && $page->path === NULL) {
 			$web = ['xxx', 'en', 'homepage'];
@@ -61,10 +65,22 @@ class PageRenderer extends Nette\Object
 			$this->template->htmlContent = $converter->html;
 			$this->template->netteOrgLink = $this->webRepoMapper->webToUrl($book, $lang, $name);
 
-			if ($menu) {
-				$converter->parse($menu->content);
-				$this->template->topMenu = $converter->html;
-				$this->template->homepageLink = $this->linkFactory->link('Editor:view', ['branch' => 'nette.org', 'path' => 'www/' . $lang . '/homepage.texy']);
+			if ($header) {
+				if ($menu = $this->model->loadPage('nette.org', "meta/$lang/menu.texy")) {
+					$converter->parse($menu->content);
+					$this->template->topMenu = $converter->html;
+				}
+
+				if (Strings::startsWith($book, 'doc-') && $name !== 'homepage') {
+					if ($docMenu = $this->model->loadPage($page->branch, "$lang/@docmenu.texy")) {
+						$converter->current = new \Text\Link('doc-2.1', $lang, 'homepage');
+						$converter->topHeadingLevel = 3;
+						$converter->parse($docMenu->content);
+						$this->template->docMenu = $converter->html;
+					}
+				}
+
+				$this->template->homepageLink = $this->linkFactory->link('Editor:view', ['branch' => 'nette.org', 'path' => "www/$lang/homepage.texy"]);
 			}
 
 		} else {
