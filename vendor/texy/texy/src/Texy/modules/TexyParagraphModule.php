@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -14,7 +10,6 @@
  * Paragraph module.
  *
  * @author     David Grudl
- * @package    Texy
  */
 final class TexyParagraphModule extends TexyModule
 {
@@ -51,8 +46,8 @@ final class TexyParagraphModule extends TexyModule
 			}
 
 			// try to find modifier
-			$mx = $mod = NULL;
-			if (preg_match('#'.TexyPatterns::MODIFIER_H.'(?=\n|\z)#sUm', $s, $mx, PREG_OFFSET_CAPTURE)) {
+			$mod = NULL;
+			if ($mx = TexyRegexp::match($s, '#'.TexyPatterns::MODIFIER_H.'(?=\n|\z)#sUm', TexyRegexp::OFFSET_CAPTURE)) {
 				list($mMod) = $mx[1];
 				$s = trim(substr_replace($s, '', $mx[0][1], strlen($mx[0][0])));
 				if ($s === '') {
@@ -86,9 +81,9 @@ final class TexyParagraphModule extends TexyModule
 		if ($tx->mergeLines) {
 			// ....
 			// ... => \r means break line
-			$content = preg_replace('#\n +(?=\S)#', "\r", $content);
+			$content = TexyRegexp::replace($content, '#\n +(?=\S)#', "\r");
 		} else {
-			$content = preg_replace('#\n#', "\r", $content);
+			$content = TexyRegexp::replace($content, '#\n#', "\r");
 		}
 
 		$el = TexyHtml::el('p');

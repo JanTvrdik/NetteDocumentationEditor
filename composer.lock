@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6e04a472c491184f51f21ec3b8a16baa",
+    "hash": "fad6ed6736de6ac0519fb9199daa42d2",
     "packages": [
         {
             "name": "janmarek/webloader",
@@ -296,12 +296,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/neeckeloo/ClosureCompilerPHP.git",
-                "reference": "1fb9e6e0c952b35f4e84b3a1d42ce3ac814aaf49"
+                "reference": "8a75565972998219d7835d76511b2c2789d75d17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/1fb9e6e0c952b35f4e84b3a1d42ce3ac814aaf49",
-                "reference": "1fb9e6e0c952b35f4e84b3a1d42ce3ac814aaf49",
+                "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/8a75565972998219d7835d76511b2c2789d75d17",
+                "reference": "8a75565972998219d7835d76511b2c2789d75d17",
                 "shasum": ""
             },
             "require": {
@@ -328,7 +328,7 @@
             "keywords": [
                 "closure compiler"
             ],
-            "time": "2013-10-22 11:55:50"
+            "time": "2014-03-03 08:38:21"
         },
         {
             "name": "nette/nette",
@@ -336,12 +336,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/nette.git",
-                "reference": "4ef8410351bfb204c3e591b0910ee5d59b9f705b"
+                "reference": "02fb1cd7a7600e2c8cd75951f1fbd83fd0da89b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/nette/zipball/4ef8410351bfb204c3e591b0910ee5d59b9f705b",
-                "reference": "4ef8410351bfb204c3e591b0910ee5d59b9f705b",
+                "url": "https://api.github.com/repos/nette/nette/zipball/02fb1cd7a7600e2c8cd75951f1fbd83fd0da89b8",
+                "reference": "02fb1cd7a7600e2c8cd75951f1fbd83fd0da89b8",
                 "shasum": ""
             },
             "require": {
@@ -399,27 +399,30 @@
                 "mvc",
                 "templating"
             ],
-            "time": "2014-01-02 16:30:37"
+            "time": "2014-03-03 16:01:24"
         },
         {
             "name": "texy/texy",
-            "version": "v2.3",
+            "version": "v2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/texy.git",
-                "reference": "11c34e6df7846ff1e02e6ef7c0ef4a1e3af40847"
+                "reference": "67d02cd95e4aaa7dae96b24a7d04ba924d641015"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/texy/zipball/11c34e6df7846ff1e02e6ef7c0ef4a1e3af40847",
-                "reference": "11c34e6df7846ff1e02e6ef7c0ef4a1e3af40847",
+                "url": "https://api.github.com/repos/dg/texy/zipball/67d02cd95e4aaa7dae96b24a7d04ba924d641015",
+                "reference": "67d02cd95e4aaa7dae96b24a7d04ba924d641015",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.0.0"
+                "php": ">=5.2.0"
+            },
+            "replace": {
+                "dg/texy": "self.version"
             },
             "require-dev": {
-                "nette/tester": "0.9.*"
+                "nette/tester": "~1.0.0"
             },
             "type": "library",
             "autoload": {
@@ -452,7 +455,7 @@
                 "wiki",
                 "xhtml"
             ],
-            "time": "2013-07-19 22:05:37"
+            "time": "2014-02-10 02:34:57"
         },
         {
             "name": "zendframework/zend-escaper",

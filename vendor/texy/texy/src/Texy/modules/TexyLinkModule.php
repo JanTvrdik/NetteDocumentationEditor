@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -14,12 +10,14 @@
  * Links module.
  *
  * @author     David Grudl
- * @package    Texy
  */
 final class TexyLinkModule extends TexyModule
 {
 	/** @var string  root of relative links */
 	public $root = '';
+
+	/** @var string image popup class */
+	public $imageClass;
 
 	/** @var string image popup event */
 	public $imageOnClick = 'return !popupImage(this.href)';  //
@@ -91,10 +89,10 @@ final class TexyLinkModule extends TexyModule
 
 		// [la trine]: http://www.latrine.cz/ text odkazu .(title)[class]{style}
 		if (!empty($texy->allowed['link/definition'])) {
-			$text = preg_replace_callback(
+			$text = TexyRegexp::replace(
+				$text,
 				'#^\[([^\[\]\#\?\*\n]{1,100})\]: ++(\S{1,1000})(\ .{1,1000})?'.TexyPatterns::MODIFIER.'?\s*()$#mUu',
-				array($this, 'patternReferenceDef'),
-				$text
+				array($this, 'patternReferenceDef')
 			);
 		}
 	}
@@ -105,8 +103,9 @@ final class TexyLinkModule extends TexyModule
 	 *
 	 * @param  array      regexp matches
 	 * @return string
+	 * @internal
 	 */
-	private function patternReferenceDef($matches)
+	public function patternReferenceDef($matches)
 	{
 		list(, $mRef, $mLink, $mLabel, $mMod) = $matches;
 		// [1] => [ (reference) ]
@@ -309,7 +308,11 @@ final class TexyLinkModule extends TexyModule
 		if ($link->type === TexyLink::IMAGE) {
 			// image
 			$el->attrs['href'] = Texy::prependRoot($link->URL, $tx->imageModule->linkedRoot);
-			$el->attrs['onclick'] = $this->imageOnClick;
+			if ($this->imageClass) {
+				$el->attrs['class'][] = $this->imageClass;
+			} else {
+				$el->attrs['onclick'] = $this->imageOnClick;
+			}
 
 		} else {
 			$el->attrs['href'] = Texy::prependRoot($link->URL, $this->root);
@@ -438,9 +441,6 @@ final class TexyLinkModule extends TexyModule
 }
 
 
-/**
- * @package Texy
- */
 final class TexyLink extends TexyObject
 {
 	/** @see $type */

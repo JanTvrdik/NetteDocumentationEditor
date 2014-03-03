@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -14,7 +10,6 @@
  * Scripts module.
  *
  * @author     David Grudl
- * @package    Texy
  */
 final class TexyScriptModule extends TexyModule
 {
@@ -63,7 +58,7 @@ final class TexyScriptModule extends TexyModule
 
 		$args = $raw = NULL;
 		// function(arg, arg, ...) or function: arg, arg
-		if (preg_match('#^([a-z_][a-z0-9_-]*)\s*(?:\(([^()]*)\)|:(.*))$#iu', $cmd, $matches)) {
+		if ($matches = TexyRegexp::match($cmd, '#^([a-z_][a-z0-9_-]*)\s*(?:\(([^()]*)\)|:(.*))$#iu')) {
 			$cmd = $matches[1];
 			$raw = isset($matches[3]) ? trim($matches[3]) : trim($matches[2]);
 			if ($raw === '') {

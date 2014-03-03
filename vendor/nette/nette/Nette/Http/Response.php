@@ -232,9 +232,9 @@ class Response extends Nette\Object implements IResponse
 	{
 		if (self::$fixIE && isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== FALSE
 			&& in_array($this->code, array(400, 403, 404, 405, 406, 408, 409, 410, 500, 501, 505), TRUE)
-			&& $this->getHeader('Content-Type', 'text/html') === 'text/html'
+			&& preg_match('#^text/html(?:;|$)#', $this->getHeader('Content-Type', 'text/html'))
 		) {
-			echo Nette\Utils\Strings::random(2e3, " \t\r\n"); // sends invisible garbage for IE
+			echo Nette\Utils\Random::generate(2e3, " \t\r\n"); // sends invisible garbage for IE
 			self::$fixIE = FALSE;
 		}
 	}
@@ -311,7 +311,7 @@ class Response extends Nette\Object implements IResponse
 	{
 		if (headers_sent($file, $line)) {
 			throw new Nette\InvalidStateException('Cannot send header after HTTP headers have been sent' . ($file ? " (output started at $file:$line)." : '.'));
-		} elseif (ob_get_length() && ($info = ob_get_status(TRUE)) && $info[0]['chunk_size']) {
+		} elseif (ob_get_length() && !array_filter(ob_get_status(TRUE), function($i) { return !$i['chunk_size']; })) {
 			trigger_error('Possible problem: you are sending a HTTP header while already having some data in output buffer. Try OutputDebugger or start session earlier.', E_USER_NOTICE);
 		}
 	}

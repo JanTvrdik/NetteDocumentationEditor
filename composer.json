@@ -20,6 +20,7 @@
 	},
 	"config": {
 		"autoloader-suffix": "NetteDocEditor",
-		"preferred-install": "dist"
+		"preferred-install": "dist",
+		"optimize-autoloader": true
 	}
 }

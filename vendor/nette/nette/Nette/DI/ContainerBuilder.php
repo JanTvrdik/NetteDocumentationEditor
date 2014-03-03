@@ -207,7 +207,7 @@ class ContainerBuilder extends Nette\Object
 					throw new ServiceCreationException("Method $method has not @return annotation.");
 				}
 
-				$returnType = Reflection\AnnotationsParser::expandClassName($returnType, $rc);
+				$returnType = Reflection\AnnotationsParser::expandClassName(preg_replace('#[|\s].*#', '', $returnType), $rc);
 				if (!class_exists($returnType)) {
 					throw new ServiceCreationException("Please check a @return annotation of the $method method. Class '$returnType' cannot be found.");
 				}
@@ -239,11 +239,15 @@ class ContainerBuilder extends Nette\Object
 
 		// complete class-factory pairs
 		foreach ($this->definitions as $name => $def) {
-			if (!$def->factory) {
+			if (!$def->factory || !$def->factory->entity) {
 				if (!$def->class) {
 					throw new ServiceCreationException("Class and factory are missing in service '$name' definition.");
 				}
-				$def->factory = new Statement($def->class);
+				if ($def->factory) {
+					$def->factory->entity = $def->class;
+				} else {
+					$def->factory = new Statement($def->class);
+				}
 			}
 		}
 
@@ -324,8 +328,8 @@ class ContainerBuilder extends Nette\Object
 				throw new ServiceCreationException("Missing factory '" . Nette\Utils\Callback::toString($factory) . "'.");
 			}
 			$def->class = preg_replace('#[|\s].*#', '', $reflection->getAnnotation('return'));
-			if ($def->class && !class_exists($def->class) && $def->class[0] !== '\\' && $reflection instanceof \ReflectionMethod) {
-				$def->class = $reflection->getDeclaringClass()->getNamespaceName() . '\\' . $def->class;
+			if ($def->class && $reflection instanceof \ReflectionMethod) {
+				$def->class = Reflection\AnnotationsParser::expandClassName($def->class, $reflection->getDeclaringClass());
 			}
 
 		} elseif ($service = $this->getServiceName($factory)) { // alias or factory

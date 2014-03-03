@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -14,7 +10,6 @@
  * Images module.
  *
  * @author     David Grudl
- * @package    Texy
  */
 final class TexyImageModule extends TexyModule
 {
@@ -48,6 +43,7 @@ final class TexyImageModule extends TexyModule
 		$this->texy = $texy;
 
 		$texy->allowed['image/definition'] = TRUE;
+		$texy->allowed['image/hover'] = TRUE;
 		$texy->addHandler('image', array($this, 'solve'));
 		$texy->addHandler('beforeParse', array($this, 'beforeParse'));
 
@@ -71,10 +67,10 @@ final class TexyImageModule extends TexyModule
 	{
 		if (!empty($texy->allowed['image/definition'])) {
 			// [*image*]: urls .(title)[class]{style}
-			$text = preg_replace_callback(
+			$text = TexyRegexp::replace(
+				$text,
 				'#^\[\*([^\n]{1,100})\*\]:\ +(.{1,1000})\ *'.TexyPatterns::MODIFIER.'?\s*()$#mUu',
-				array($this, 'patternReferenceDef'),
-				$text
+				array($this, 'patternReferenceDef')
 			);
 		}
 	}
@@ -85,8 +81,9 @@ final class TexyImageModule extends TexyModule
 	 *
 	 * @param  array      regexp matches
 	 * @return string
+	 * @internal
 	 */
-	private function patternReferenceDef($matches)
+	public function patternReferenceDef($matches)
 	{
 		list(, $mRef, $mURLs, $mMod) = $matches;
 		// [1] => [* (reference) *]
@@ -184,7 +181,7 @@ final class TexyImageModule extends TexyModule
 
 			// dimensions
 			$matches = NULL;
-			if (preg_match('#^(.*) (\d+|\?) *(X|x) *(\d+|\?) *()$#U', $content[0], $matches)) {
+			if ($matches = TexyRegexp::match($content[0], '#^(.*) (\d+|\?) *(X|x) *(\d+|\?) *()$#U')) {
 				$image->URL = trim($matches[1]);
 				$image->asMax = $matches[3] === 'X';
 				$image->width = $matches[2] === '?' ? NULL : (int) $matches[2];
@@ -306,7 +303,7 @@ final class TexyImageModule extends TexyModule
 		$el->attrs['height'] = $image->height;
 
 		// onmouseover actions generate
-		if ($image->overURL !== NULL) {
+		if (!empty($tx->allowed['image/hover']) && $image->overURL !== NULL) {
 			$overSrc = Texy::prependRoot($image->overURL, $this->root);
 			$el->attrs['onmouseover'] = 'this.src=\'' . addSlashes($overSrc) . '\'';
 			$el->attrs['onmouseout'] = 'this.src=\'' . addSlashes($el->attrs['src']) . '\'';
@@ -326,9 +323,6 @@ final class TexyImageModule extends TexyModule
 }
 
 
-/**
- * @package Texy
- */
 final class TexyImage extends TexyObject
 {
 	/** @var string  base image URL */

@@ -50,11 +50,12 @@ class Form extends Container
 		LENGTH = ':length',
 		EMAIL = ':email',
 		URL = ':url',
-		REGEXP = ':regexp',
 		PATTERN = ':pattern',
 		INTEGER = ':integer',
 		NUMERIC = ':integer',
 		FLOAT = ':float',
+		MIN = ':min',
+		MAX = ':max',
 		RANGE = ':range';
 
 	// multiselect
@@ -529,7 +530,7 @@ class Form extends Container
 	public function getAllErrors()
 	{
 		trigger_error(__METHOD__ . '() is deprecated; use getErrors() instead.', E_USER_DEPRECATED);
-		return $this->errors();
+		return $this->getErrors();
 	}
 
 
@@ -625,9 +626,7 @@ class Form extends Container
 	{
 		$toggles = array();
 		foreach ($this->getControls() as $control) {
-			foreach ($control->getRules()->getToggles(TRUE) as $id => $hide) {
-				$toggles[$id] = empty($toggles[$id]) ? $hide : TRUE;
-			}
+			$toggles = $control->getRules()->getToggleStates($toggles);
 		}
 		return $toggles;
 	}

@@ -57,18 +57,18 @@ abstract class MultiChoiceControl extends BaseControl
 		if (is_scalar($values) || $values === NULL) {
 			$values = (array) $values;
 		} elseif (!is_array($values)) {
-			throw new Nette\InvalidArgumentException('Value must be array or NULL, ' . gettype($values) . ' given.');
+			throw new Nette\InvalidArgumentException('Value must be array or NULL, ' . gettype($values) . " given in field '{$this->name}'.");
 		}
 		$flip = array();
 		foreach ($values as $value) {
 			if (!is_scalar($value) && !method_exists($value, '__toString')) {
-				throw new Nette\InvalidArgumentException('Values must be scalar, ' . gettype($value) . ' given.');
+				throw new Nette\InvalidArgumentException('Values must be scalar, ' . gettype($value) . " given in field '{$this->name}'.");
 			}
 			$flip[(string) $value] = TRUE;
 		}
 		$values = array_keys($flip);
 		if ($diff = array_diff($values, array_keys($this->items))) {
-			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of range of current items.");
+			throw new Nette\InvalidArgumentException("Values '" . implode("', '", $diff) . "' are out of allowed range in field '{$this->name}'.");
 		}
 		$this->value = $values;
 		return $this;

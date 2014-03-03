@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -19,7 +15,6 @@
  * </code>
  *
  * @author     David Grudl
- * @package    Texy
  */
 class Texy extends TexyObject
 {
@@ -28,8 +23,8 @@ class Texy extends TexyObject
 	const NONE = FALSE;
 
 	// Texy version
-	const VERSION = '2.3';
-	const REVISION = '$WCREV$ released on $WCDATE$';
+	const VERSION = '2.4';
+	const REVISION = 'released on 2014-02-10';
 
 	// types of protection marks
 	const CONTENT_MARKUP = "\x17";
@@ -412,7 +407,7 @@ class Texy extends TexyObject
 		// replace tabs with spaces
 		$this->tabWidth = max(1, (int) $this->tabWidth);
 		while (strpos($text, "\t") !== FALSE) {
-			$text = preg_replace_callback('#^([^\t\n]*+)\t#mU', array($this, 'tabCb'), $text);
+			$text = TexyRegexp::replace($text, '#^([^\t\n]*+)\t#mU', array($this, 'tabCb'));
 		}
 
 		// user before handler
@@ -564,9 +559,9 @@ class Texy extends TexyObject
 		$this->htmlOutputModule->lineWrap = $save;
 
 		// remove tags
-		$s = preg_replace('#<(script|style)(.*)</\\1>#Uis', '', $s);
+		$s = TexyRegexp::replace($s, '#<(script|style)(.*)</\\1>#Uis', '');
 		$s = strip_tags($s);
-		$s = preg_replace('#\n\s*\n\s*\n[\n\s]*\n#', "\n\n", $s);
+		$s = TexyRegexp::replace($s, '#\n\s*\n\s*\n[\n\s]*\n#', "\n\n");
 
 		// entities -> chars
 		$s = self::unescapeHtml($s);
@@ -674,10 +669,10 @@ class Texy extends TexyObject
 		$s = strtr($s, "\r", "\n"); // Mac
 
 		// remove special chars; leave \t + \n
-		$s = preg_replace('#[\x00-\x08\x0B-\x1F]+#', '', $s);
+		$s = TexyRegexp::replace($s, '#[\x00-\x08\x0B-\x1F]+#', '');
 
 		// right trim
-		$s = preg_replace("#[\t ]+$#m", '', $s);
+		$s = TexyRegexp::replace($s, "#[\t ]+$#m", '');
 
 		// trailing spaces
 		$s = trim($s, "\n");
@@ -696,7 +691,7 @@ class Texy extends TexyObject
 	{
 		$s = TexyUtf::utf2ascii($s);
 		$s = strtolower($s);
-		$s = preg_replace('#[^a-z0-9'.preg_quote($charlist, '#').']+#', '-', $s);
+		$s = TexyRegexp::replace($s, '#[^a-z0-9'.preg_quote($charlist, '#').']+#', '-');
 		$s = trim($s, '-');
 		return $s;
 	}
@@ -738,7 +733,7 @@ class Texy extends TexyObject
 		$s = trim($s, "\n");
 		$spaces = strspn($s, ' ');
 		if ($spaces) {
-			return preg_replace("#^ {1,$spaces}#m", '', $s);
+			return TexyRegexp::replace($s, "#^ {1,$spaces}#m", '');
 		}
 		return $s;
 	}
@@ -832,7 +827,8 @@ class Texy extends TexyObject
 	}
 
 
-	private function tabCb($m)
+	/** @internal */
+	public function tabCb($m)
 	{
 		return $m[1] . str_repeat(' ', $this->tabWidth - strlen($m[1]) % $this->tabWidth);
 	}

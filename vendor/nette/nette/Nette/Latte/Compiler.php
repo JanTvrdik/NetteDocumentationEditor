@@ -97,7 +97,7 @@ class Compiler extends Nette\Object
 	 */
 	public function compile(array $tokens)
 	{
-		$this->templateId = Strings::random();
+		$this->templateId = Nette\Utils\Random::generate();
 		$this->tokens = $tokens;
 		$output = '';
 		$this->output = & $output;
@@ -285,23 +285,24 @@ class Compiler extends Nette\Object
 
 		$htmlNode = $this->htmlNode;
 		$isEmpty = !$htmlNode->closing && (Strings::contains($token->text, '/') || $htmlNode->isEmpty);
+		$end = '';
 
 		if ($isEmpty && in_array($this->contentType, array(self::CONTENT_HTML, self::CONTENT_XHTML))) { // auto-correct
-			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty
-				? ($this->contentType === self::CONTENT_XHTML ? ' />' : '>')
-				: "></$htmlNode->name>",
-			$token->text);
+			$token->text = preg_replace('#^.*>#', $htmlNode->isEmpty && $this->contentType === self::CONTENT_XHTML ? ' />' : '>', $token->text);
+			if (!$htmlNode->isEmpty) {
+				$end = "</$htmlNode->name>";
+			}
 		}
 
 		if (empty($htmlNode->macroAttrs)) {
-			$this->output .= $token->text;
+			$this->output .= $token->text . $end;
 		} else {
 			$code = substr($this->output, $htmlNode->offset) . $token->text;
 			$this->output = substr($this->output, 0, $htmlNode->offset);
 			$this->writeAttrsMacro($code);
 			if ($isEmpty) {
 				$htmlNode->closing = TRUE;
-				$this->writeAttrsMacro('');
+				$this->writeAttrsMacro($end);
 			}
 		}
 
@@ -397,16 +398,18 @@ class Compiler extends Nette\Object
 	 * @param  bool
 	 * @return MacroNode
 	 */
-	public function closeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE)
+	public function closeMacro($name, $args = NULL, $modifiers = NULL, $isRightmost = FALSE, $nPrefix = NULL)
 	{
 		$node = $this->macroNode;
 
 		if (!$node || ($node->name !== $name && '' !== $name) || $modifiers
 			|| ($args && $node->args && !Strings::startsWith("$node->args ", "$args "))
+			|| $nPrefix !== $node->prefix
 		) {
-			$name .= $args ? ' ' : '';
-			throw new CompileException("Unexpected {/{$name}{$args}{$modifiers}}"
-				. ($node ? ', expecting ' . self::printEndTag($node) : ''));
+			$name = $nPrefix
+				? "</{$this->htmlNode->name}> for macro-attribute " . Parser::N_PREFIX . implode(' and ' . Parser::N_PREFIX, array_keys($this->htmlNode->macroAttrs))
+				: '{/' . $name . ($args ? ' ' . $args : '') . $modifiers . '}';
+			throw new CompileException("Unexpected $name" . ($node ? ', expecting ' . self::printEndTag($node) : ''));
 		}
 
 		$this->macroNode = $node->parentNode;
@@ -456,9 +459,9 @@ class Compiler extends Nette\Object
 			$attrName = MacroNode::PREFIX_INNER . "-$name";
 			if (isset($attrs[$attrName])) {
 				if ($this->htmlNode->closing) {
-					$left[] = array(TRUE, $name, '', MacroNode::PREFIX_INNER);
+					$left[] = array('closeMacro', $name, '', MacroNode::PREFIX_INNER);
 				} else {
-					array_unshift($right, array(FALSE, $name, $attrs[$attrName], MacroNode::PREFIX_INNER));
+					array_unshift($right, array('openMacro', $name, $attrs[$attrName], MacroNode::PREFIX_INNER));
 				}
 				unset($attrs[$attrName]);
 			}
@@ -467,8 +470,8 @@ class Compiler extends Nette\Object
 		foreach (array_reverse($this->macros) as $name => $foo) {
 			$attrName = MacroNode::PREFIX_TAG . "-$name";
 			if (isset($attrs[$attrName])) {
-				$left[] = array(FALSE, $name, $attrs[$attrName], MacroNode::PREFIX_TAG);
-				array_unshift($right, array(TRUE, $name, '', MacroNode::PREFIX_TAG));
+				$left[] = array('openMacro', $name, $attrs[$attrName], MacroNode::PREFIX_TAG);
+				array_unshift($right, array('closeMacro', $name, '', MacroNode::PREFIX_TAG));
 				unset($attrs[$attrName]);
 			}
 		}
@@ -476,9 +479,9 @@ class Compiler extends Nette\Object
 		foreach ($this->macros as $name => $foo) {
 			if (isset($attrs[$name])) {
 				if ($this->htmlNode->closing) {
-					$right[] = array(TRUE, $name, '', MacroNode::PREFIX_NONE);
+					$right[] = array('closeMacro', $name, '', MacroNode::PREFIX_NONE);
 				} else {
-					array_unshift($left, array(FALSE, $name, $attrs[$name], MacroNode::PREFIX_NONE));
+					array_unshift($left, array('openMacro', $name, $attrs[$name], MacroNode::PREFIX_NONE));
 				}
 				unset($attrs[$name]);
 			}
@@ -490,12 +493,12 @@ class Compiler extends Nette\Object
 		}
 
 		if (!$this->htmlNode->closing) {
-			$this->htmlNode->attrCode = & $this->attrCodes[$uniq = ' n:' . Nette\Utils\Strings::random()];
+			$this->htmlNode->attrCode = & $this->attrCodes[$uniq = ' n:' . Nette\Utils\Random::generate()];
 			$code = substr_replace($code, $uniq, strrpos($code, '/>') ?: strrpos($code, '>'), 0);
 		}
 
 		foreach ($left as $item) {
-			$node = $item[0] ? $this->closeMacro($item[1], $item[2]) : $this->openMacro($item[1], $item[2], NULL, NULL, $item[3]);
+			$node = $this->{$item[0]}($item[1], $item[2], NULL, NULL, $item[3]);
 			if ($node->closing || $node->isEmpty) {
 				$this->htmlNode->attrCode .= $node->attrCode;
 				if ($node->isEmpty) {
@@ -507,7 +510,7 @@ class Compiler extends Nette\Object
 		$this->output .= $code;
 
 		foreach ($right as $item) {
-			$node = $item[0] ? $this->closeMacro($item[1], $item[2]) : $this->openMacro($item[1], $item[2], NULL, NULL, $item[3]);
+			$node = $this->{$item[0]}($item[1], $item[2], NULL, NULL, $item[3]);
 			if ($node->closing) {
 				$this->htmlNode->attrCode .= $node->attrCode;
 			}
@@ -536,7 +539,7 @@ class Compiler extends Nette\Object
 
 		if ($this->context[1] === self::CONTENT_URL) {
 			$modifiers = preg_replace('#\|nosafeurl\s?(?=\||\z)#i', '', $modifiers, -1, $found);
-			if (!$found) {
+			if (!$found && !preg_match('#\|datastream(?=\s|\||\z)#i', $modifiers)) {
 				$modifiers .= '|safeurl';
 			}
 		}
@@ -562,7 +565,7 @@ class Compiler extends Nette\Object
 
 	private static function printEndTag(MacroNode $node)
 	{
-		if ($node->htmlNode) {
+		if ($node->prefix) {
 			return  "</{$node->htmlNode->name}> for macro-attribute " . Parser::N_PREFIX
 				. implode(' and ' . Parser::N_PREFIX, array_keys($node->htmlNode->macroAttrs));
 		} else {

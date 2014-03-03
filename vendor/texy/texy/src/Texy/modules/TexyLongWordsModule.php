@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -14,7 +10,6 @@
  * Long words wrap module.
  *
  * @author     David Grudl
- * @package    Texy
  */
 final class TexyLongWordsModule extends TexyModule
 {
@@ -69,10 +64,10 @@ final class TexyLongWordsModule extends TexyModule
 
 	public function postLine($text)
 	{
-		return preg_replace_callback(
+		return TexyRegexp::replace(
+			$text,
 			'#[^\ \n\t\x14\x15\x16\x{2013}\x{2014}\x{ad}-]{'.$this->wordLimit.',}#u',
-			array($this, 'pattern'),
-			$text
+			array($this, 'pattern')
 		);
 	}
 
@@ -82,8 +77,9 @@ final class TexyLongWordsModule extends TexyModule
 	 * (c) David Grudl
 	 * @param  array
 	 * @return string
+	 * @internal
 	 */
-	private function pattern($matches)
+	public function pattern($matches)
 	{
 		list($mWord) = $matches;
 		// [0] => lllloooonnnnggggwwwoorrdddd

@@ -1,12 +1,8 @@
 <?php
 
 /**
- * Texy! is human-readable text to HTML converter (http://texy.info)
- *
+ * This file is part of the Texy! (http://texy.info)
  * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
- *
- * For the full copyright and license information, please view
- * the file license.txt that was distributed with this source code.
  */
 
 
@@ -14,7 +10,6 @@
  * Special blocks module.
  *
  * @author     David Grudl
- * @package    Texy
  */
 final class TexyBlockModule extends TexyModule
 {
@@ -53,10 +48,10 @@ final class TexyBlockModule extends TexyModule
 	public function beforeBlockParse($parser, & $text)
 	{
 		// autoclose exclusive blocks
-		$text = preg_replace(
+		$text = TexyRegexp::replace(
+			$text,
 			'#^(/--++ *+(?!div|texysource).*)$((?:\n.*+)*?)(?:\n\\\\--.*$|(?=(\n/--.*$)))#mi',
-			"\$1\$2\n\\--",
-			$text
+			"\$1\$2\n\\--"
 		);
 	}
 

@@ -722,7 +722,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	 */
 	public function canonicalize()
 	{
-		if (!$this->isAjax() && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
+		if (!$this->isAjax() && !$this->request->hasFlag(Application\Request::RESTORED) && ($this->request->isMethod('get') || $this->request->isMethod('head'))) {
 			try {
 				$url = $this->createRequest($this, $this->action, $this->getGlobalState() + $this->request->getParameters(), 'redirectX');
 			} catch (InvalidLinkException $e) {}
@@ -1051,7 +1051,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			return '#';
 
 		} elseif ($this->invalidLinkMode === self::INVALID_LINK_WARNING) {
-			return 'error: ' . $e->getMessage();
+			return '#error: ' . $e->getMessage();
 
 		} else { // self::INVALID_LINK_EXCEPTION
 			throw $e;
@@ -1071,7 +1071,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	{
 		$session = $this->session->getSection('Nette.Application/requests');
 		do {
-			$key = Nette\Utils\Strings::random(5);
+			$key = Nette\Utils\Random::generate(5);
 		} while (isset($session[$key]));
 
 		$session[$key] = array($this->user->getId(), $this->request);
@@ -1288,7 +1288,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	public function getFlashSession()
 	{
 		if (empty($this->params[self::FLASH_KEY])) {
-			$this->params[self::FLASH_KEY] = Nette\Utils\Strings::random(4);
+			$this->params[self::FLASH_KEY] = Nette\Utils\Random::generate(4);
 		}
 		return $this->session->getSection('Nette.Application.Flash/' . $this->params[self::FLASH_KEY]);
 	}

@@ -148,7 +148,7 @@ class Debugger
 	{
 		self::$time = isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime(TRUE);
 		if (isset($_SERVER['REQUEST_URI'])) {
-			self::$source = (isset($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
+			self::$source = (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
 				. (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
 				. $_SERVER['REQUEST_URI'];
 		} else {
@@ -530,6 +530,7 @@ class Debugger
 
 	/**
 	 * Dumps information about a variable in readable format.
+	 * @tracySkipLocation
 	 * @param  mixed  variable to dump
 	 * @param  bool   return output instead of printing it? (bypasses $productionMode)
 	 * @return mixed  variable itself or dump
@@ -573,6 +574,7 @@ class Debugger
 
 	/**
 	 * Dumps information about a variable in Nette Debug Bar.
+	 * @tracySkipLocation
 	 * @param  mixed  variable to dump
 	 * @param  string optional title
 	 * @param  array  dumper options
