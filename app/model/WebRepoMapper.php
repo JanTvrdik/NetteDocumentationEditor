@@ -8,11 +8,17 @@ use Nette\Utils\Strings;
 class WebRepoMapper extends Nette\Object
 {
 
-	/** @var string */
-	private $defaultBranch = 'nette.org';
+	/** string */
+	const DEFAULT_BRANCH = 'nette.org';
 
-	/** @var string */
-	private $defaultDocVersion = '2.1';
+	/** string */
+	const DEFAULT_DOC_VERSION = '2.1';
+
+	/** string */
+	const DEFAULT_PAGE_NAME = 'homepage';
+
+	/** string */
+	const DEFAULT_LANG = 'en';
 
 	/**
 	 * Converts page identification in repository to its web identification.
@@ -42,14 +48,14 @@ class WebRepoMapper extends Nette\Object
 	 */
 	public function webToRepo($book, $lang, $name)
 	{
-		$name = $name ?: 'homepage';
+		$name = $name ?: self::DEFAULT_PAGE_NAME;
 		if (Strings::startsWith($book, 'doc')) {
 			if ($book === 'doc') {
-				$book .= '-' . $this->defaultDocVersion;
+				$book .= '-' . self::DEFAULT_DOC_VERSION;
 			}
 			return [$book, $lang . '/' . $name . '.texy'];
 		} else {
-			return [$this->defaultBranch, $book . '/' . $lang . '/' . $name . '.texy'];
+			return [self::DEFAULT_BRANCH, $book . '/' . $lang . '/' . $name . '.texy'];
 		}
 	}
 
@@ -73,10 +79,10 @@ class WebRepoMapper extends Nette\Object
 		if (!$m) return FALSE;
 		$book = (!empty($m['book']) ? $m['book'] : 'www');
 		if ($book === 'doc') {
-			$book .= '-' . (!empty($m['version']) ? $m['version'] : $this->defaultDocVersion);
+			$book .= '-' . (!empty($m['version']) ? $m['version'] : self::DEFAULT_DOC_VERSION);
 		}
 		$lang = !empty($m['lang']) ? $m['lang'] : 'en';
-		$name = !empty($m['name']) ? rtrim($m['name'], '/') : 'homepage';
+		$name = !empty($m['name']) ? rtrim($m['name'], '/') : self::DEFAULT_PAGE_NAME;
 		return [$book, $lang, $name];
 	}
 
@@ -85,7 +91,7 @@ class WebRepoMapper extends Nette\Object
 		$parts = explode('-', $book);
 		$sub = ($parts[0] === 'www' ? '' : $parts[0] . '.');
 		$version = isset($parts[1]) ? '/' . $parts[1] : '';
-		$name = ($name === 'homepage' ? '' : $name);
+		$name = ($name === self::DEFAULT_PAGE_NAME ? '' : $name);
 		return 'http://' . $sub . 'nette.org/' . $lang . $version . '/' . $name;
 	}
 
