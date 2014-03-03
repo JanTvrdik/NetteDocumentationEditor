@@ -21,6 +21,7 @@ test(function () {
 test(function () {
 	$mapper = new WebRepoMapper();
 	Assert::same( ['doc-0.9', 'cs/quickstart/model.texy'], $mapper->webToRepo('doc-0.9', 'cs', 'quickstart/model') );
+	Assert::same( ['doc-2.1', 'cs/homepage.texy'], $mapper->webToRepo('doc', 'cs', 'homepage') );
 });
 
 test(function () {

@@ -43,7 +43,10 @@ class WebRepoMapper extends Nette\Object
 	public function webToRepo($book, $lang, $name)
 	{
 		$name = $name ?: 'homepage';
-		if (strpos($book, '-')) {
+		if (Strings::startsWith($book, 'doc')) {
+			if ($book === 'doc') {
+				$book .= '-' . $this->defaultDocVersion;
+			}
 			return [$book, $lang . '/' . $name . '.texy'];
 		} else {
 			return [$this->defaultBranch, $book . '/' . $lang . '/' . $name . '.texy'];
