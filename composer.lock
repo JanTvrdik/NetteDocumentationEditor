@@ -60,16 +60,16 @@
         },
         {
             "name": "jantvrdik/nette-doc-converter",
-            "version": "v1.0.0",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JanTvrdik/NetteDocumentationConverter.git",
-                "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f"
+                "reference": "680b84e53bbb1551dd884cfc20847a1f17ac7b42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConverter/zipball/6613726f19a403109e359c0614dfc8e0bd8b965f",
-                "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f",
+                "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConverter/zipball/680b84e53bbb1551dd884cfc20847a1f17ac7b42",
+                "reference": "680b84e53bbb1551dd884cfc20847a1f17ac7b42",
                 "shasum": ""
             },
             "require": {
@@ -80,6 +80,11 @@
                 "nette/tester": "~0.9"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "src/"
@@ -98,7 +103,7 @@
                     "name": "Jan Tvrdik"
                 }
             ],
-            "time": "2014-01-03 13:00:24"
+            "time": "2014-03-04 00:58:17"
         },
         {
             "name": "knplabs/github-api",

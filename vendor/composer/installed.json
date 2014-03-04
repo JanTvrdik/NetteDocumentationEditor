@@ -562,50 +562,6 @@
         ]
     },
     {
-        "name": "jantvrdik/nette-doc-converter",
-        "version": "v1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JanTvrdik/NetteDocumentationConverter.git",
-            "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConverter/zipball/6613726f19a403109e359c0614dfc8e0bd8b965f",
-            "reference": "6613726f19a403109e359c0614dfc8e0bd8b965f",
-            "shasum": ""
-        },
-        "require": {
-            "kukulich/fshl": "~2.1",
-            "texy/texy": "~2.3"
-        },
-        "require-dev": {
-            "nette/tester": "~0.9"
-        },
-        "time": "2014-01-03 13:00:24",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "http://davidgrudl.com"
-            },
-            {
-                "name": "Jan Tvrdik"
-            }
-        ]
-    },
-    {
         "name": "janmarek/webloader",
         "version": "2.2.0",
         "version_normalized": "2.2.0.0",
@@ -705,6 +661,48 @@
         ]
     },
     {
+        "name": "neeckeloo/closure-compiler-php",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/neeckeloo/ClosureCompilerPHP.git",
+            "reference": "8a75565972998219d7835d76511b2c2789d75d17"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/8a75565972998219d7835d76511b2c2789d75d17",
+            "reference": "8a75565972998219d7835d76511b2c2789d75d17",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "zendframework/zend-http": "2.*"
+        },
+        "time": "2014-03-03 08:38:21",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Closure": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Eeckeloo",
+                "email": "neeckeloo@gmail.com"
+            }
+        ],
+        "description": "The Closure Compiler compiles JavaScript into compact, high-performance code.",
+        "keywords": [
+            "closure compiler"
+        ]
+    },
+    {
         "name": "texy/texy",
         "version": "v2.4",
         "version_normalized": "2.4.0.0",
@@ -763,45 +761,52 @@
         ]
     },
     {
-        "name": "neeckeloo/closure-compiler-php",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "name": "jantvrdik/nette-doc-converter",
+        "version": "v1.0.2",
+        "version_normalized": "1.0.2.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/neeckeloo/ClosureCompilerPHP.git",
-            "reference": "8a75565972998219d7835d76511b2c2789d75d17"
+            "url": "https://github.com/JanTvrdik/NetteDocumentationConverter.git",
+            "reference": "680b84e53bbb1551dd884cfc20847a1f17ac7b42"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/8a75565972998219d7835d76511b2c2789d75d17",
-            "reference": "8a75565972998219d7835d76511b2c2789d75d17",
+            "url": "https://api.github.com/repos/JanTvrdik/NetteDocumentationConverter/zipball/680b84e53bbb1551dd884cfc20847a1f17ac7b42",
+            "reference": "680b84e53bbb1551dd884cfc20847a1f17ac7b42",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3.0",
-            "zendframework/zend-http": "2.*"
+            "kukulich/fshl": "~2.1",
+            "texy/texy": "~2.3"
         },
-        "time": "2014-03-03 08:38:21",
+        "require-dev": {
+            "nette/tester": "~0.9"
+        },
+        "time": "2014-03-04 00:58:17",
         "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
         "installation-source": "dist",
         "autoload": {
-            "psr-0": {
-                "Closure": "src/"
-            }
+            "classmap": [
+                "src/"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "MIT"
+            "BSD-3-Clause"
         ],
         "authors": [
             {
-                "name": "Nicolas Eeckeloo",
-                "email": "neeckeloo@gmail.com"
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Jan Tvrdik"
             }
-        ],
-        "description": "The Closure Compiler compiles JavaScript into compact, high-performance code.",
-        "keywords": [
-            "closure compiler"
         ]
     }
 ]

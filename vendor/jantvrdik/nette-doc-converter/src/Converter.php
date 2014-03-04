@@ -16,7 +16,7 @@ class Converter
 	const HOMEPAGE = 'homepage';
 
 	/** @var Link */
-	private $current;
+	public $current;
 
 	/** @var string */
 	public $html;
@@ -123,6 +123,7 @@ class Converter
 		$texy->dtd['body'][1]['style'] = TRUE;
 		$texy->allowed['longwords'] = FALSE;
 		$texy->allowed['block/html'] = FALSE;
+		$texy->allowed['phrase/wikilink'] = FALSE; // fixes syntax collision with Texy 2.4
 
 		$texy->phraseModule->tags['phrase/strong'] = 'b';
 		$texy->phraseModule->tags['phrase/em'] = 'i';
