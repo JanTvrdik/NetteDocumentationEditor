@@ -42,8 +42,8 @@
 			{if $toc}
 				<aside id="sidebar">
 					<div>
-						<h3>Contents</h3>
 						<ul id="toc">
+							<li class="up" value="0"><a href="#page">▲</a></li>
 							{foreach $toc as $heading}
 								<li><a href="#{$heading->id}">{$heading->title}</a>
 								{if $next = $iterator->nextValue}
