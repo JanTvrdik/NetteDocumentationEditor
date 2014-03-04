@@ -10,7 +10,7 @@ module LiveTexyEditor
 	export class Panel
 	{
 		/** is panel visible? */
-		visible: bool = false;
+		visible: boolean = false;
 
 		/** panel content */
 		content: string = '';
@@ -23,7 +23,7 @@ module LiveTexyEditor
 		 * @param updateWaitTime how long (in milliseconds) after last input change should the panel be updated?
 		 * @param outOfDate      does panel content need to be updated?
 		 */
-		constructor(public name: string, public updateWaitTime: number, public outOfDate: bool = false)
+		constructor(public name: string, public updateWaitTime: number, public outOfDate: boolean = false)
 		{
 
 		}

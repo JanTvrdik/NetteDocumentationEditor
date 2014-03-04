@@ -14,7 +14,7 @@ interface DiffMatchPatch
 	Patch_Margin: number;
 	Match_MaxBits: number;
 
-	diff_main(text1: string, text2: string, opt_checklines?: bool, opt_deadline?: number): Diff[];
+	diff_main(text1: string, text2: string, opt_checklines?: boolean, opt_deadline?: number): Diff[];
 	diff_commonPrefix(text1: string, text2: string): number;
 	diff_commonSuffix(text1: string, text2: string): number;
 	diff_cleanupSemantic(diffs: Diff[]): void;
