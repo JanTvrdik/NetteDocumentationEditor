@@ -4,7 +4,7 @@ namespace App;
 use Nette;
 
 
-class Page extends Nette\Object
+class RepoPage extends Nette\Object
 {
 
 	/** @var string branch to which this page belong */

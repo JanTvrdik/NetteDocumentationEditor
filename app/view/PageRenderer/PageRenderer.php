@@ -28,7 +28,7 @@ class PageRenderer extends Nette\Object
 		$this->model = $model;
 	}
 
-	public function render(Page $page, $header = TRUE, $forceNewWindow = FALSE)
+	public function render(RepoPage $page, $header = TRUE, $forceNewWindow = FALSE)
 	{
 		if ($page->branch === NULL && $page->path === NULL) {
 			$web = ['xxx', 'en', 'homepage'];

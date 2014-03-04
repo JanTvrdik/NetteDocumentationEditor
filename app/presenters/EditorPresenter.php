@@ -129,7 +129,7 @@ final class EditorPresenter extends BasePresenter
 		$form = $button->form;
 		$values = $form->values;
 
-		$page = new Page();
+		$page = new RepoPage();
 		$page->branch = $values->branch;
 		$page->path = $values->path;
 		$page->prevBlobHash = $values->prevBlobHash;
@@ -200,7 +200,7 @@ final class EditorPresenter extends BasePresenter
 
 	public function handleRenderPreview($branch, $path, $texyContent)
 	{
-		$page = new Page();
+		$page = new RepoPage();
 		$page->branch = $branch;
 		$page->path = $path;
 		$page->content = $texyContent;

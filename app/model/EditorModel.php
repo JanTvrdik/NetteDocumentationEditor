@@ -81,7 +81,7 @@ class EditorModel extends Nette\Object
 	 *
 	 * @param  string $branch
 	 * @param  string $path
-	 * @return Page|NULL
+	 * @return RepoPage|NULL
 	 * @throws NotSupportedException
 	 * @throws InvalidArgumentException if URL is not on nette.org domain
 	 */
@@ -99,7 +99,7 @@ class EditorModel extends Nette\Object
 			return NULL;
 		}
 
-		$page = new Page();
+		$page = new RepoPage();
 		$page->branch = $branch;
 		$page->path = $file['path'];
 		$page->prevBlobHash = $file['sha'];
@@ -117,7 +117,7 @@ class EditorModel extends Nette\Object
 	 * @throws PermissionDeniedException
 	 * @throws PageSaveConflictException
 	 */
-	public function savePage(Page $page, $userAccessToken)
+	public function savePage(RepoPage $page, $userAccessToken)
 	{
 		$user = $this->getUser($userAccessToken);
 		if (!$this->canEdit($user['login'])) throw new PermissionDeniedException();
