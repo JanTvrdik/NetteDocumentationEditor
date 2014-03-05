@@ -32,4 +32,11 @@ class TextConverter extends \Text\Converter
 		return $texy;
 	}
 
+	public function resolveLink($link)
+	{
+		$link = parent::resolveLink($link);
+		if (is_string($link)) $link = strtolower($link);
+		return $link;
+	}
+
 }
