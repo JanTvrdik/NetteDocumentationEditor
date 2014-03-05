@@ -163,7 +163,10 @@ module LiveTexyEditor
 				iframeDoc.write(this.model.Preview);
 				iframeDoc.close();
 
-				iframeWin.addEventListener('load', this.syncIframeScrollPosition.bind(this));
+				iframeWin.addEventListener('load', () => {
+					this.updateScrollSyncPoints(iframeDoc, this.model.Preview);
+					this.syncIframeScrollPosition();
+				});
 				iframeDoc.addEventListener('click', (e:Event) => {
 					this.closeDropdown();
 
@@ -199,12 +202,50 @@ module LiveTexyEditor
 			if (this.preview.height() !== expectedPreviewHeight) {
 				this.preview.css('height', expectedPreviewHeight + 'px');
 			}
+
+			var ta = <HTMLTextAreaElement> this.textarea.get(0);
+			var sh, width;
+			for (sh = ta.scrollHeight; sh === ta.scrollHeight; ta.value += ' ');
+			for (width = 0, sh = ta.scrollHeight; sh === ta.scrollHeight; width++, ta.value += ' ');
+			alert(width);
+
+
 		}
 
 		private getOriginalContent(): string
 		{
 			var orig = this.textarea.data('original');
 			return (orig !== undefined ? orig : this.textarea.val());
+		}
+
+		private updateScrollSyncPoints(doc: Document, input: string)
+		{
+			var syncPoints = {};
+
+			var linesMap = <number[]> [0]; // lineNumber => offset
+			var lineWidth = 101; // todo!
+			var prevPos = 0, currentPos;
+			while ((currentPos = input.indexOf('\n', prevPos + 1) + 1) > prevPos) {
+				while ((currentPos - prevPos) > lineWidth) {
+					prevPos += lineWidth;
+					linesMap.push(prevPos);
+				}
+				linesMap.push(currentPos);
+				prevPos = currentPos;
+			}
+
+			var headings = doc.querySelectorAll('h1, h2, h3');
+			for (var i = 0; i < headings.length; i++) {
+				var heading = <HTMLHeadingElement> headings[i];
+				var headingText = heading.firstChild.textContent;
+				var headingEscaped = headingText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // http://stackoverflow.com/a/3561711
+				var re = new RegExp('^' + headingEscaped + '\n(?:\\-\\-\\-+|===+|\\*\\*\\*+|###+)$', 'm');
+				var match = re.exec(input);
+				if (match) {
+					for (var line = 0; linesMap[line] < match.index; line++);
+					syncPoints[line] = heading.scrollTop;
+				}
+			}
 		}
 
 		private syncIframeScrollPosition()
