@@ -157,11 +157,13 @@ module LiveTexyEditor
 			this.model.on('preview:change', () => {
 				var iframe = <HTMLIFrameElement> this.preview.get(0);
 				var iframeDoc = iframe.contentDocument;
+				var iframeWin = iframe.contentWindow;
 				iframeDoc.open('text/html', 'replace');
 				iframeDoc.write(this.model.Preview);
 				iframeDoc.addEventListener('click', this.closeDropdown.bind(this));
 				iframeDoc.close();
-				this.syncIframeScrollPosition();
+
+				iframeWin.addEventListener('load', this.syncIframeScrollPosition.bind(this));
 			});
 
 			this.model.on('diff:change', () => {
@@ -199,6 +201,7 @@ module LiveTexyEditor
 			var iframe = <HTMLIFrameElement> this.preview.get(0);
 			var iframeWin = iframe.contentWindow;
 			var iframeBody = iframe.contentDocument.body;
+			if (iframeBody === null) return;
 
 			var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
 			var iframeMaximumScrollTop = iframeBody.scrollHeight - this.preview.height();
