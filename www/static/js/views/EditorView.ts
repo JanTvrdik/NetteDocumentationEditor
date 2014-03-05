@@ -158,12 +158,23 @@ module LiveTexyEditor
 				var iframe = <HTMLIFrameElement> this.preview.get(0);
 				var iframeDoc = iframe.contentDocument;
 				var iframeWin = iframe.contentWindow;
+
 				iframeDoc.open('text/html', 'replace');
 				iframeDoc.write(this.model.Preview);
-				iframeDoc.addEventListener('click', this.closeDropdown.bind(this));
 				iframeDoc.close();
 
 				iframeWin.addEventListener('load', this.syncIframeScrollPosition.bind(this));
+				iframeDoc.addEventListener('click', (e:Event) => {
+					this.closeDropdown();
+
+					// custom anchor handling due to FF
+					var link = <HTMLAnchorElement> e.target;
+					if (link.nodeName === 'A' && link.hash && !link.target) {
+						e.preventDefault();
+						var el = <HTMLElement> iframeDoc.querySelector(link.hash);
+						if (el) el.scrollIntoView();
+					}
+				});
 			});
 
 			this.model.on('diff:change', () => {
