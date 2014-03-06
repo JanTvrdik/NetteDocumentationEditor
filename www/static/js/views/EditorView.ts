@@ -94,56 +94,67 @@ module LiveTexyEditor
 		private initTextareaEvents()
 		{
 			this.textarea.on('keydown', (e: JQueryKeyEventObject) => {
-				if (e.keyCode !== 9 && e.keyCode !== 13) return; // ignore everything but tab and enter
-				if (e.ctrlKey || e.altKey || e.metaKey) return;
+				var TAB_KEY_CODE = 9;
+				var ENTER_KEY_CODE = 13;
+				var ARROW_UP_KEY_CODE = 38;
+				var ARROW_DOWN_KEY_CODE = 40;
 
-				// based on code by David Grudl, http://editor.texy.info
-				e.preventDefault();
-				var textarea = <HTMLTextAreaElement> e.target;
-				var top = textarea.scrollTop;
-				var start = textarea.selectionStart, end = textarea.selectionEnd;
-				var lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
-				var lines = textarea.value.substring(lineStart, end);
-				var startMove = 0, endMove = 0;
+				if (e.keyCode === TAB_KEY_CODE || e.keyCode === ENTER_KEY_CODE) {
+					if (e.ctrlKey || e.altKey || e.metaKey) return;
 
-				// tab
-				if (e.keyCode === 9) {
-					if (e.shiftKey) {
-						startMove = -1;
-						lines = lines.replace(/^\t/gm, '');
+					// based on code by David Grudl, http://editor.texy.info
+					e.preventDefault();
+					var textarea = <HTMLTextAreaElement> e.target;
+					var top = textarea.scrollTop;
+					var start = textarea.selectionStart, end = textarea.selectionEnd;
+					var lineStart = textarea.value.lastIndexOf('\n', start - 1) + 1;
+					var lines = textarea.value.substring(lineStart, end);
+					var startMove = 0, endMove = 0;
 
-					} else {
-						startMove = 1;
-						if (start !== end) lines = lines.replace(/^/gm, '\t');
-						else lines += '\t';
+					if (e.keyCode === TAB_KEY_CODE) {
+						if (e.shiftKey) {
+							startMove = -1;
+							lines = lines.replace(/^\t/gm, '');
+
+						} else {
+							startMove = 1;
+							if (start !== end) lines = lines.replace(/^/gm, '\t');
+							else lines += '\t';
+						}
+
+					} else if (e.keyCode === ENTER_KEY_CODE) {
+						if (start !== end) return; // ignore enter when text is selected
+
+						var m, indentation;
+						if (m = lines.match(/^(\t*)\/\*\*/)) { // PHPDoc / JSDoc start
+							indentation = m[1];
+							startMove = 4 + indentation.length;
+							endMove = -4 - indentation.length;
+							lines += '\n' + indentation + ' * \n' + indentation + ' */';
+
+						} else {
+							m = lines.match(/^\t*( \*(?: |$))?/);
+							indentation = m[0] + (m[1] === ' *' ? ' ' : '');
+							startMove = 1 + indentation.length;
+							lines += '\n' + indentation;
+						}
 					}
 
-				// enter
-				} else if (e.keyCode === 13) {
-					if (start !== end) return; // ignore enter when text is selected
+					textarea.value = textarea.value.substring(0, lineStart) + lines + textarea.value.substr(end);
 
-					var m, indentation;
-					if (m = lines.match(/^(\t*)\/\*\*/)) { // PHPDoc / JSDoc start
-						indentation = m[1];
-						startMove = 4 + indentation.length;
-						endMove = -4 - indentation.length;
-						lines += '\n' + indentation + ' * \n' + indentation + ' */';
+					if (start !== lineStart || start === end) start += startMove;
+					end = lineStart + lines.length + endMove;
+					textarea.setSelectionRange(start, end);
+					textarea.focus();
+					textarea.scrollTop = top; // Firefox
 
-					} else {
-						m = lines.match(/^\t*( \*(?: |$))?/);
-						indentation = m[0] + (m[1] === ' *' ? ' ' : '');
-						startMove = 1 + indentation.length;
-						lines += '\n' + indentation;
-					}
+				} else if (e.keyCode === ARROW_UP_KEY_CODE || e.keyCode === ARROW_DOWN_KEY_CODE) {
+					if (!e.ctrlKey || e.altKey || e.metaKey) return;
+					e.preventDefault();
+					var step = (e.keyCode === ARROW_UP_KEY_CODE ? -20 : +20);
+					var textarea = <HTMLTextAreaElement> e.target;
+					textarea.scrollTop += step;
 				}
-
-				textarea.value = textarea.value.substring(0, lineStart) + lines + textarea.value.substr(end);
-
-				if (start !== lineStart || start === end) start += startMove;
-				end = lineStart + lines.length + endMove;
-				textarea.setSelectionRange(start, end);
-				textarea.focus();
-				textarea.scrollTop = top; // Firefox
 			});
 
 			this.textarea.on('keyup', (e: JQueryKeyEventObject) => {
