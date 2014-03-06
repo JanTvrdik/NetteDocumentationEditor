@@ -66,6 +66,11 @@ module LiveTexyEditor
 					select.val(value).trigger('change');
 				}
 			});
+
+			$(window).on('resize', () => {
+				this.updateLineLength();
+				this.updateScrollSyncPoints(this.preview.get(0).contentDocument);
+			});
 		}
 
 		private initDropdownEvents()
@@ -163,7 +168,10 @@ module LiveTexyEditor
 				iframeDoc.write(this.model.Preview);
 				iframeDoc.close();
 
-				iframeWin.addEventListener('load', this.syncIframeScrollPosition.bind(this));
+				iframeWin.addEventListener('load', () => {
+					this.updateScrollSyncPoints(iframeDoc);
+					this.syncIframeScrollPosition();
+				});
 				iframeDoc.addEventListener('click', (e:Event) => {
 					this.closeDropdown();
 
@@ -172,7 +180,11 @@ module LiveTexyEditor
 					if (link.nodeName === 'A' && link.hash && !link.target) {
 						e.preventDefault();
 						var el = <HTMLElement> iframeDoc.querySelector(link.hash);
-						if (el) el.scrollIntoView();
+						if (el) {
+							el.scrollIntoView();
+							this.syncTextareaScrollPosition();
+						}
+
 					}
 				});
 			});
@@ -199,6 +211,8 @@ module LiveTexyEditor
 			if (this.preview.height() !== expectedPreviewHeight) {
 				this.preview.css('height', expectedPreviewHeight + 'px');
 			}
+
+			this.updateLineLength();
 		}
 
 		private getOriginalContent(): string
@@ -207,20 +221,109 @@ module LiveTexyEditor
 			return (orig !== undefined ? orig : this.textarea.val());
 		}
 
+		private textareaSyncPoints: number[];
+		private previewSyncPoints: number[];
+		private lineLength: number;
+
+		private updateLineLength()
+		{
+			var padding = 5;
+			var ta = <HTMLDivElement> document.querySelector('.textarea-shadow');
+			var charCount = 1000;
+			ta.firstChild.textContent = Array(charCount + 1).join('=');
+			this.lineLength = Math.floor((ta.clientWidth - 2 * padding) / (ta.scrollWidth - padding) * charCount);
+		}
+
+		private updateScrollSyncPoints(doc: Document)
+		{
+			var input = this.textarea.val();
+			var linesMap = <number[]> []; // lineNumber => offset
+			var currentPos = 0, previousPos, found;
+
+			do {
+				linesMap.push(currentPos);
+				previousPos = currentPos;
+				currentPos = input.indexOf('\n', previousPos);
+				found = (currentPos !== -1);
+				currentPos = (found ? currentPos + 1 : input.length);
+				while ((currentPos - previousPos - 1) > this.lineLength) {
+					var reversedLine = input.substr(previousPos, this.lineLength).split('').reverse().join('');
+					previousPos = Math.min(previousPos + this.lineLength, previousPos + this.lineLength - reversedLine.search(/[ \t]/));
+					linesMap.push(previousPos);
+				}
+			} while (found);
+
+			this.textareaSyncPoints = [0, 1];
+			this.previewSyncPoints = [0, 1];
+			var headings = doc.querySelectorAll('h2, h3');
+			for (var i = 0; i < headings.length; i++) {
+				var heading = <HTMLHeadingElement> headings[i];
+				if (!heading.firstChild) continue;
+
+				var headingText = heading.firstChild.textContent.replace(' ', ' '); // nbsp -> normal space
+				var headingEscaped = headingText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // http://stackoverflow.com/a/3561711
+				var re = new RegExp('^`?' + headingEscaped + '`?\n(?:\\-\\-\\-+|===+|\\*\\*\\*+|###+)$', 'm');
+				var match = re.exec(input);
+
+				if (match) {
+					for (var line = 0; linesMap[line] < match.index; line++);
+					this.textareaSyncPoints.push(line / linesMap.length);
+					this.previewSyncPoints.push(heading.getBoundingClientRect().top / doc.body.scrollHeight);
+				}
+			}
+
+			console.log('LinesMap', linesMap.length, this.textarea.get(0).scrollHeight / linesMap.length);
+		}
+
 		private syncIframeScrollPosition()
 		{
-			var iframe = <HTMLIFrameElement> this.preview.get(0);
-			var iframeWin = iframe.contentWindow;
-			var iframeBody = iframe.contentDocument.body;
-			if (iframeBody === null) return;
+			var source = <HTMLElement> this.textarea.get(0);
+			var target = <HTMLElement> this.preview.get(0).contentDocument.body;
 
-			var textareaMaximumScrollTop = this.textarea.prop('scrollHeight') - this.textarea.height();
-			var iframeMaximumScrollTop = iframeBody.scrollHeight - this.preview.height();
+			// fix FF-Chrome incompatibility, FF requires <html>, Chrome <body>
+			var temp = target.scrollTop++;
+			if (temp === target.scrollTop) target = target.parentElement;
 
-			var percent = this.textarea.scrollTop() / textareaMaximumScrollTop;
-			var iframePos = iframeMaximumScrollTop * percent;
+			this.syncScrollPosition(source, this.textareaSyncPoints, target, this.previewSyncPoints);
+		}
 
-			iframeWin.scrollTo(0, iframePos);
+		private syncTextareaScrollPosition()
+		{
+			var source = <HTMLElement> this.preview.get(0).contentDocument.body;
+			var target = <HTMLElement> this.textarea.get(0);
+
+			// fix FF-Chrome incompatibility, FF requires <html>, Chrome <body>
+			var temp = source.scrollTop++;
+			if (temp === source.scrollTop) source = source.parentElement;
+
+			this.syncScrollPosition(source, this.previewSyncPoints, target, this.textareaSyncPoints);
+		}
+
+		private syncScrollPosition(source: Element, sourceSyncPoints: number[], target: Element, targetSyncPoints: number[])
+		{
+			var sourcePos = source.scrollTop / source.scrollHeight;
+
+			var lowerBound = <number> null, upperBound = <number> null;
+			for (var i = 0; i < sourceSyncPoints.length; i++) {
+				var pos = sourceSyncPoints[i];
+				if (pos <= sourcePos) {
+					if (lowerBound === null || pos > sourceSyncPoints[lowerBound]) {
+						lowerBound = i;
+					}
+				} else {
+					if (upperBound === null || pos < sourceSyncPoints[upperBound]) {
+						upperBound = i;
+					}
+				}
+			}
+
+			// BP = ((AP - AL) / (AU - AL) * (BU - BL) + BL)
+			var sourcePosNormalized = sourcePos - sourceSyncPoints[lowerBound];
+			var sourceDistance = sourceSyncPoints[upperBound] - sourceSyncPoints[lowerBound];
+			var targetDistance = targetSyncPoints[upperBound] - targetSyncPoints[lowerBound];
+			var targetPosNormalized = sourcePosNormalized / sourceDistance * targetDistance;
+			var targetPos = targetPosNormalized + targetSyncPoints[lowerBound];
+			target.scrollTop = targetPos * target.scrollHeight;
 		}
 
 		private closeDropdown()

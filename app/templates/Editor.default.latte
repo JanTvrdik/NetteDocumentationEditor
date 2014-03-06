@@ -41,7 +41,7 @@
 
 		<div class="main">
 			{var $originalContent = $page ? ($page->content !== $form[texyContent]->value ? $page->content : null) : ''}
-			<div class="column code">{input texyContent, autofocus => true, data-original => $originalContent}</div>
+			<div class="column code">{input texyContent, autofocus => true, data-original => $originalContent}<div class="textarea-shadow">X</div></div>
 			<div class="column preview"><iframe></iframe></div>
 			<div class="column diff"><div class="content"></div></div>
 		</div>

@@ -202,8 +202,9 @@
 
 		&.code .column.code {
 			.display(flex);
+			position: relative;
 
-			textarea {
+			textarea, .textarea-shadow {
 				.display(flex); /* for Safari */
 				.flex(1, 1, auto);
 				.tab-size(4);
@@ -214,6 +215,19 @@
 				resize: none;
 				overflow-y: scroll;
 				font-family: Consolas, monospace;
+				font-size: 14px;
+				line-height: 20px;
+				word-break: keep-all; /* not supported in Chrome */
+				white-space: pre-wrap;
+			}
+
+			.textarea-shadow {
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				bottom: 0px;
+				right: 0px;
+				z-index: -1;
 			}
 		}
 
