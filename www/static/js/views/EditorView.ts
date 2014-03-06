@@ -293,7 +293,7 @@ module LiveTexyEditor
 
 			// fix FF-Chrome incompatibility, FF requires <html>, Chrome <body>
 			var temp = target.scrollTop++;
-			if (temp === target.scrollTop) target = target.parentElement;
+			if (temp === target.scrollTop && target.scrollTop === 0) target = target.parentElement;
 
 			this.syncScrollPosition(source, this.textareaSyncPoints, target, this.previewSyncPoints);
 		}
@@ -305,7 +305,7 @@ module LiveTexyEditor
 
 			// fix FF-Chrome incompatibility, FF requires <html>, Chrome <body>
 			var temp = source.scrollTop++;
-			if (temp === source.scrollTop) source = source.parentElement;
+			if (temp === source.scrollTop && source.scrollTop === 0) source = source.parentElement;
 
 			this.syncScrollPosition(source, this.previewSyncPoints, target, this.textareaSyncPoints);
 		}
