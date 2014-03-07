@@ -172,32 +172,34 @@ module LiveTexyEditor
 
 			this.model.on('preview:change', () => {
 				var iframe = <HTMLIFrameElement> this.preview.get(0);
-				var iframeDoc = iframe.contentDocument;
-				var iframeWin = iframe.contentWindow;
 
-				iframeDoc.open('text/html', 'replace');
-				iframeDoc.write(this.model.Preview);
-				iframeDoc.close();
-
-				iframeWin.addEventListener('load', () => {
-					this.updateScrollSyncPoints(iframeDoc);
-					this.syncIframeScrollPosition();
+				var iframe2 = <HTMLIFrameElement> iframe.parentNode.insertBefore(document.createElement('iframe'), iframe);
+				var iframeDoc2 = iframe2.contentDocument;
+				iframeDoc2.open('text/html', 'replace');
+				iframeDoc2.addEventListener('readystatechange', (e) => {
+					if (iframeDoc2.readyState === 'complete') {
+						this.preview = $(iframe2);
+						this.updateScrollSyncPoints(iframeDoc2);
+						this.syncIframeScrollPosition();
+						iframe.parentNode.removeChild(iframe);
+					}
 				});
-				iframeDoc.addEventListener('click', (e:Event) => {
+				iframeDoc2.addEventListener('click', (e:Event) => {
 					this.closeDropdown();
 
 					// custom anchor handling due to FF
 					var link = <HTMLAnchorElement> e.target;
 					if (link.nodeName === 'A' && link.hash && !link.target) {
 						e.preventDefault();
-						var el = <HTMLElement> iframeDoc.querySelector(link.hash);
+						var el = <HTMLElement> iframeDoc2.querySelector(link.hash);
 						if (el) {
 							el.scrollIntoView();
 							this.syncTextareaScrollPosition();
 						}
-
 					}
 				});
+				iframeDoc2.write(this.model.Preview);
+				iframeDoc2.close();
 			});
 
 			this.model.on('diff:change', () => {
@@ -232,8 +234,8 @@ module LiveTexyEditor
 			return (orig !== undefined ? orig : this.textarea.val());
 		}
 
-		private textareaSyncPoints: number[];
-		private previewSyncPoints: number[];
+		private textareaSyncPoints = <number[]> [0, 1];
+		private previewSyncPoints = <number[]> [0, 1];
 		private lineLength: number;
 
 		private updateLineLength()

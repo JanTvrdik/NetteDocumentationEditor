@@ -234,11 +234,19 @@
 		&.preview .column.preview {
 			.display(flex);
 			.flex-grow(1.4); // makes horizontal scrollbar not visible at 1080p
+			position: relative;
 
 			iframe {
 				.display(flex); /* for Safari */
 				.flex(1, 1, auto);
 				border: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
 			}
 		}
 
