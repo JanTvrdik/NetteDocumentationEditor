@@ -34,7 +34,8 @@ class AbstractStreamTest extends \PHPUnit_Framework_TestCase
                 'content'          => 'foo=bar&bar=baz',
                 'protocol_version' => 1.0,
                 'ignore_errors'    => false,
-                'max_redirects'    => 5,
+                'follow_location'  => true,
+                'max_redirects'    => 6,
                 'timeout'          => 10,
             ),
             'ssl' => array(
@@ -46,6 +47,11 @@ class AbstractStreamTest extends \PHPUnit_Framework_TestCase
 
         $client->setVerifyPeer(true);
         $expected['ssl']['verify_peer'] = true;
+        $this->assertEquals($expected, $client->getStreamContextArray($request));
+
+        $client->setMaxRedirects(0);
+        $expected['http']['follow_location'] = false;
+        $expected['http']['max_redirects'] = 1;
         $this->assertEquals($expected, $client->getStreamContextArray($request));
     }
 }

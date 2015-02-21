@@ -2,7 +2,7 @@
     "name": "neeckeloo/closure-compiler-php",
     "type": "library",
     "description": "The Closure Compiler compiles JavaScript into compact, high-performance code.",
-    "keywords": ["closure compiler"],
+    "keywords": ["closure", "compiler"],
     "license": "MIT",
     "authors": [
         {
@@ -14,16 +14,9 @@
         "php": ">=5.3.0",
         "zendframework/zend-http": "2.*"
     },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.zendframework.com/"
-        }
-    ],
     "autoload": {
         "psr-0": {
             "Closure": "src/"
         }
-    },
-    "minimum-stability": "beta"
+    }
 }

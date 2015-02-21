@@ -23,9 +23,6 @@ class ComposerAutoloaderInitNetteDocEditor
         self::$loader = $loader = new \Composer\Autoload\ClassLoader();
         spl_autoload_unregister(array('ComposerAutoloaderInitNetteDocEditor', 'loadClassLoader'));
 
-        $vendorDir = dirname(__DIR__);
-        $baseDir = dirname($vendorDir);
-
         $map = require __DIR__ . '/autoload_namespaces.php';
         foreach ($map as $namespace => $path) {
             $loader->set($namespace, $path);
@@ -41,6 +38,7 @@ class ComposerAutoloaderInitNetteDocEditor
             $loader->addClassMap($classMap);
         }
 
+        $loader->setClassMapAuthoritative(true);
         $loader->register(true);
 
         $includeFiles = require __DIR__ . '/autoload_files.php';

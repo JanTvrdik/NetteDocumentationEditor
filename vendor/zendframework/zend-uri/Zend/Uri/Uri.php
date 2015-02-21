@@ -3,7 +3,7 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
@@ -20,10 +20,14 @@ class Uri implements UriInterface
     /**
      * Character classes defined in RFC-3986
      */
-    const CHAR_UNRESERVED = 'a-zA-Z0-9_\-\.~';
-    const CHAR_GEN_DELIMS = ':\/\?#\[\]@';
-    const CHAR_SUB_DELIMS = '!\$&\'\(\)\*\+,;=';
-    const CHAR_RESERVED   = ':\/\?#\[\]@!\$&\'\(\)\*\+,;=';
+    const CHAR_UNRESERVED   = 'a-zA-Z0-9_\-\.~';
+    const CHAR_GEN_DELIMS   = ':\/\?#\[\]@';
+    const CHAR_SUB_DELIMS   = '!\$&\'\(\)\*\+,;=';
+    const CHAR_RESERVED     = ':\/\?#\[\]@!\$&\'\(\)\*\+,;=';
+    /**
+     * Not in the spec - those characters have special meaning in urlencoded query parameters
+     */
+    const CHAR_QUERY_DELIMS = '!\$\'\(\)\*\,';
 
     /**
      * Host part types represented as binary masks
@@ -556,10 +560,8 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $pathParts = preg_split('|(/)|', $this->getPath(), null,
-                                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $baseParts = preg_split('|(/)|', $baseUri->getPath(), null,
-                                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $pathParts = preg_split('|(/)|', $this->getPath(), null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $baseParts = preg_split('|(/)|', $baseUri->getPath(), null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         // Get the intersection of existing path parts and those from the
         // provided URI
@@ -1304,7 +1306,7 @@ class Uri implements UriInterface
         $query = self::encodeQueryFragment(
             self::decodeUrlEncodedChars(
                 $query,
-                '/[' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]/'
+                '/[' . self::CHAR_UNRESERVED . self::CHAR_QUERY_DELIMS . ':@\/\?]/'
             )
         );
 
@@ -1321,7 +1323,14 @@ class Uri implements UriInterface
      */
     protected static function normalizeFragment($fragment)
     {
-        return static::normalizeQuery($fragment);
+        $fragment = self::encodeQueryFragment(
+            self::decodeUrlEncodedChars(
+                $fragment,
+                '/[' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]/'
+            )
+        );
+
+        return $fragment;
     }
 
     /**

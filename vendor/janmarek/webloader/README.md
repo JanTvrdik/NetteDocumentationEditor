@@ -61,10 +61,9 @@ webloader:
 			files:
 				- style.css
 				- {files: ["*.css", "*.less"], from: %appDir%/presenters} # Nette\Utils\Finder support
-			filters:
-				- @wlCssFilter
 			fileFilters:
 				- @lessFilter
+				- @wlCssFilter
 	js:
 		default:
 			remoteFiles:
@@ -85,7 +84,7 @@ $webloaderExtension->install($configurator);
 Usage in `app/presenters/BasePresenter.php`:
 
 ```php
-	/** @var \WebLoader\LoaderFactory @inject */
+	/** @var \WebLoader\Nette\LoaderFactory @inject */
 	public $webLoader;
 
 	/** @return CssLoader */

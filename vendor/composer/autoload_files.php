@@ -6,6 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    $vendorDir . '/nette/nette/Nette/common/shortcuts.php',
+    $vendorDir . '/tracy/tracy/src/shortcuts.php',
     $vendorDir . '/texy/texy/src/texy.php',
 );

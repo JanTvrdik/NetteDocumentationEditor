@@ -1,4 +1,5 @@
 {
+	"name": "jantvrdik/nette-web-editor",
 	"license": ["MIT"],
 	"authors": [
 		{
@@ -7,16 +8,32 @@
 		}
 	],
 	"require": {
-		"php": "~5.4",
-		"nette/nette": "~2.2.0@dev",
+		"php": ">=5.6",
+		"nette/application": "~2.3@dev",
+		"nette/bootstrap": "~2.3@dev",
+		"nette/caching": "~2.3@dev",
+		"nette/component-model": "~2.3@dev",
+		"nette/di": "~2.3@dev",
+		"nette/finder": "~2.3@dev",
+		"nette/forms": "~2.3@dev",
+		"nette/http": "~2.3@dev",
+		"nette/neon": "~2.3@dev",
+		"nette/php-generator": "~2.3@dev",
+		"nette/reflection": "~2.3@dev",
+		"nette/utils": "~2.3@dev",
+		"latte/latte": "~2.3@dev",
+		"tracy/tracy": "~2.3@dev",
 		"knplabs/github-api": "~1.1.5",
 		"jantvrdik/nette-doc-converter": "~1.0.0",
-		"janmarek/webloader": "~2.2",
+		"janmarek/webloader": "~2.3@dev",
 		"neeckeloo/closure-compiler-php": "@dev",
 		"natxet/cssmin": "~3.0.0"
 	},
 	"require-dev": {
 		"nette/tester": "~0.9"
+	},
+	"autoload": {
+		"classmap": ["app/"]
 	},
 	"config": {
 		"autoloader-suffix": "NetteDocEditor",

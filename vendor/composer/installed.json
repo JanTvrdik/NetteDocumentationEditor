@@ -44,410 +44,6 @@
         ]
     },
     {
-        "name": "nette/nette",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nette/nette.git",
-            "reference": "02fb1cd7a7600e2c8cd75951f1fbd83fd0da89b8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nette/nette/zipball/02fb1cd7a7600e2c8cd75951f1fbd83fd0da89b8",
-            "reference": "02fb1cd7a7600e2c8cd75951f1fbd83fd0da89b8",
-            "shasum": ""
-        },
-        "require": {
-            "ext-iconv": "*",
-            "ext-tokenizer": "*",
-            "php": ">=5.3.1"
-        },
-        "require-dev": {
-            "nette/tester": "@dev"
-        },
-        "suggest": {
-            "ext-fileinfo": "*",
-            "ext-gd": "*",
-            "ext-mbstring": "*",
-            "ext-pdo": "*"
-        },
-        "time": "2014-03-03 16:01:24",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "Nette/"
-            ],
-            "files": [
-                "Nette/common/shortcuts.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "http://davidgrudl.com"
-            },
-            {
-                "name": "Nette Community",
-                "homepage": "http://nette.org/contributors"
-            }
-        ],
-        "description": "Nette Framework - innovative framework for fast and easy development of secured web applications in PHP. Write less, have cleaner code and your work will bring you joy.",
-        "homepage": "http://nette.org",
-        "keywords": [
-            "Forms",
-            "database",
-            "debugging",
-            "framework",
-            "mailing",
-            "mvc",
-            "templating"
-        ]
-    },
-    {
-        "name": "zendframework/zend-stdlib",
-        "version": "2.2.5",
-        "version_normalized": "2.2.5.0",
-        "target-dir": "Zend/Stdlib",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendStdlib.git",
-            "reference": "f440ecfc828d61d620662a03987c8287e1e4801e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/f440ecfc828d61d620662a03987c8287e1e4801e",
-            "reference": "f440ecfc828d61d620662a03987c8287e1e4801e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "suggest": {
-            "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
-            "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
-        },
-        "time": "2013-10-20 06:00:20",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev",
-                "dev-develop": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Stdlib\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "keywords": [
-            "stdlib",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-validator",
-        "version": "2.2.5",
-        "version_normalized": "2.2.5.0",
-        "target-dir": "Zend/Validator",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendValidator.git",
-            "reference": "8c23193a617a03dd7ee6c25049132c942f31ec28"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendValidator/zipball/8c23193a617a03dd7ee6c25049132c942f31ec28",
-            "reference": "8c23193a617a03dd7ee6c25049132c942f31ec28",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3",
-            "zendframework/zend-stdlib": "self.version"
-        },
-        "require-dev": {
-            "zendframework/zend-filter": "self.version",
-            "zendframework/zend-i18n": "self.version",
-            "zendframework/zend-math": "self.version",
-            "zendframework/zend-servicemanager": "self.version"
-        },
-        "suggest": {
-            "zendframework/zend-db": "Zend\\Db component",
-            "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
-            "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages as well as to use the various Date validators",
-            "zendframework/zend-math": "Zend\\Math component",
-            "zendframework/zend-resources": "Translations of validator messages",
-            "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
-            "zendframework/zend-uri": "Zend\\Uri component, required by the Uri and Sitemap\\Loc validators"
-        },
-        "time": "2013-10-20 06:00:22",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev",
-                "dev-develop": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Validator\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "description": "provides a set of commonly needed validators",
-        "keywords": [
-            "validator",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-escaper",
-        "version": "2.2.5",
-        "version_normalized": "2.2.5.0",
-        "target-dir": "Zend/Escaper",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendEscaper.git",
-            "reference": "5db67b32359d86326077209f1fefbbf1183911e8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendEscaper/zipball/5db67b32359d86326077209f1fefbbf1183911e8",
-            "reference": "5db67b32359d86326077209f1fefbbf1183911e8",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-05-01 21:53:03",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev",
-                "dev-develop": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Escaper\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "keywords": [
-            "escaper",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-uri",
-        "version": "2.2.5",
-        "version_normalized": "2.2.5.0",
-        "target-dir": "Zend/Uri",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendUri.git",
-            "reference": "e2a4b038a0939d46e53bfa40cfc9f1791533ae84"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendUri/zipball/e2a4b038a0939d46e53bfa40cfc9f1791533ae84",
-            "reference": "e2a4b038a0939d46e53bfa40cfc9f1791533ae84",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3",
-            "zendframework/zend-escaper": "self.version",
-            "zendframework/zend-validator": "self.version"
-        },
-        "time": "2013-06-12 19:46:02",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev",
-                "dev-develop": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Uri\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "description": "a component that aids in manipulating and validating » Uniform Resource Identifiers (URIs)",
-        "keywords": [
-            "uri",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-loader",
-        "version": "2.2.5",
-        "version_normalized": "2.2.5.0",
-        "target-dir": "Zend/Loader",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendLoader.git",
-            "reference": "9e3537a6012dc0b184f66f8668e6c33fd805f0eb"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendLoader/zipball/9e3537a6012dc0b184f66f8668e6c33fd805f0eb",
-            "reference": "9e3537a6012dc0b184f66f8668e6c33fd805f0eb",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2013-10-20 06:00:17",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev",
-                "dev-develop": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Loader\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "keywords": [
-            "loader",
-            "zf2"
-        ]
-    },
-    {
-        "name": "zendframework/zend-http",
-        "version": "2.2.5",
-        "version_normalized": "2.2.5.0",
-        "target-dir": "Zend/Http",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/Component_ZendHttp.git",
-            "reference": "5b8745a7f857fbf3bd989b2ccaebd6778de7c25a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/Component_ZendHttp/zipball/5b8745a7f857fbf3bd989b2ccaebd6778de7c25a",
-            "reference": "5b8745a7f857fbf3bd989b2ccaebd6778de7c25a",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3",
-            "zendframework/zend-loader": "self.version",
-            "zendframework/zend-stdlib": "self.version",
-            "zendframework/zend-uri": "self.version",
-            "zendframework/zend-validator": "self.version"
-        },
-        "time": "2013-10-23 15:00:05",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.2-dev",
-                "dev-develop": "2.3-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Zend\\Http\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "description": "provides an easy interface for performing Hyper-Text Transfer Protocol (HTTP) requests",
-        "keywords": [
-            "http",
-            "zf2"
-        ]
-    },
-    {
-        "name": "kriswallsmith/buzz",
-        "version": "v0.10",
-        "version_normalized": "0.10.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/kriswallsmith/Buzz.git",
-            "reference": "759432d66387e3433d3b06cb6f773b97225b9b17"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/759432d66387e3433d3b06cb6f773b97225b9b17",
-            "reference": "759432d66387e3433d3b06cb6f773b97225b9b17",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*"
-        },
-        "suggest": {
-            "ext-curl": "*"
-        },
-        "time": "2013-05-19 03:41:15",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Buzz": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Kris Wallsmith",
-                "email": "kris.wallsmith@gmail.com",
-                "homepage": "http://kriswallsmith.net/"
-            }
-        ],
-        "description": "Lightweight HTTP client",
-        "homepage": "https://github.com/kriswallsmith/Buzz",
-        "keywords": [
-            "curl",
-            "http client"
-        ]
-    },
-    {
         "name": "knplabs/github-api",
         "version": "1.1.5",
         "version_normalized": "1.1.5.0",
@@ -562,61 +158,6 @@
         ]
     },
     {
-        "name": "janmarek/webloader",
-        "version": "2.2.0",
-        "version_normalized": "2.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/janmarek/WebLoader.git",
-            "reference": "5e62831fe7ba5779b97ebd0c23439dbcef80d102"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/5e62831fe7ba5779b97ebd0c23439dbcef80d102",
-            "reference": "5e62831fe7ba5779b97ebd0c23439dbcef80d102",
-            "shasum": ""
-        },
-        "require": {
-            "nette/nette": "~2.0@rc"
-        },
-        "require-dev": {
-            "mockery/mockery": "0.7.*",
-            "phpunit/phpunit": "3.7.*"
-        },
-        "suggest": {
-            "leafo/lessphp": "Lessphp is a composer for LESS written in PHP."
-        },
-        "time": "2014-01-01 16:54:25",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "WebLoader": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jan Marek",
-                "email": "mail@janmarek.net",
-                "homepage": "http://www.janmarek.net/",
-                "role": "Author"
-            }
-        ],
-        "description": "Tool for loading or deploying CSS and JS files into web pages",
-        "homepage": "http://addons.nette.org/cs/webloader",
-        "keywords": [
-            "assets",
-            "css",
-            "javascript",
-            "nette",
-            "webloader"
-        ]
-    },
-    {
         "name": "natxet/CssMin",
         "version": "3.0.2",
         "version_normalized": "3.0.2.0",
@@ -658,106 +199,6 @@
         "keywords": [
             "css",
             "minify"
-        ]
-    },
-    {
-        "name": "neeckeloo/closure-compiler-php",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/neeckeloo/ClosureCompilerPHP.git",
-            "reference": "8a75565972998219d7835d76511b2c2789d75d17"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/8a75565972998219d7835d76511b2c2789d75d17",
-            "reference": "8a75565972998219d7835d76511b2c2789d75d17",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "zendframework/zend-http": "2.*"
-        },
-        "time": "2014-03-03 08:38:21",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "Closure": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Eeckeloo",
-                "email": "neeckeloo@gmail.com"
-            }
-        ],
-        "description": "The Closure Compiler compiles JavaScript into compact, high-performance code.",
-        "keywords": [
-            "closure compiler"
-        ]
-    },
-    {
-        "name": "texy/texy",
-        "version": "v2.4",
-        "version_normalized": "2.4.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/dg/texy.git",
-            "reference": "67d02cd95e4aaa7dae96b24a7d04ba924d641015"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/dg/texy/zipball/67d02cd95e4aaa7dae96b24a7d04ba924d641015",
-            "reference": "67d02cd95e4aaa7dae96b24a7d04ba924d641015",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.0"
-        },
-        "replace": {
-            "dg/texy": "self.version"
-        },
-        "require-dev": {
-            "nette/tester": "~1.0.0"
-        },
-        "time": "2014-02-10 02:34:57",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/texy.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "homepage": "http://davidgrudl.com"
-            }
-        ],
-        "description": "Texy converts plain text in easy to read Texy syntax into structurally valid (X)HTML. It supports adding of images, links, nested lists, tables and has full support for CSS. Texy supports hyphenation of long words (which reflects language rules), clickable emails and URL (emails are obfuscated against spambots), national typographic single and double quotation marks, ellipses, em dashes, dimension sign, nonbreakable spaces (e.g. in phone numbers), acronyms, arrows and many others. Texy code can optionally contain HTML tags.",
-        "homepage": "http://texy.info",
-        "keywords": [
-            "html",
-            "markdown",
-            "markup language",
-            "plain text",
-            "text",
-            "textile",
-            "texy",
-            "wiki",
-            "xhtml"
         ]
     },
     {
@@ -807,6 +248,1448 @@
             {
                 "name": "Jan Tvrdik"
             }
+        ]
+    },
+    {
+        "name": "nette/utils",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/utils.git",
+            "reference": "6da3c275895b46290e4949473a648057ada9c157"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/utils/zipball/6da3c275895b46290e4949473a648057ada9c157",
+            "reference": "6da3c275895b46290e4949473a648057ada9c157",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~1.0"
+        },
+        "suggest": {
+            "ext-gd": "to use Image",
+            "ext-iconv": "to use Strings::webalize() and toAscii()",
+            "ext-intl": "for script transliteration in Strings::webalize() and toAscii()",
+            "ext-mbstring": "to use Strings::lower() etc..."
+        },
+        "time": "2015-02-18 02:34:53",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Utility Classes",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/php-generator",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/php-generator.git",
+            "reference": "bb8439b73fab9f403a7fa0d61e4c1913f75200ff"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/php-generator/zipball/bb8439b73fab9f403a7fa0d61e4c1913f75200ff",
+            "reference": "bb8439b73fab9f403a7fa0d61e4c1913f75200ff",
+            "shasum": ""
+        },
+        "require": {
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~1.0"
+        },
+        "time": "2015-02-18 17:11:05",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette PHP Generator",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/finder",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/finder.git",
+            "reference": "0eba793c90e236714b6f76474590d14d6bfe733a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/finder/zipball/0eba793c90e236714b6f76474590d14d6bfe733a",
+            "reference": "0eba793c90e236714b6f76474590d14d6bfe733a",
+            "shasum": ""
+        },
+        "require": {
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~1.0"
+        },
+        "time": "2015-02-17 20:36:43",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Finder: Files Searching",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/caching",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/caching.git",
+            "reference": "e9508220f5628d9ac075ec3c13ba1e053dbd7944"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/caching/zipball/e9508220f5628d9ac075ec3c13ba1e053dbd7944",
+            "reference": "e9508220f5628d9ac075ec3c13ba1e053dbd7944",
+            "shasum": ""
+        },
+        "require": {
+            "nette/finder": "~2.2",
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "latte/latte": "~2.3",
+            "nette/di": "~2.3",
+            "nette/tester": "~1.0"
+        },
+        "time": "2015-02-18 02:23:54",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Caching Component",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/reflection",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/reflection.git",
+            "reference": "08328bbd23323de285966dac7164f9ceb73cd77b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/reflection/zipball/08328bbd23323de285966dac7164f9ceb73cd77b",
+            "reference": "08328bbd23323de285966dac7164f9ceb73cd77b",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "nette/caching": "~2.2",
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/di": "~2.3",
+            "nette/tester": "~1.0"
+        },
+        "time": "2015-02-16 15:33:50",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette PHP Reflection Component",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/neon",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/neon.git",
+            "reference": "c14c3ae106fbf11bef6dfc3ec7668c59bdd7f58e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/neon/zipball/c14c3ae106fbf11bef6dfc3ec7668c59bdd7f58e",
+            "reference": "c14c3ae106fbf11bef6dfc3ec7668c59bdd7f58e",
+            "shasum": ""
+        },
+        "require": {
+            "ext-iconv": "*",
+            "php": ">=5.3.1"
+        },
+        "require-dev": {
+            "nette/tester": "~1.0"
+        },
+        "time": "2015-02-17 21:10:16",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette NEON: parser & generator for Nette Object Notation",
+        "homepage": "http://ne-on.org"
+    },
+    {
+        "name": "nette/di",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/di.git",
+            "reference": "d84b62d31ba8c71e02489be771fd807ae4525e32"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/di/zipball/d84b62d31ba8c71e02489be771fd807ae4525e32",
+            "reference": "d84b62d31ba8c71e02489be771fd807ae4525e32",
+            "shasum": ""
+        },
+        "require": {
+            "nette/neon": "~2.3",
+            "nette/php-generator": "~2.3",
+            "nette/utils": "~2.3",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~1.3"
+        },
+        "time": "2015-02-21 16:36:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Dependency Injection Component",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/security",
+        "version": "v2.2.2",
+        "version_normalized": "2.2.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/security.git",
+            "reference": "9678d50769eba82a9e9621b19720152b14055b0a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/security/zipball/9678d50769eba82a9e9621b19720152b14055b0a",
+            "reference": "9678d50769eba82a9e9621b19720152b14055b0a",
+            "shasum": ""
+        },
+        "require": {
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~1.0"
+        },
+        "time": "2014-12-14 17:53:13",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Security: Access Control Component",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/http",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/http.git",
+            "reference": "43846908577a799d181e194c024b772a8b61e063"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/http/zipball/43846908577a799d181e194c024b772a8b61e063",
+            "reference": "43846908577a799d181e194c024b772a8b61e063",
+            "shasum": ""
+        },
+        "require": {
+            "nette/utils": "~2.2, >=2.2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/di": "~2.3",
+            "nette/tester": "~1.0"
+        },
+        "suggest": {
+            "ext-fileinfo": "to detect type of uploaded files"
+        },
+        "time": "2015-02-19 22:54:59",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette HTTP Component",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/component-model",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/component-model.git",
+            "reference": "a96c5179631eec6e47881a77607577ef199e74cc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/component-model/zipball/a96c5179631eec6e47881a77607577ef199e74cc",
+            "reference": "a96c5179631eec6e47881a77607577ef199e74cc",
+            "shasum": ""
+        },
+        "require": {
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "nette/tester": "~1.3"
+        },
+        "time": "2015-02-05 02:51:09",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Component Model",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/application",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/application.git",
+            "reference": "731246447d028c0967b9dbaa5915c8341d9d32dd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/application/zipball/731246447d028c0967b9dbaa5915c8341d9d32dd",
+            "reference": "731246447d028c0967b9dbaa5915c8341d9d32dd",
+            "shasum": ""
+        },
+        "require": {
+            "nette/component-model": "~2.2",
+            "nette/di": "~2.3",
+            "nette/http": "~2.2",
+            "nette/reflection": "~2.2",
+            "nette/security": "~2.2",
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "latte/latte": "~2.3",
+            "nette/forms": "~2.2",
+            "nette/robot-loader": "~2.2",
+            "nette/tester": "~1.3"
+        },
+        "suggest": {
+            "latte/latte": "Allows using Latte in templates",
+            "nette/forms": "Allows to use Nette\\Application\\UI\\Form"
+        },
+        "time": "2015-02-18 02:46:32",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Application MVC Component",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "kriswallsmith/buzz",
+        "version": "v0.13",
+        "version_normalized": "0.13.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kriswallsmith/Buzz.git",
+            "reference": "487760b05d6269a4c2c374364325326cfa65b12c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/487760b05d6269a4c2c374364325326cfa65b12c",
+            "reference": "487760b05d6269a4c2c374364325326cfa65b12c",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*"
+        },
+        "suggest": {
+            "ext-curl": "*"
+        },
+        "time": "2014-09-15 12:42:36",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Buzz": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kris Wallsmith",
+                "email": "kris.wallsmith@gmail.com",
+                "homepage": "http://kriswallsmith.net/"
+            }
+        ],
+        "description": "Lightweight HTTP client",
+        "homepage": "https://github.com/kriswallsmith/Buzz",
+        "keywords": [
+            "curl",
+            "http client"
+        ]
+    },
+    {
+        "name": "zendframework/zend-stdlib",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "target-dir": "Zend/Stdlib",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendStdlib.git",
+            "reference": "280e4ee6a8fea96b3de00a39174758b4002a7358"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendStdlib/zipball/280e4ee6a8fea96b3de00a39174758b4002a7358",
+            "reference": "280e4ee6a8fea96b3de00a39174758b4002a7358",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23"
+        },
+        "require-dev": {
+            "zendframework/zend-eventmanager": "self.version",
+            "zendframework/zend-filter": "self.version",
+            "zendframework/zend-serializer": "self.version",
+            "zendframework/zend-servicemanager": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+            "zendframework/zend-filter": "To support naming strategy hydrator usage",
+            "zendframework/zend-serializer": "Zend\\Serializer component",
+            "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
+        },
+        "time": "2015-01-14 16:44:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Stdlib\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "stdlib",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-validator",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "target-dir": "Zend/Validator",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendValidator.git",
+            "reference": "f048d85d523c9bb2b16f0660412560efd9d257c1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendValidator/zipball/f048d85d523c9bb2b16f0660412560efd9d257c1",
+            "reference": "f048d85d523c9bb2b16f0660412560efd9d257c1",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "require-dev": {
+            "zendframework/zend-db": "self.version",
+            "zendframework/zend-filter": "self.version",
+            "zendframework/zend-i18n": "self.version",
+            "zendframework/zend-math": "self.version",
+            "zendframework/zend-servicemanager": "self.version",
+            "zendframework/zend-session": "self.version",
+            "zendframework/zend-uri": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-db": "Zend\\Db component",
+            "zendframework/zend-filter": "Zend\\Filter component, required by the Digits validator",
+            "zendframework/zend-i18n": "Zend\\I18n component to allow translation of validation error messages as well as to use the various Date validators",
+            "zendframework/zend-math": "Zend\\Math component",
+            "zendframework/zend-resources": "Translations of validator messages",
+            "zendframework/zend-servicemanager": "Zend\\ServiceManager component to allow using the ValidatorPluginManager and validator chains",
+            "zendframework/zend-session": "Zend\\Session component",
+            "zendframework/zend-uri": "Zend\\Uri component, required by the Uri and Sitemap\\Loc validators"
+        },
+        "time": "2015-01-14 16:44:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Validator\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "provides a set of commonly needed validators",
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "validator",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-escaper",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "target-dir": "Zend/Escaper",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendEscaper.git",
+            "reference": "67c8f76ff6d899a5619a4ab27c3b46ed3ae743fc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendEscaper/zipball/67c8f76ff6d899a5619a4ab27c3b46ed3ae743fc",
+            "reference": "67c8f76ff6d899a5619a4ab27c3b46ed3ae743fc",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23"
+        },
+        "time": "2015-01-14 16:44:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Escaper\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "escaper",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-uri",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "target-dir": "Zend/Uri",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendUri.git",
+            "reference": "72c7e6b146b6d16e71c5529bfcdb45a7148adc33"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendUri/zipball/72c7e6b146b6d16e71c5529bfcdb45a7148adc33",
+            "reference": "72c7e6b146b6d16e71c5529bfcdb45a7148adc33",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23",
+            "zendframework/zend-escaper": "self.version",
+            "zendframework/zend-validator": "self.version"
+        },
+        "time": "2015-01-14 16:44:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Uri\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "a component that aids in manipulating and validating » Uniform Resource Identifiers (URIs)",
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "uri",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-loader",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "target-dir": "Zend/Loader",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendLoader.git",
+            "reference": "521ba8650f70d512f9790921153d39eedcabed43"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendLoader/zipball/521ba8650f70d512f9790921153d39eedcabed43",
+            "reference": "521ba8650f70d512f9790921153d39eedcabed43",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23"
+        },
+        "time": "2015-01-14 16:44:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Loader\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "loader",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-http",
+        "version": "2.3.4",
+        "version_normalized": "2.3.4.0",
+        "target-dir": "Zend/Http",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/Component_ZendHttp.git",
+            "reference": "1758f768120fdd173e22ed45230a8e49b6155766"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/Component_ZendHttp/zipball/1758f768120fdd173e22ed45230a8e49b6155766",
+            "reference": "1758f768120fdd173e22ed45230a8e49b6155766",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.23",
+            "zendframework/zend-loader": "self.version",
+            "zendframework/zend-stdlib": "self.version",
+            "zendframework/zend-uri": "self.version",
+            "zendframework/zend-validator": "self.version"
+        },
+        "time": "2015-01-14 16:44:17",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev",
+                "dev-develop": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Zend\\Http\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "provides an easy interface for performing Hyper-Text Transfer Protocol (HTTP) requests",
+        "homepage": "https://github.com/zendframework/zf2",
+        "keywords": [
+            "http",
+            "zf2"
+        ]
+    },
+    {
+        "name": "texy/texy",
+        "version": "v2.6",
+        "version_normalized": "2.6.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/dg/texy.git",
+            "reference": "8213d3646c3ab1a3eca52413a5be26acb29826fc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/dg/texy/zipball/8213d3646c3ab1a3eca52413a5be26acb29826fc",
+            "reference": "8213d3646c3ab1a3eca52413a5be26acb29826fc",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.0"
+        },
+        "replace": {
+            "dg/texy": "self.version"
+        },
+        "require-dev": {
+            "nette/tester": "~1.2"
+        },
+        "time": "2014-06-20 18:38:38",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/texy.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            }
+        ],
+        "description": "Texy converts plain text in easy to read Texy syntax into structurally valid (X)HTML. It supports adding of images, links, nested lists, tables and has full support for CSS. Texy supports hyphenation of long words (which reflects language rules), clickable emails and URL (emails are obfuscated against spambots), national typographic single and double quotation marks, ellipses, em dashes, dimension sign, nonbreakable spaces (e.g. in phone numbers), acronyms, arrows and many others. Texy code can optionally contain HTML tags.",
+        "homepage": "http://texy.info",
+        "keywords": [
+            "html",
+            "markdown",
+            "markup language",
+            "plain text",
+            "text",
+            "textile",
+            "texy",
+            "wiki",
+            "xhtml"
+        ]
+    },
+    {
+        "name": "nette/bootstrap",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/bootstrap.git",
+            "reference": "5b7c055f38e8d329bc8f4b4504899b5b39be5199"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/bootstrap/zipball/5b7c055f38e8d329bc8f4b4504899b5b39be5199",
+            "reference": "5b7c055f38e8d329bc8f4b4504899b5b39be5199",
+            "shasum": ""
+        },
+        "require": {
+            "nette/di": "~2.3",
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "latte/latte": "~2.2",
+            "nette/application": "~2.3",
+            "nette/caching": "~2.3",
+            "nette/database": "~2.3",
+            "nette/forms": "~2.3",
+            "nette/http": "~2.3",
+            "nette/mail": "~2.3",
+            "nette/robot-loader": "~2.2",
+            "nette/safe-stream": "~2.2",
+            "nette/security": "~2.3",
+            "nette/tester": "~1.3",
+            "tracy/tracy": "~2.3"
+        },
+        "suggest": {
+            "nette/robot-loader": "to use Configurator::createRobotLoader()",
+            "tracy/tracy": "to use Configurator::enableDebugger()"
+        },
+        "time": "2015-02-20 19:43:56",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Bootstrap",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "nette/forms",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/forms.git",
+            "reference": "8a7bedf704b2df1ac679a7f397832b2886ecb1a4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/forms/zipball/8a7bedf704b2df1ac679a7f397832b2886ecb1a4",
+            "reference": "8a7bedf704b2df1ac679a7f397832b2886ecb1a4",
+            "shasum": ""
+        },
+        "require": {
+            "nette/component-model": "~2.2",
+            "nette/http": "~2.2",
+            "nette/utils": "~2.2",
+            "php": ">=5.3.1"
+        },
+        "conflict": {
+            "nette/nette": "<2.2"
+        },
+        "require-dev": {
+            "latte/latte": "~2.3",
+            "nette/di": "~2.3",
+            "nette/tester": "~1.3",
+            "tracy/tracy": "~2.2"
+        },
+        "time": "2015-02-20 21:10:45",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Nette Forms: greatly facilitates web forms",
+        "homepage": "http://nette.org"
+    },
+    {
+        "name": "latte/latte",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/latte.git",
+            "reference": "50d0297567e0da55b48943f14c95a0369aef56e5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/latte/zipball/50d0297567e0da55b48943f14c95a0369aef56e5",
+            "reference": "50d0297567e0da55b48943f14c95a0369aef56e5",
+            "shasum": ""
+        },
+        "require": {
+            "ext-tokenizer": "*",
+            "php": ">=5.3.1"
+        },
+        "require-dev": {
+            "nette/tester": "~1.3"
+        },
+        "suggest": {
+            "ext-fileinfo": "to use filter |datastream",
+            "ext-mbstring": "to use filters like lower, upper, capitalize, ..."
+        },
+        "time": "2015-02-20 21:20:46",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Latte: the amazing template engine for PHP",
+        "homepage": "http://latte.nette.org",
+        "keywords": [
+            "templating",
+            "twig"
+        ]
+    },
+    {
+        "name": "neeckeloo/closure-compiler-php",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/neeckeloo/ClosureCompilerPHP.git",
+            "reference": "d7ae3fdbe82249d7fa9ce2fd1f6cc0edbc01366f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/neeckeloo/ClosureCompilerPHP/zipball/d7ae3fdbe82249d7fa9ce2fd1f6cc0edbc01366f",
+            "reference": "d7ae3fdbe82249d7fa9ce2fd1f6cc0edbc01366f",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "zendframework/zend-http": "2.*"
+        },
+        "time": "2014-04-14 14:01:04",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Closure": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Nicolas Eeckeloo",
+                "email": "neeckeloo@gmail.com"
+            }
+        ],
+        "description": "The Closure Compiler compiles JavaScript into compact, high-performance code.",
+        "keywords": [
+            "closure",
+            "compiler"
+        ]
+    },
+    {
+        "name": "tracy/tracy",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nette/tracy.git",
+            "reference": "5abaabd4c4c73ba0f355879ae8f6932a50bbb199"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nette/tracy/zipball/5abaabd4c4c73ba0f355879ae8f6932a50bbb199",
+            "reference": "5abaabd4c4c73ba0f355879ae8f6932a50bbb199",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.1"
+        },
+        "require-dev": {
+            "nette/di": "~2.3",
+            "nette/tester": "~1.3"
+        },
+        "time": "2015-02-21 16:23:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "src"
+            ],
+            "files": [
+                "src/shortcuts.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause",
+            "GPL-2.0",
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "David Grudl",
+                "homepage": "http://davidgrudl.com"
+            },
+            {
+                "name": "Nette Community",
+                "homepage": "http://nette.org/contributors"
+            }
+        ],
+        "description": "Tracy: useful PHP debugger",
+        "homepage": "http://tracy.nette.org",
+        "keywords": [
+            "debug",
+            "debugger",
+            "nette"
+        ]
+    },
+    {
+        "name": "janmarek/webloader",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/janmarek/WebLoader.git",
+            "reference": "00de2c8772c121f3de9d80b1922f2179a23b36fe"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/janmarek/WebLoader/zipball/00de2c8772c121f3de9d80b1922f2179a23b36fe",
+            "reference": "00de2c8772c121f3de9d80b1922f2179a23b36fe",
+            "shasum": ""
+        },
+        "require": {
+            "nette/application": "~2.3@dev",
+            "nette/di": "~2.3@dev",
+            "nette/utils": "~2.3@dev"
+        },
+        "require-dev": {
+            "jakub-onderka/php-parallel-lint": "~0.7",
+            "latte/latte": "~2.3@dev",
+            "leafo/scssphp": "~0.1",
+            "mockery/mockery": "0.7.*",
+            "nette/application": "~2.3@dev",
+            "nette/bootstrap": "~2.3@dev",
+            "nette/caching": "~2.3@dev",
+            "nette/component-model": "~2.2@dev",
+            "nette/database": "~2.3@dev",
+            "nette/deprecated": "~2.2@dev",
+            "nette/di": "~2.3@dev",
+            "nette/finder": "~2.3@dev",
+            "nette/forms": "~2.3@dev",
+            "nette/http": "~2.3@dev",
+            "nette/mail": "~2.3@dev",
+            "nette/neon": "~2.3@dev",
+            "nette/php-generator": "~2.3@dev",
+            "nette/reflection": "~2.3@dev",
+            "nette/robot-loader": "~2.3@dev",
+            "nette/safe-stream": "~2.3@dev",
+            "nette/security": "~2.3@dev",
+            "nette/tokenizer": "~2.2@dev",
+            "nette/utils": "~2.3@dev",
+            "oyejorge/less.php": "~1.5",
+            "phpunit/phpunit": "3.7.*",
+            "tracy/tracy": "~2.3@dev"
+        },
+        "suggest": {
+            "leafo/scssphp": "Scssphp is a composer for SCSS written in PHP.",
+            "oyejorge/less.php": "Lessphp is a composer for LESS written in PHP."
+        },
+        "time": "2015-02-21 15:03:15",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "WebLoader": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Marek",
+                "email": "mail@janmarek.net"
+            }
+        ],
+        "description": "Tool for loading or deploying CSS and JS files into web pages",
+        "homepage": "http://addons.nette.org/cs/webloader",
+        "keywords": [
+            "assets",
+            "css",
+            "javascript",
+            "nette",
+            "webloader"
         ]
     }
 ]

@@ -7,19 +7,24 @@ namespace WebLoader\Filter;
  *
  * @author Jan Marek
  * @license MIT
- *
- * @deprecated
  */
 class CssUrlsFilter
 {
 
+	/**
+	 * @var string
+	 */
 	private $docRoot;
 
-	private $basePath;
+	/**
+	 * @var string
+	 */
+	protected $basePath;
 
 	/**
 	 * @param string $docRoot web document root
 	 * @param string $basePath base path
+	 * @throws \WebLoader\InvalidArgumentException
 	 */
 	public function __construct($docRoot, $basePath = '/')
 	{
@@ -29,6 +34,14 @@ class CssUrlsFilter
 			throw new \WebLoader\InvalidArgumentException('Given document root is not directory.');
 		}
 
+		$this->basePath = $basePath;
+	}
+
+	/**
+	 * @param string $basePath
+	 */
+	public function setBasePath($basePath)
+	{
 		$this->basePath = $basePath;
 	}
 
@@ -100,6 +113,7 @@ class CssUrlsFilter
 			url\(                                     ## url(
 				\s*                                   ##   optional whitespace
 				([\'"])?                              ##   optional single/double quote
+				(?!data:)                             ##   keep data URIs
 				(   (?: (?:\\\\.)+                    ##     escape sequences
 					|   [^\'"\\\\,()\s]+              ##     safe characters
 					|   (?(1)   (?!\1)[\'"\\\\,() \t] ##       allowed special characters

@@ -14,7 +14,7 @@ class Compiler
 	private $outputDir;
 
 	/** @var bool */
-	private $joinFiles = true;
+	private $joinFiles = TRUE;
 
 	/** @var array */
 	private $filters = array();
@@ -29,7 +29,10 @@ class Compiler
 	private $namingConvention;
 
 	/** @var bool */
-	private $checkLastModified = true;
+	private $checkLastModified = TRUE;
+
+	/** @var bool */
+	private $debugging = FALSE;
 
 	public function __construct(IFileCollection $files, IOutputNamingConvention $convention, $outputDir)
 	{
@@ -61,6 +64,14 @@ class Compiler
 	}
 
 	/**
+	 * @param bool $allow
+	 */
+	public function enableDebugging($allow = TRUE)
+	{
+		$this->debugging = (bool) $allow;
+	}
+
+	/**
 	 * Get temp path
 	 * @return string
 	 */
@@ -78,7 +89,7 @@ class Compiler
 		$tempPath = Path::normalize($tempPath);
 
 		if (!is_dir($tempPath)) {
-			throw new FileNotFoundException('Temp path does not exist.');
+			throw new FileNotFoundException("Temp path '$tempPath' does not exist.");
 		}
 
 		if (!is_writable($tempPath)) {
@@ -167,14 +178,21 @@ class Compiler
 	 */
 	public function generate($ifModified = TRUE)
 	{
+		$files = $this->collection->getFiles();
+
+		if (!count($files)) {
+			return array();
+		}
+
 		if ($this->joinFiles) {
 			return array(
-				$this->generateFiles($this->collection->getFiles(), $ifModified)
+				$this->generateFiles($files, $ifModified),
 			);
+
 		} else {
 			$arr = array();
 
-			foreach ($this->collection->getFiles() as $file) {
+			foreach ($files as $file) {
 				$arr[] = $this->generateFiles(array($file), $ifModified);
 			}
 
@@ -188,7 +206,7 @@ class Compiler
 		$path = $this->outputDir . '/' . $name;
 		$lastModified = $this->checkLastModified ? $this->getLastModified($files) : 0;
 
-		if (!$ifModified || !file_exists($path) || $lastModified > filemtime($path)) {
+		if (!$ifModified || !file_exists($path) || $lastModified > filemtime($path) || $this->debugging === TRUE) {
 			$outPath = in_array('safe', stream_get_wrappers()) ? 'safe://' . $path : $path;
 			file_put_contents($outPath, $this->getContent($files));
 		}

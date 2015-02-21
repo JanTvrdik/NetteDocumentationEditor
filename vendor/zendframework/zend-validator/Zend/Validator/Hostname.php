@@ -3,13 +3,12 @@
  * Zend Framework (http://framework.zend.com/)
  *
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
 namespace Zend\Validator;
 
-use Zend\Stdlib\ErrorHandler;
 use Zend\Stdlib\StringUtils;
 
 /**
@@ -74,25 +73,758 @@ class Hostname extends AbstractValidator
      * @var array
      */
     protected $validTlds = array(
-        'ac', 'ad', 'ae', 'aero', 'af', 'ag', 'ai', 'al', 'am', 'an', 'ao', 'aq', 'ar', 'arpa',
-        'as', 'asia', 'at', 'au', 'aw', 'ax', 'az', 'ba', 'bb', 'bd', 'be', 'bf', 'bg', 'bh', 'bi',
-        'biz', 'bj', 'bm', 'bn', 'bo', 'br', 'bs', 'bt', 'bv', 'bw', 'by', 'bz', 'ca', 'cat', 'cc',
-        'cd', 'cf', 'cg', 'ch', 'ci', 'ck', 'cl', 'cm', 'cn', 'co', 'com', 'coop', 'cr', 'cu',
-        'cv', 'cx', 'cy', 'cz', 'de', 'dj', 'dk', 'dm', 'do', 'dz', 'ec', 'edu', 'ee', 'eg', 'er',
-        'es', 'et', 'eu', 'fi', 'fj', 'fk', 'fm', 'fo', 'fr', 'ga', 'gb', 'gd', 'ge', 'gf', 'gg',
-        'gh', 'gi', 'gl', 'gm', 'gn', 'gov', 'gp', 'gq', 'gr', 'gs', 'gt', 'gu', 'gw', 'gy', 'hk',
-        'hm', 'hn', 'hr', 'ht', 'hu', 'id', 'ie', 'il', 'im', 'in', 'info', 'int', 'io', 'iq',
-        'ir', 'is', 'it', 'je', 'jm', 'jo', 'jobs', 'jp', 'ke', 'kg', 'kh', 'ki', 'km', 'kn', 'kp',
-        'kr', 'kw', 'ky', 'kz', 'la', 'lb', 'lc', 'li', 'lk', 'lr', 'ls', 'lt', 'lu', 'lv', 'ly',
-        'ma', 'mc', 'md', 'me', 'mg', 'mh', 'mil', 'mk', 'ml', 'mm', 'mn', 'mo', 'mobi', 'mp',
-        'mq', 'mr', 'ms', 'mt', 'mu', 'museum', 'mv', 'mw', 'mx', 'my', 'mz', 'na', 'name', 'nc',
-        'ne', 'net', 'nf', 'ng', 'ni', 'nl', 'no', 'np', 'nr', 'nu', 'nz', 'om', 'org', 'pa', 'pe',
-        'pf', 'pg', 'ph', 'pk', 'pl', 'pm', 'pn', 'pr', 'pro', 'ps', 'pt', 'pw', 'py', 'qa', 're',
-        'ro', 'rs', 'ru', 'rw', 'sa', 'sb', 'sc', 'sd', 'se', 'sg', 'sh', 'si', 'sj', 'sk', 'sl',
-        'sm', 'sn', 'so', 'sr', 'st', 'su', 'sv', 'sy', 'sz', 'tc', 'td', 'tel', 'tf', 'tg', 'th',
-        'tj', 'tk', 'tl', 'tm', 'tn', 'to', 'tp', 'tr', 'travel', 'tt', 'tv', 'tw', 'tz', 'ua',
-        'ug', 'uk', 'um', 'us', 'uy', 'uz', 'va', 'vc', 've', 'vg', 'vi', 'vn', 'vu', 'wf', 'ws',
-        'xxx', 'ye', 'yt', 'yu', 'za', 'zm', 'zw'
+        'abogado',
+        'ac',
+        'academy',
+        'accountants',
+        'active',
+        'actor',
+        'ad',
+        'ae',
+        'aero',
+        'af',
+        'ag',
+        'agency',
+        'ai',
+        'airforce',
+        'al',
+        'allfinanz',
+        'alsace',
+        'am',
+        'an',
+        'android',
+        'ao',
+        'aq',
+        'ar',
+        'archi',
+        'army',
+        'arpa',
+        'as',
+        'asia',
+        'associates',
+        'at',
+        'attorney',
+        'au',
+        'auction',
+        'audio',
+        'autos',
+        'aw',
+        'ax',
+        'axa',
+        'az',
+        'ba',
+        'band',
+        'bar',
+        'bargains',
+        'bayern',
+        'bb',
+        'bd',
+        'be',
+        'beer',
+        'berlin',
+        'best',
+        'bf',
+        'bg',
+        'bh',
+        'bi',
+        'bid',
+        'bike',
+        'bio',
+        'biz',
+        'bj',
+        'black',
+        'blackfriday',
+        'bloomberg',
+        'blue',
+        'bm',
+        'bmw',
+        'bn',
+        'bnpparibas',
+        'bo',
+        'boo',
+        'boutique',
+        'br',
+        'brussels',
+        'bs',
+        'bt',
+        'budapest',
+        'build',
+        'builders',
+        'business',
+        'buzz',
+        'bv',
+        'bw',
+        'by',
+        'bz',
+        'bzh',
+        'ca',
+        'cab',
+        'cal',
+        'camera',
+        'camp',
+        'cancerresearch',
+        'capetown',
+        'capital',
+        'caravan',
+        'cards',
+        'care',
+        'career',
+        'careers',
+        'casa',
+        'cash',
+        'cat',
+        'catering',
+        'cc',
+        'cd',
+        'center',
+        'ceo',
+        'cern',
+        'cf',
+        'cg',
+        'ch',
+        'channel',
+        'cheap',
+        'christmas',
+        'chrome',
+        'church',
+        'ci',
+        'citic',
+        'city',
+        'ck',
+        'cl',
+        'claims',
+        'cleaning',
+        'click',
+        'clinic',
+        'clothing',
+        'club',
+        'cm',
+        'cn',
+        'co',
+        'coach',
+        'codes',
+        'coffee',
+        'college',
+        'cologne',
+        'com',
+        'community',
+        'company',
+        'computer',
+        'condos',
+        'construction',
+        'consulting',
+        'contractors',
+        'cooking',
+        'cool',
+        'coop',
+        'country',
+        'cr',
+        'credit',
+        'creditcard',
+        'cricket',
+        'crs',
+        'cruises',
+        'cu',
+        'cuisinella',
+        'cv',
+        'cw',
+        'cx',
+        'cy',
+        'cymru',
+        'cz',
+        'dad',
+        'dance',
+        'dating',
+        'day',
+        'de',
+        'deals',
+        'degree',
+        'delivery',
+        'democrat',
+        'dental',
+        'dentist',
+        'desi',
+        'diamonds',
+        'diet',
+        'digital',
+        'direct',
+        'directory',
+        'discount',
+        'dj',
+        'dk',
+        'dm',
+        'dnp',
+        'do',
+        'domains',
+        'durban',
+        'dvag',
+        'dz',
+        'eat',
+        'ec',
+        'edu',
+        'education',
+        'ee',
+        'eg',
+        'email',
+        'emerck',
+        'energy',
+        'engineer',
+        'engineering',
+        'enterprises',
+        'equipment',
+        'er',
+        'es',
+        'esq',
+        'estate',
+        'et',
+        'eu',
+        'eus',
+        'events',
+        'everbank',
+        'exchange',
+        'expert',
+        'exposed',
+        'fail',
+        'farm',
+        'feedback',
+        'fi',
+        'finance',
+        'financial',
+        'firmdale',
+        'fish',
+        'fishing',
+        'fitness',
+        'fj',
+        'fk',
+        'flights',
+        'florist',
+        'flsmidth',
+        'fly',
+        'fm',
+        'fo',
+        'foo',
+        'forsale',
+        'foundation',
+        'fr',
+        'frl',
+        'frogans',
+        'fund',
+        'furniture',
+        'futbol',
+        'ga',
+        'gal',
+        'gallery',
+        'gb',
+        'gbiz',
+        'gd',
+        'ge',
+        'gent',
+        'gf',
+        'gg',
+        'gh',
+        'gi',
+        'gift',
+        'gifts',
+        'gives',
+        'gl',
+        'glass',
+        'gle',
+        'global',
+        'globo',
+        'gm',
+        'gmail',
+        'gmo',
+        'gmx',
+        'gn',
+        'google',
+        'gop',
+        'gov',
+        'gp',
+        'gq',
+        'gr',
+        'graphics',
+        'gratis',
+        'green',
+        'gripe',
+        'gs',
+        'gt',
+        'gu',
+        'guide',
+        'guitars',
+        'guru',
+        'gw',
+        'gy',
+        'hamburg',
+        'haus',
+        'healthcare',
+        'help',
+        'here',
+        'hiphop',
+        'hiv',
+        'hk',
+        'hm',
+        'hn',
+        'holdings',
+        'holiday',
+        'homes',
+        'horse',
+        'host',
+        'hosting',
+        'house',
+        'how',
+        'hr',
+        'ht',
+        'hu',
+        'ibm',
+        'id',
+        'ie',
+        'il',
+        'im',
+        'immo',
+        'immobilien',
+        'in',
+        'industries',
+        'info',
+        'ing',
+        'ink',
+        'institute',
+        'insure',
+        'int',
+        'international',
+        'investments',
+        'io',
+        'iq',
+        'ir',
+        'is',
+        'it',
+        'je',
+        'jetzt',
+        'jm',
+        'jo',
+        'jobs',
+        'joburg',
+        'jp',
+        'juegos',
+        'kaufen',
+        'ke',
+        'kg',
+        'kh',
+        'ki',
+        'kim',
+        'kitchen',
+        'kiwi',
+        'km',
+        'kn',
+        'koeln',
+        'kp',
+        'kr',
+        'krd',
+        'kred',
+        'kw',
+        'ky',
+        'kz',
+        'la',
+        'lacaixa',
+        'land',
+        'lawyer',
+        'lb',
+        'lc',
+        'lds',
+        'lease',
+        'legal',
+        'lgbt',
+        'li',
+        'life',
+        'lighting',
+        'limited',
+        'limo',
+        'link',
+        'lk',
+        'loans',
+        'london',
+        'lotto',
+        'lr',
+        'ls',
+        'lt',
+        'ltda',
+        'lu',
+        'luxe',
+        'luxury',
+        'lv',
+        'ly',
+        'ma',
+        'madrid',
+        'maison',
+        'management',
+        'mango',
+        'market',
+        'marketing',
+        'mc',
+        'md',
+        'me',
+        'media',
+        'meet',
+        'melbourne',
+        'meme',
+        'memorial',
+        'menu',
+        'mg',
+        'mh',
+        'miami',
+        'mil',
+        'mini',
+        'mk',
+        'ml',
+        'mm',
+        'mn',
+        'mo',
+        'mobi',
+        'moda',
+        'moe',
+        'monash',
+        'money',
+        'mormon',
+        'mortgage',
+        'moscow',
+        'motorcycles',
+        'mov',
+        'mp',
+        'mq',
+        'mr',
+        'ms',
+        'mt',
+        'mu',
+        'museum',
+        'mv',
+        'mw',
+        'mx',
+        'my',
+        'mz',
+        'na',
+        'nagoya',
+        'name',
+        'navy',
+        'nc',
+        'ne',
+        'net',
+        'network',
+        'neustar',
+        'new',
+        'nexus',
+        'nf',
+        'ng',
+        'ngo',
+        'nhk',
+        'ni',
+        'ninja',
+        'nl',
+        'no',
+        'np',
+        'nr',
+        'nra',
+        'nrw',
+        'nu',
+        'nyc',
+        'nz',
+        'okinawa',
+        'om',
+        'ong',
+        'onl',
+        'ooo',
+        'org',
+        'organic',
+        'otsuka',
+        'ovh',
+        'pa',
+        'paris',
+        'partners',
+        'parts',
+        'party',
+        'pe',
+        'pf',
+        'pg',
+        'ph',
+        'pharmacy',
+        'photo',
+        'photography',
+        'photos',
+        'physio',
+        'pics',
+        'pictures',
+        'pink',
+        'pizza',
+        'pk',
+        'pl',
+        'place',
+        'plumbing',
+        'pm',
+        'pn',
+        'pohl',
+        'poker',
+        'post',
+        'pr',
+        'praxi',
+        'press',
+        'pro',
+        'prod',
+        'productions',
+        'prof',
+        'properties',
+        'property',
+        'ps',
+        'pt',
+        'pub',
+        'pw',
+        'py',
+        'qa',
+        'qpon',
+        'quebec',
+        're',
+        'realtor',
+        'recipes',
+        'red',
+        'rehab',
+        'reise',
+        'reisen',
+        'reit',
+        'ren',
+        'rentals',
+        'repair',
+        'report',
+        'republican',
+        'rest',
+        'restaurant',
+        'reviews',
+        'rich',
+        'rio',
+        'rip',
+        'ro',
+        'rocks',
+        'rodeo',
+        'rs',
+        'rsvp',
+        'ru',
+        'ruhr',
+        'rw',
+        'ryukyu',
+        'sa',
+        'saarland',
+        'sarl',
+        'sb',
+        'sc',
+        'sca',
+        'scb',
+        'schmidt',
+        'schule',
+        'science',
+        'scot',
+        'sd',
+        'se',
+        'services',
+        'sexy',
+        'sg',
+        'sh',
+        'shiksha',
+        'shoes',
+        'si',
+        'singles',
+        'sj',
+        'sk',
+        'sl',
+        'sm',
+        'sn',
+        'so',
+        'social',
+        'software',
+        'sohu',
+        'solar',
+        'solutions',
+        'soy',
+        'space',
+        'spiegel',
+        'sr',
+        'st',
+        'su',
+        'supplies',
+        'supply',
+        'support',
+        'surf',
+        'surgery',
+        'suzuki',
+        'sv',
+        'sx',
+        'sy',
+        'sydney',
+        'systems',
+        'sz',
+        'taipei',
+        'tatar',
+        'tattoo',
+        'tax',
+        'tc',
+        'td',
+        'technology',
+        'tel',
+        'tf',
+        'tg',
+        'th',
+        'tienda',
+        'tips',
+        'tirol',
+        'tj',
+        'tk',
+        'tl',
+        'tm',
+        'tn',
+        'to',
+        'today',
+        'tokyo',
+        'tools',
+        'top',
+        'town',
+        'toys',
+        'tp',
+        'tr',
+        'trade',
+        'training',
+        'travel',
+        'tt',
+        'tui',
+        'tv',
+        'tw',
+        'tz',
+        'ua',
+        'ug',
+        'uk',
+        'university',
+        'uno',
+        'uol',
+        'us',
+        'uy',
+        'uz',
+        'va',
+        'vacations',
+        'vc',
+        've',
+        'vegas',
+        'ventures',
+        'versicherung',
+        'vet',
+        'vg',
+        'vi',
+        'viajes',
+        'villas',
+        'vision',
+        'vlaanderen',
+        'vn',
+        'vodka',
+        'vote',
+        'voting',
+        'voto',
+        'voyage',
+        'vu',
+        'wales',
+        'wang',
+        'watch',
+        'webcam',
+        'website',
+        'wed',
+        'wedding',
+        'wf',
+        'whoswho',
+        'wien',
+        'wiki',
+        'williamhill',
+        'wme',
+        'work',
+        'works',
+        'world',
+        'ws',
+        'wtc',
+        'wtf',
+        '测试',
+        'परीक्षा',
+        '集团',
+        '在线',
+        '한국',
+        'ভারত',
+        'বাংলা',
+        '公益',
+        '公司',
+        '移动',
+        '我爱你',
+        'испытание',
+        'қаз',
+        'онлайн',
+        'сайт',
+        'срб',
+        '테스트',
+        '삼성',
+        'சிங்கப்பூர்',
+        'дети',
+        'טעסט',
+        '中文网',
+        '中信',
+        '中国',
+        '中國',
+        'భారత్',
+        'ලංකා',
+        '測試',
+        'ભારત',
+        'भारत',
+        'آزمایشی',
+         'பரிட்சை',
+        '网络',
+        'укр',
+        '香港',
+        'δοκιμή',
+        'إختبار',
+        '台湾',
+        '台灣',
+        'мон',
+        'الجزا',
+        'عمان',
+        'ایران',
+        'امارات',
+        'بازار',
+        'پاکستا',
+        'الاردن',
+        'بھارت',
+        'المغرب',
+        'السعودية',
+        'سودان',
+        'مليسيا',
+        'شبكة',
+        'გე',
+        'ไทย',
+        'سورية',
+        'рф',
+        'تونس',
+        'みんな',
+        'ਭਾਰਤ',
+        '游戏',
+        'مصر',
+        'قطر',
+        'இலங்கை',
+        'இந்தியா',
+        '新加坡',
+        'فلسطين',
+        'テスト',
+        '政务',
+        'xxx',
+        'xyz',
+        'yachts',
+        'yandex',
+        'ye',
+        'yoga',
+        'yokohama',
+        'youtube',
+        'yt',
+        'za',
+        'zip',
+        'zm',
+        'zone',
+        'zw'
     );
 
     /**
@@ -115,6 +847,7 @@ class Hostname extends AbstractValidator
      * (.FI) Finland http://www.ficora.fi/en/index/palvelut/fiverkkotunnukset/aakkostenkaytto.html
      * (.GR) Greece https://grweb.ics.forth.gr/CharacterTable1_en.jsp
      * (.HU) Hungary http://www.domain.hu/domain/English/szabalyzat/szabalyzat.html
+     * (.IL) Israel http://www.isoc.org.il/domains/il-domain-rules.html
      * (.INFO) International http://www.nic.info/info/idn
      * (.IO) British Indian Ocean Territory http://www.nic.io/IO-IDN-Policy.pdf
      * (.IR) Iran http://www.nic.ir/Allowable_Characters_dot-iran
@@ -172,6 +905,8 @@ class Hostname extends AbstractValidator
         'GR'  => array(1 => '/^[\x{002d}0-9a-zΆΈΉΊΌΎ-ΡΣ-ώἀ-ἕἘ-Ἕἠ-ὅὈ-Ὅὐ-ὗὙὛὝὟ-ώᾀ-ᾴᾶ-ᾼῂῃῄῆ-ῌῐ-ΐῖ-Ίῠ-Ῥῲῳῴῶ-ῼ]{1,63}$/iu'),
         'HK'  => 'Hostname/Cn.php',
         'HU'  => array(1 => '/^[\x{002d}0-9a-záéíóöúüőű]{1,63}$/iu'),
+        'IL'  => array(1 => '/^[\x{002d}0-9\x{05D0}-\x{05EA}]{1,63}$/iu',
+            2 => '/^[\x{002d}0-9a-z]{1,63}$/i'),
         'INFO'=> array(1 => '/^[\x{002d}0-9a-zäåæéöøü]{1,63}$/iu',
             2 => '/^[\x{002d}0-9a-záéíóöúüőű]{1,63}$/iu',
             3 => '/^[\x{002d}0-9a-záæéíðóöúýþ]{1,63}$/iu',
@@ -251,6 +986,10 @@ class Hostname extends AbstractValidator
         'UA'  => array(1 => '/^[\x{002d}0-9a-zабвгдежзийклмнопрстуфхцчшщъыьэюяѐёђѓєѕіїјљњћќѝўџґӂʼ]{1,63}$/iu'),
         'VE'  => array(1 => '/^[\x{002d}0-9a-záéíóúüñ]{1,63}$/iu'),
         'VN'  => array(1 => '/^[ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯư\x{1EA0}-\x{1EF9}]{1,63}$/iu'),
+        'мон' => array(1 => '/^[\x{002d}0-9\x{0430}-\x{044F}]{1,63}$/iu'),
+        'срб' => array(1 => '/^[\x{002d}0-9а-ик-шђјљњћџ]{1,63}$/iu'),
+        'сайт' => array(1 => '/^[\x{002d}0-9а-яёіїѝйўґг]{1,63}$/iu'),
+        'онлайн' => array(1 => '/^[\x{002d}0-9а-яёіїѝйўґг]{1,63}$/iu'),
         '中国' => 'Hostname/Cn.php',
         '中國' => 'Hostname/Cn.php',
         'ලංකා' => array(1 => '/^[\x{0d80}-\x{0dff}]{1,63}$/iu'),
@@ -266,6 +1005,7 @@ class Hostname extends AbstractValidator
         'مصر' => array(1 => '/^[\x{0621}-\x{0624}\x{0626}-\x{063A}\x{0641}\x{0642}\x{0644}-\x{0648}\x{067E}\x{0686}\x{0698}\x{06A9}\x{06AF}\x{06CC}\x{06F0}-\x{06F9}]{1,30}$/iu'),
         'இலங்கை' => array(1 => '/^[\x{0b80}-\x{0bff}]{1,63}$/iu'),
         'فلسطين' => array(1 => '/^[\x{0621}-\x{0624}\x{0626}-\x{063A}\x{0641}\x{0642}\x{0644}-\x{0648}\x{067E}\x{0686}\x{0698}\x{06A9}\x{06AF}\x{06CC}\x{06F0}-\x{06F9}]{1,30}$/iu'),
+        'شبكة'  => array(1 => '/^[\x{0621}-\x{0624}\x{0626}-\x{063A}\x{0641}\x{0642}\x{0644}-\x{0648}\x{067E}\x{0686}\x{0698}\x{06A9}\x{06AF}\x{06CC}\x{06F0}-\x{06F9}]{1,30}$/iu'),
     );
 
     protected $idnLength = array(
@@ -284,6 +1024,7 @@ class Hostname extends AbstractValidator
         'تونس' => array(1 => 30),
         'مصر' => array(1 => 30),
         'فلسطين' => array(1 => 30),
+        'شبكة' => array(1 => 30),
         '中国' => array(1 => 20),
         '中國' => array(1 => 20),
         '香港' => array(1 => 20),
@@ -352,6 +1093,7 @@ class Hostname extends AbstractValidator
     }
 
     /**
+     *
      * @param Ip $ipValidator OPTIONAL
      * @return Hostname;
      */
@@ -452,14 +1194,15 @@ class Hostname extends AbstractValidator
 
         $this->setValue($value);
         // Check input against IP address schema
-        if (preg_match('/^[0-9a-f:.]*$/i', $value) &&
-            $this->getIpValidator()->setTranslator($this->getTranslator())->isValid($value)) {
+        if (preg_match('/^[0-9a-f:.]*$/i', $value)
+            && $this->getIpValidator()->setTranslator($this->getTranslator())->isValid($value)
+        ) {
             if (!($this->getAllow() & self::ALLOW_IP)) {
                 $this->error(self::IP_ADDRESS_NOT_ALLOWED);
                 return false;
-            } else {
-                return true;
             }
+
+            return true;
         }
 
         // Local hostnames are allowed to be partial (ending '.')
@@ -477,21 +1220,27 @@ class Hostname extends AbstractValidator
         $domainParts = explode('.', $value);
 
         // Prevent partial IP V4 addresses (ending '.')
-        if ((count($domainParts) == 4) && preg_match('/^[0-9.a-e:.]*$/i', $value) &&
-            $this->getIpValidator()->setTranslator($this->getTranslator())->isValid($value)) {
+        if (count($domainParts) == 4 && preg_match('/^[0-9.a-e:.]*$/i', $value)
+            && $this->getIpValidator()->setTranslator($this->getTranslator())->isValid($value)
+        ) {
             $this->error(self::INVALID_LOCAL_NAME);
         }
 
+        $utf8StrWrapper = StringUtils::getWrapper('UTF-8');
+
         // Check input against DNS hostname schema
-        if ((count($domainParts) > 1) && (strlen($value) >= 4) && (strlen($value) <= 254)) {
-            $utf8StrWrapper = StringUtils::getWrapper('UTF-8');
-            $status         = false;
+        if (count($domainParts) > 1
+            && $utf8StrWrapper->strlen($value) >= 4
+            && $utf8StrWrapper->strlen($value) <= 254
+        ) {
+            $status = false;
 
             do {
                 // First check TLD
                 $matches = array();
-                if (preg_match('/([^.]{2,10})$/i', end($domainParts), $matches) ||
-                    (array_key_exists(end($domainParts), $this->validIdns))) {
+                if (preg_match('/([^.]{2,63})$/iu', end($domainParts), $matches)
+                    || (array_key_exists(end($domainParts), $this->validIdns))
+                ) {
                     reset($domainParts);
 
                     // Hostname characters are: *(label dot)(label dot label); max 254 chars
@@ -500,26 +1249,31 @@ class Hostname extends AbstractValidator
                     // ldh: alpha / digit / dash
 
                     // Match TLD against known list
-                    $this->tld = strtolower($matches[1]);
+                    $this->tld = strtoupper($matches[1]);
                     if ($this->getTldCheck()) {
-                        if (!in_array($this->tld, $this->validTlds)) {
+                        if (!in_array(strtolower($this->tld), $this->validTlds)
+                            && !in_array($this->tld, $this->validTlds)) {
                             $this->error(self::UNKNOWN_TLD);
                             $status = false;
                             break;
                         }
+                        // We have already validated that the TLD is fine. We don't want it to go through the below
+                        // checks as new UTF-8 TLDs will incorrectly fail if there is no IDN regex for it.
+                        array_pop($domainParts);
                     }
 
                     /**
                      * Match against IDN hostnames
                      * Note: Keep label regex short to avoid issues with long patterns when matching IDN hostnames
+                     *
                      * @see Hostname\Interface
                      */
                     $regexChars = array(0 => '/^[a-z0-9\x2d]{1,63}$/i');
-                    if ($this->getIdnCheck() &&  isset($this->validIdns[strtoupper($this->tld)])) {
-                        if (is_string($this->validIdns[strtoupper($this->tld)])) {
-                            $regexChars += include __DIR__ .'/'. $this->validIdns[strtoupper($this->tld)];
+                    if ($this->getIdnCheck() && isset($this->validIdns[$this->tld])) {
+                        if (is_string($this->validIdns[$this->tld])) {
+                            $regexChars += include __DIR__ . '/' . $this->validIdns[$this->tld];
                         } else {
-                            $regexChars += $this->validIdns[strtoupper($this->tld)];
+                            $regexChars += $this->validIdns[$this->tld];
                         }
                     }
 
@@ -535,9 +1289,13 @@ class Hostname extends AbstractValidator
                         }
 
                         // Check dash (-) does not start, end or appear in 3rd and 4th positions
-                        if ((strpos($domainPart, '-') === 0)
-                            || ((strlen($domainPart) > 2) && (strpos($domainPart, '-', 2) == 2) && (strpos($domainPart, '-', 3) == 3))
-                            || (strpos($domainPart, '-') === (strlen($domainPart) - 1))) {
+                        if ($utf8StrWrapper->strpos($domainPart, '-') === 0
+                            || ($utf8StrWrapper->strlen($domainPart) > 2
+                                && $utf8StrWrapper->strpos($domainPart, '-', 2) == 2
+                                && $utf8StrWrapper->strpos($domainPart, '-', 3) == 3
+                            )
+                            || ($utf8StrWrapper->strpos($domainPart, '-') === ($utf8StrWrapper->strlen($domainPart) - 1))
+                        ) {
                             $this->error(self::INVALID_DASH);
                             $status = false;
                             break 2;
@@ -546,18 +1304,18 @@ class Hostname extends AbstractValidator
                         // Check each domain part
                         $checked = false;
                         foreach ($regexChars as $regexKey => $regexChar) {
-                            ErrorHandler::start();
                             $status = preg_match($regexChar, $domainPart);
-                            ErrorHandler::stop();
                             if ($status > 0) {
                                 $length = 63;
-                                if (array_key_exists(strtoupper($this->tld), $this->idnLength)
-                                    && (array_key_exists($regexKey, $this->idnLength[strtoupper($this->tld)]))) {
-                                    $length = $this->idnLength[strtoupper($this->tld)];
+                                if (array_key_exists($this->tld, $this->idnLength)
+                                    && array_key_exists($regexKey, $this->idnLength[$this->tld])
+                                ) {
+                                    $length = $this->idnLength[$this->tld];
                                 }
 
                                 if ($utf8StrWrapper->strlen($domainPart) > $length) {
                                     $this->error(self::INVALID_HOSTNAME);
+                                    $status = false;
                                 } else {
                                     $checked = true;
                                     break;
@@ -589,22 +1347,21 @@ class Hostname extends AbstractValidator
             }
         } elseif ($this->getAllow() & self::ALLOW_DNS) {
             $this->error(self::INVALID_HOSTNAME);
+            $status = false;
         }
 
         // Check for URI Syntax (RFC3986)
         if ($this->getAllow() & self::ALLOW_URI) {
             if (preg_match("/^([a-zA-Z0-9-._~!$&\'()*+,;=]|%[[:xdigit:]]{2}){1,254}$/i", $value)) {
                 return true;
-            } else {
-                $this->error(self::INVALID_URI);
             }
+
+            $this->error(self::INVALID_URI);
         }
 
         // Check input against local network name schema; last chance to pass validation
-        ErrorHandler::start();
         $regexLocal = '/^(([a-zA-Z0-9\x2d]{1,63}\x2e)*[a-zA-Z0-9\x2d]{1,63}[\x2e]{0,1}){1,254}$/';
         $status = preg_match($regexLocal, $value);
-        ErrorHandler::stop();
 
         // If the input passes as a local network name, and local network names are allowed, then the
         // hostname passes validation
@@ -628,10 +1385,10 @@ class Hostname extends AbstractValidator
 
     /**
      * Decodes a punycode encoded string to it's original utf8 string
-     * In case of a decoding failure the original string is returned
+     * Returns false in case of a decoding failure.
      *
      * @param  string $encoded Punycode encoded string to decode
-     * @return string
+     * @return string|false
      */
     protected function decodePunycode($encoded)
     {

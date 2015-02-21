@@ -23,8 +23,8 @@ class Texy extends TexyObject
 	const NONE = FALSE;
 
 	// Texy version
-	const VERSION = '2.4';
-	const REVISION = 'released on 2014-02-10';
+	const VERSION = '2.6';
+	const REVISION = 'released on 2014-06-20';
 
 	// types of protection marks
 	const CONTENT_MARKUP = "\x17";
@@ -98,8 +98,8 @@ class Texy extends TexyObject
 	/** @var bool  remove soft hyphens (SHY)? */
 	public $removeSoftHyphens = TRUE;
 
-	/** @var mixed */
-	public static $advertisingNotice = 'once';
+	/** @deprecated */
+	public static $advertisingNotice = FALSE;
 
 	/** @var string */
 	public $nontextParagraph = 'div';
@@ -444,14 +444,6 @@ class Texy extends TexyObject
 		// created by TexyParagraphModule and then protected
 		$html = str_replace("\r", "\n", $html);
 
-		// this notice should remain
-		if (self::$advertisingNotice) {
-			$html .= "\n<!-- by Texy2! -->";
-			if (self::$advertisingNotice === 'once') {
-				self::$advertisingNotice = FALSE;
-			}
-		}
-
 		$this->processing = FALSE;
 
 		return TexyUtf::utf2html($html, $this->encoding);
@@ -731,9 +723,12 @@ class Texy extends TexyObject
 	final public static function outdent($s)
 	{
 		$s = trim($s, "\n");
-		$spaces = strspn($s, ' ');
-		if ($spaces) {
-			return TexyRegexp::replace($s, "#^ {1,$spaces}#m", '');
+		$min = strlen($s);
+		foreach (TexyRegexp::match($s, '#^ *\S#m', TexyRegexp::ALL) as $m) {
+			$min = min($min, strlen($m[0]) - 1);
+		}
+		if ($min) {
+			$s = TexyRegexp::replace($s, "#^ {{$min}}#m", '');
 		}
 		return $s;
 	}
