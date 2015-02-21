@@ -9,7 +9,7 @@ abstract class BasePresenter extends UI\Presenter
 {
 
 	/**
-	 * @var WebLoader\LoaderFactory
+	 * @var WebLoader\Nette\LoaderFactory
 	 * @inject
 	 */
 	public $webLoader;

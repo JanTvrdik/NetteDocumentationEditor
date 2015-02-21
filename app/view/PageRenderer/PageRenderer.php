@@ -8,7 +8,7 @@ use Nette\Utils\Strings;
 class PageRenderer extends Nette\Object
 {
 
-	/** @var Nette\Templating\FileTemplate */
+	/** @var Nette\Application\UI\ITemplate */
 	private $template;
 
 	/** @var LinkFactory */
@@ -20,7 +20,7 @@ class PageRenderer extends Nette\Object
 	/** @var EditorModel */
 	private $model;
 
-	public function __construct(Nette\Templating\FileTemplate $template, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper, EditorModel $model)
+	public function __construct(Nette\Application\UI\ITemplate $template, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper, EditorModel $model)
 	{
 		$this->template = $template;
 		$this->linkFactory = $linkFactory;

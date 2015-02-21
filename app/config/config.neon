@@ -1,24 +1,19 @@
 extensions:
 	webloader: WebLoader\Nette\Extension
-
-
-parameters:
+	application: Nette\Bridges\ApplicationDI\ApplicationExtension(%debugMode%, [])
 
 
 php:
 	date.timezone: Europe/Prague
 
 
-nette:
-	application:
-		mapping:
-			*: App\*Module\*Presenter
-	session:
-		autoStart: no
-		name: NetteWebEditorSessionId
+session:
+	autoStart: no
+	name: NetteWebEditorSessionId
 
-	security:
-		debugger: no
+application:
+	mapping:
+		*: App\*Module\*Presenter
 
 
 webloader:
@@ -48,9 +43,6 @@ services:
 			- authenticate(%github.clientId%, %github.clientSecret%, Github\Client::AUTH_URL_CLIENT_ID)
 
 	router: @App\RouterFactory::createRouter
-	pageRenderer: App\PageRenderer(@nette.template)
+	pageRenderer: App\PageRenderer(@latte.templateFactory::createTemplate())
 	cssMinifier: App\CssMinifier
 	jsMinifier: App\JavaScriptMinifier
-
-
-factories:
