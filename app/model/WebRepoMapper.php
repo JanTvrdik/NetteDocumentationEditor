@@ -41,7 +41,7 @@ class WebRepoMapper extends Nette\Object
 	/**
 	 * Converts page web identification to its repository identification.
 	 *
-	 * @aaram  string e.g. 'pla'
+	 * @param  string e.g. 'pla'
 	 * @param  string e.g. 'en'
 	 * @param  string e.g. 'homepage'
 	 * @return array

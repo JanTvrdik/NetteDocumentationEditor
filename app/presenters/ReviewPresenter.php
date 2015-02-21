@@ -3,10 +3,7 @@ namespace App;
 
 use Github;
 use Nette;
-use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI;
-use Nette\Forms\Controls\SubmitButton;
-use Nette\Utils\Strings;
 use WebLoader;
 
 

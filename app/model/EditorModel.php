@@ -67,7 +67,7 @@ class EditorModel extends Nette\Object
 	public function canEdit($username)
 	{
 		try {
-			$response = $this->ghClient->api('repos')->collaborators()->check($this->repoOwner, $this->repoName, $username);
+			$this->ghClient->api('repos')->collaborators()->check($this->repoOwner, $this->repoName, $username);
 			return TRUE;
 
 		} catch (Github\Exception\RuntimeException $e) {
