@@ -12,7 +12,7 @@ class WebRepoMapper extends Nette\Object
 	const DEFAULT_BRANCH = 'nette.org';
 
 	/** string */
-	const DEFAULT_DOC_VERSION = '2.1';
+	const DEFAULT_DOC_VERSION = '2.3';
 
 	/** string */
 	const DEFAULT_PAGE_NAME = 'homepage';
