@@ -14,6 +14,9 @@ class EditorLocalModel extends Nette\Object implements IEditorModel
 	/** @var array */
 	private $env;
 
+	/** @var string */
+	private $activeBranch;
+
 	public function __construct($directory, $env)
 	{
 		$this->dir = $directory;
@@ -54,12 +57,12 @@ class EditorLocalModel extends Nette\Object implements IEditorModel
 	 */
 	public function loadPage($branch, $path)
 	{
-		$this->smartCheckout($branch);
-		if (!is_file($this->dir . '/' . $path)) {
+		try {
+			$content = $this->exec('show', ["$branch:$path"]);
+
+		} catch (IOException $e) {
 			return NULL;
 		}
-
-		$content = file_get_contents($this->dir . '/' . $path);
 
 		$page = new RepoPage();
 		$page->branch = $branch;
@@ -193,30 +196,23 @@ class EditorLocalModel extends Nette\Object implements IEditorModel
 		return $command;
 	}
 
-
 	/**
-	 * @return string
-	 */
-	private function getActiveBranch()
-	{
-		return trim($this->exec('rev-parse', ['abbrev-ref' => TRUE, 'HEAD']));
-	}
-
-
-	/**
-	 * @param $branch
+	 * @param  string $branch
+	 * @return void
 	 */
 	private function smartCheckout($branch)
 	{
-		if ($branch !== $this->getActiveBranch()) {
-			if (trim($this->exec('diff', ['shortstat' => TRUE])) !== '' || trim($this->exec('diff', [
-					'cached' => TRUE, 'shortstat' => TRUE
-				])) !== ''
-			) {
+		if ($this->activeBranch === NULL) {
+			$this->activeBranch = trim($this->exec('rev-parse', ['abbrev-ref' => TRUE, 'HEAD']));
+		}
+
+		if ($branch !== $this->activeBranch) {
+			if (trim($this->exec('status', ['short' => TRUE])) !== '') {
 				$this->exec('add', ['all' => TRUE]);
 				$this->exec('commit', ['message' => 'WIP']);
 			}
 			$this->exec('checkout', [$branch]);
+			$this->activeBranch = $branch;
 		}
 	}
 
