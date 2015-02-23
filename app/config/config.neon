@@ -35,7 +35,8 @@ services:
 	- App\RouterFactory
 	- App\LinkFactory
 	- App\WebRepoMapper
-	- App\EditorModel(..., %github.clientId%, %github.clientSecret%, %github.repoOwner%, %github.repoName%, %github.accessToken%)
+	- App\EditorLocalModel(%git.repo%, %git.env%)
+#	- App\EditorModel(..., %github.clientId%, %github.clientSecret%, %github.repoOwner%, %github.repoName%, %github.accessToken%)
 
 	ghClient:
 		class: Github\Client

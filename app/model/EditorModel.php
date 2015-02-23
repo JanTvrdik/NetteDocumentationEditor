@@ -5,8 +5,7 @@ use Github;
 use Nette;
 use Nette\Utils\Strings;
 
-
-class EditorModel extends Nette\Object
+class EditorModel extends Nette\Object implements IEditorModel
 {
 
 	/** @var Github\Client */
@@ -156,6 +155,17 @@ class EditorModel extends Nette\Object
 	}
 
 	/**
+	 * Saves page draft.
+	 *
+	 * @param  RepoPage $page
+	 * @return void
+	 */
+	public function savePageDraft(RepoPage $page)
+	{
+		// TODO: Implement savePageDraft() method.
+	}
+
+	/**
 	 * Acquire user access token.
 	 *
 	 * @param  string temporary code provided by GitHub (see http://developer.github.com/v3/oauth/#github-redirects-back-to-your-site)
@@ -181,6 +191,16 @@ class EditorModel extends Nette\Object
 		$json = file_get_contents('https://github.com/login/oauth/access_token', NULL, $context);
 		$params = Nette\Utils\Json::decode($json, Nette\Utils\Json::FORCE_ARRAY);
 		return isset($params['access_token']) ? $params['access_token'] : FALSE;
+	}
+
+	/**
+	 * @param  string      $path
+	 * @return string|NULL binary data
+	 */
+	public function loadImage($path)
+	{
+		// "https://raw.github.com/nette/web-content/{$page->branch}" . (($page->branch === 'nette.org') ? "/{$book}" : '') . "/files";
+		return NULL;
 	}
 
 	/**

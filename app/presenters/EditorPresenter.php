@@ -13,7 +13,7 @@ final class EditorPresenter extends BasePresenter
 {
 
 	/**
-	 * @var EditorModel
+	 * @var IEditorModel
 	 * @inject
 	 */
 	public $editorModel;
@@ -138,16 +138,23 @@ final class EditorPresenter extends BasePresenter
 		$page->authorName = $values->authorName;
 		$page->authorEmail = $values->authorEmail;
 
-		$pageKey = Strings::random(10);
-		$this->getSession(__CLASS__)->pages[$pageKey] = $page;
+		if ($this->editorModel instanceof EditorLocalModel) {
+			$this->editorModel->savePage($page);
+			$this->flashMessage('Page successfully saved.');
+			$this->redirect('default');
 
-		$url = new Nette\Http\Url('https://github.com/login/oauth/authorize');
-		$url->setQuery([
-			'client_id' => $this->context->parameters['github']['clientId'],
-			'scope' => 'user:email',
-			'redirect_uri' => $this->link('//authorized', ['pageKey' => $pageKey]),
-		]);
-		$this->redirectUrl($url);
+		} else {
+			$pageKey = Strings::random(10);
+			$this->getSession(__CLASS__)->pages[$pageKey] = $page;
+
+			$url = new Nette\Http\Url('https://github.com/login/oauth/authorize');
+			$url->setQuery([
+				'client_id' => $this->context->parameters['github']['clientId'],
+				'scope' => 'user:email',
+				'redirect_uri' => $this->link('//authorized', ['pageKey' => $pageKey]),
+			]);
+			$this->redirectUrl($url);
+		}
 	}
 
 	public function actionAuthorized($pageKey, $code)
@@ -206,6 +213,7 @@ final class EditorPresenter extends BasePresenter
 		$page->content = $texyContent;
 
 		$htmlContent = $this->pageRenderer->render($page, FALSE, TRUE);
+		$this->editorModel->savePageDraft($page);
 
 		$this->payload->htmlContent = $htmlContent;
 		$this->sendPayload();

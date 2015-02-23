@@ -5,3 +5,6 @@ parameters:
 		accessToken:
 		repoOwner: nette
 		repoName: web-content
+	git:
+		repo:
+		env:
