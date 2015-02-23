@@ -30,12 +30,13 @@ final class ImagePresenter extends Nette\Object implements Application\IPresente
 			return NULL;
 		}
 
+		$branch = $request->getParameter('branch');
 		$path = $request->getParameter('path');
-		if (!is_string($path)) {
+		if (!is_string($path) || !is_string($branch)) {
 			return NULL;
 		}
 
-		$binary = $this->editorModel->loadImage($path);
+		$binary = $this->editorModel->loadImage($branch, $path);
 		if (!$binary) {
 			throw new Application\BadRequestException('', 404);
 		}

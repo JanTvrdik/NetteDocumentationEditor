@@ -21,7 +21,7 @@ class RouterFactory extends Nette\Object
 	{
 		$router = new RouteList();
 
-		$router[] = new Route('img/[<path .+>]', [
+		$router[] = new Route('img/<branch>/<path .+>', [
 			'presenter' => 'Image',
 			'action' => 'view',
 		]);

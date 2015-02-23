@@ -194,13 +194,13 @@ class EditorModel extends Nette\Object implements IEditorModel
 	}
 
 	/**
+	 * @param  string      $branch
 	 * @param  string      $path
 	 * @return string|NULL binary data
 	 */
-	public function loadImage($path)
+	public function loadImage($branch, $path)
 	{
-		// "https://raw.github.com/nette/web-content/{$page->branch}" . (($page->branch === 'nette.org') ? "/{$book}" : '') . "/files";
-		return NULL;
+		return @file_get_contents("https://raw.github.com/nette/web-content/$branch/$path") ?: NULL;
 	}
 
 	/**

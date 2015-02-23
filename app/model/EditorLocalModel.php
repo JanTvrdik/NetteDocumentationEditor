@@ -118,12 +118,18 @@ class EditorLocalModel extends Nette\Object implements IEditorModel
 	}
 
 	/**
+	 * @param  string      $branch
 	 * @param  string      $path
 	 * @return string|NULL binary data
 	 */
-	public function loadImage($path)
+	public function loadImage($branch, $path)
 	{
-		return is_file($this->dir . '/files/' . $path) ? file_get_contents($this->dir . '/files/' . $path) : NULL;
+		try {
+			return $this->exec('show', ["$branch:$path"]);
+
+		} catch (IOException $e) {
+			return NULL;
+		}
 	}
 
 	/**

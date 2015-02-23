@@ -62,9 +62,10 @@ interface IEditorModel
 	public function getAccessToken($code);
 
 	/**
+	 * @param  string      $branch
 	 * @param  string      $path
 	 * @return string|NULL binary data
 	 */
-	public function loadImage($path);
+	public function loadImage($branch, $path);
 
 }
