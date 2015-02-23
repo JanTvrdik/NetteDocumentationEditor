@@ -30,9 +30,9 @@ class WebRepoMapper extends Nette\Object
 	public function repoToWeb($branch, $path)
 	{
 		if (strpos($branch, '-')) {
-			$m = Strings::match($path, '#^()([a-z]{2})/([\w/.-]+)\.texy$#');
+			$m = Strings::match($path, '#^()([a-z]{2})/([\w/@.-]+)\.texy$#');
 		} else {
-			$m = Strings::match($path, '#^([a-z]{3,})/([a-z]{2})/([\w/.-]+)\.texy$#');
+			$m = Strings::match($path, '#^([a-z]{3,})/([a-z]{2})/([\w/@.-]+)\.texy$#');
 		}
 		if (!$m) return FALSE;
 		return [$m[1] ?: $branch, $m[2], $m[3]];
@@ -117,7 +117,7 @@ class WebRepoMapper extends Nette\Object
 				:
 				(?<path>
 					[\w.-]+
-					(?: / [\w.-]+ )*
+					(?: / [\w@.-]+ )*
 				)
 			$#x',
 			// https://github.com/nette/web-content/blob/doc-2.1/en/arrays.texy
@@ -127,8 +127,8 @@ class WebRepoMapper extends Nette\Object
 				(?<branch>[\w.-]+)
 				/
 				(?<path>
-					[\w.-]+
-					(?: / [\w.-]+ )*
+					[\w@%.-]+
+					(?: / [\w@%.-]+ )*
 				)
 				(?: [#?].* )?
 			$~x',
@@ -139,8 +139,8 @@ class WebRepoMapper extends Nette\Object
 				(?<branch>[\w.-]+)
 				/
 				(?<path>
-					[\w.-]+
-					(?: / [\w.-]+ )*
+					[\w@%.-]+
+					(?: / [\w@%.-]+ )*
 				)
 				(?: [#?].* )?
 			$~x',
@@ -149,8 +149,8 @@ class WebRepoMapper extends Nette\Object
 		foreach ($patterns as $pattern) {
 			$match = Strings::match($str, $pattern);
 			if ($match) {
-				$branch = $match['branch'];
-				$path = $match['path'];
+				$branch = rawurldecode($match['branch']);
+				$path = rawurldecode($match['path']);
 				return [$branch, $path];
 			}
 		}
