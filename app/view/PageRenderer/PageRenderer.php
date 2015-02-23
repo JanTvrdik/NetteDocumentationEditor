@@ -9,7 +9,7 @@ class PageRenderer extends Nette\Object
 {
 
 	/** @var Nette\Application\UI\ITemplate */
-	private $template;
+	private $templateFactory;
 
 	/** @var LinkFactory */
 	private $linkFactory;
@@ -20,9 +20,9 @@ class PageRenderer extends Nette\Object
 	/** @var IEditorModel */
 	private $model;
 
-	public function __construct(Nette\Application\UI\ITemplate $template, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper, IEditorModel $model)
+	public function __construct(Nette\Application\UI\ITemplateFactory $templateFactory, LinkFactory $linkFactory, WebRepoMapper $webRepoMapper, IEditorModel $model)
 	{
-		$this->template = $template;
+		$this->templateFactory = $templateFactory;
 		$this->linkFactory = $linkFactory;
 		$this->webRepoMapper = $webRepoMapper;
 		$this->model = $model;
@@ -36,6 +36,8 @@ class PageRenderer extends Nette\Object
 		} else {
 			$web = $this->webRepoMapper->repoToWeb($page->branch, $page->path);
 		}
+
+		$template = $this->templateFactory->createTemplate();
 
 		if ($web) {
 			list($book, $lang, $name) = $web;
@@ -58,17 +60,17 @@ class PageRenderer extends Nette\Object
 				$converter->html = Strings::replace($converter->html, '~<a(\s+)(?!href="#)~', '<a target="_blank"$1');
 			}
 
-			$this->template->title = $converter->title;
-			$this->template->themeIcon = $converter->themeIcon;
-			$this->template->toc = $converter->toc;
-			$this->template->theme = $converter->theme;
-			$this->template->htmlContent = $converter->html;
-			$this->template->netteOrgLink = $this->webRepoMapper->webToUrl($book, $lang, $name);
+			$template->title = $converter->title;
+			$template->themeIcon = $converter->themeIcon;
+			$template->toc = $converter->toc;
+			$template->theme = $converter->theme;
+			$template->htmlContent = $converter->html;
+			$template->netteOrgLink = $this->webRepoMapper->webToUrl($book, $lang, $name);
 
 			if ($header) {
 				if ($menu = $this->model->loadPage('nette.org', "meta/$lang/menu.texy")) {
 					$converter->parse($menu->content);
-					$this->template->topMenu = $converter->html;
+					$template->topMenu = $converter->html;
 				}
 
 				if (Strings::startsWith($book, 'doc-') && $name !== 'homepage') {
@@ -76,26 +78,26 @@ class PageRenderer extends Nette\Object
 						$converter->current = new \Text\Link('doc-2.1', $lang, 'homepage');
 						$converter->topHeadingLevel = 3;
 						$converter->parse($docMenu->content);
-						$this->template->docMenu = $converter->html;
+						$template->docMenu = $converter->html;
 					}
 				}
 
-				$this->template->homepageLink = $this->linkFactory->link('Editor:view', ['branch' => 'nette.org', 'path' => "www/$lang/homepage.texy"]);
+				$template->homepageLink = $this->linkFactory->link('Editor:view', ['branch' => 'nette.org', 'path' => "www/$lang/homepage.texy"]);
 			}
 
 		} else {
 			// assume plain-text
-			$this->template->title = NULL;
-			$this->template->themeIcon = NULL;
-			$this->template->toc = NULL;
-			$this->template->theme = NULL;
-			$this->template->htmlContent = nl2br(htmlspecialchars($page->content), FALSE);
+			$template->title = NULL;
+			$template->themeIcon = NULL;
+			$template->toc = NULL;
+			$template->theme = NULL;
+			$template->htmlContent = nl2br(htmlspecialchars($page->content), FALSE);
 		}
 
-		$this->template->ghLink = "https://github.com/nette/web-content/blob/{$page->branch}/{$page->path}";
-		$this->template->editLink = $this->linkFactory->link('Editor:default', ['branch' => $page->branch, 'path' => $page->path]);
-		$this->template->setFile(__DIR__ . '/PageRenderer.latte');
-		return (string) $this->template;
+		$template->ghLink = "https://github.com/nette/web-content/blob/{$page->branch}/{$page->path}";
+		$template->editLink = $this->linkFactory->link('Editor:default', ['branch' => $page->branch, 'path' => $page->path]);
+		$template->setFile(__DIR__ . '/PageRenderer.latte');
+		return (string) $template;
 	}
 
 	private function getApiVersion($branch)

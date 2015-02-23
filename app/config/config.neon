@@ -44,6 +44,6 @@ services:
 			- authenticate(%github.clientId%, %github.clientSecret%, Github\Client::AUTH_URL_CLIENT_ID)
 
 	router: @App\RouterFactory::createRouter
-	pageRenderer: App\PageRenderer(@latte.templateFactory::createTemplate())
+	pageRenderer: App\PageRenderer
 	cssMinifier: App\CssMinifier
 	jsMinifier: App\JavaScriptMinifier
