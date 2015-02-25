@@ -204,6 +204,41 @@ class EditorModel extends Nette\Object implements IEditorModel
 	}
 
 	/**
+	 * @param  string   $branch
+	 * @return string[]
+	 */
+	public function getPages($branch)
+	{
+		try {
+			$response = $this->ghClient->api('git')->trees()->show($this->repoOwner, $this->repoName, $branch, TRUE);
+
+		} catch (Github\Exception\RuntimeException $e) {
+			return [];
+		}
+
+		$pages = [];
+		foreach ($response['tree'] as $file) {
+			if (substr($file['path'], -5) === '.texy') {
+				$pages[] = $file['path'];
+			}
+		}
+		return $pages;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getBranches()
+	{
+		return array_map(
+			function ($branch) {
+				return $branch['name'];
+			},
+			$this->ghClient->api('repo')->branches($this->repoOwner, $this->repoName)
+		);
+	}
+
+	/**
 	 * @returns string
 	 */
 	private function getRepoPath()

@@ -133,6 +133,34 @@ class EditorLocalModel extends Nette\Object implements IEditorModel
 	}
 
 	/**
+	 * @param  string   $branch
+	 * @return string[]
+	 */
+	public function getPages($branch)
+	{
+		try {
+			$files = $this->exec('ls-tree', ['-r', 'name-only' => TRUE, $branch]);
+		} catch (IOException $e) {
+			return []; // branch not exist
+		}
+
+		return array_values(array_filter(explode("\n", $files), function ($file) {
+			return substr($file, -5) === '.texy';
+		}));
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function getBranches()
+	{
+		return array_map(
+			function ($line) { return trim($line, ' *'); },
+			explode("\n", trim($this->exec('branch', ['no-color' => TRUE])))
+		);
+	}
+
+	/**
 	 * Executes a Git command.
 	 *
 	 * @param    string

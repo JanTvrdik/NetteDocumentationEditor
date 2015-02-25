@@ -68,4 +68,15 @@ interface IEditorModel
 	 */
 	public function loadImage($branch, $path);
 
+	/**
+	 * @param  string   $branch
+	 * @return string[]
+	 */
+	public function getPages($branch);
+
+	/**
+	 * @return string[]
+	 */
+	public function getBranches();
+
 }
