@@ -308,4 +308,50 @@
 			}
 		}
 	}
+
+	.search {
+		display: none;
+		position: absolute;
+		top: 20%;
+		left: 0;
+		right: 0;
+		width: 400px;
+		margin: 0 auto;
+		z-index: 100;
+
+		input {
+			box-sizing: border-box;
+			margin: 10px;
+			border: 0;
+			padding: 3px;
+			width: 380px;
+			font-size: 18px;
+			outline: none;
+		}
+
+		ul {
+			position: relative;
+			margin: 0;
+			padding: 0;
+			max-height: 320px;
+			overflow: hidden;
+			list-style-type: none;
+			background-color: #333;
+		}
+
+		li {
+			display: none;
+			margin: 5px 0;
+			padding: 3px 10px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			color: #fff;
+			cursor: default;
+
+			&.active, &:active {
+				background: darken(@nette-blue, 20%);
+			}
+		}
+	}
 }

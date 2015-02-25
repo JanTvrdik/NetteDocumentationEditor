@@ -4,4 +4,6 @@
 /// <reference path="model/DiffRenderer.ts" />
 /// <reference path="model/EventEmitter.ts" />
 /// <reference path="model/Model.ts" />
+/// <reference path="model/SearchModel.ts" />
 /// <reference path="views/EditorView.ts" />
+/// <reference path="views/SearchView.ts" />

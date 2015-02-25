@@ -92,6 +92,7 @@ final class EditorPresenter extends BasePresenter
 		$this->template->enableSave = $enableSave;
 		$this->template->ghLink = $page ? "https://github.com/nette/web-content/blob/{$page->branch}/{$page->path}" : NULL;
 		$this->template->form = $this['form'];
+		$this->template->branches = $this->editorModel->getBranches();
 	}
 
 	public function renderView($branch, $path)
@@ -216,6 +217,15 @@ final class EditorPresenter extends BasePresenter
 		$this->editorModel->savePageDraft($page);
 
 		$this->payload->htmlContent = $htmlContent;
+		$this->sendPayload();
+	}
+
+
+// === Search ==========================================================================================================
+
+	public function handleSearch($tree)
+	{
+		$this->payload->pages = $this->editorModel->getPages($tree);
 		$this->sendPayload();
 	}
 

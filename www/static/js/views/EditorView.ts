@@ -6,11 +6,12 @@ module LiveTexyEditor
 	{
 		private header: JQuery;
 		private main: JQuery;
+		private search: JQuery;
 		private textarea: JQuery;
 		private preview: JQuery;
 		private diff: JQuery;
 
-		constructor(private container: JQuery, private model: Model)
+		constructor(private container: JQuery, private model: Model, private searchView: SearchView)
 		{
 			this.initElements();
 			this.initEvents();
@@ -22,6 +23,7 @@ module LiveTexyEditor
 		{
 			this.header = this.container.find('.header');
 			this.main = this.container.find('.main');
+			this.search = this.container.find('.search');
 			this.textarea = this.main.find('.column.code textarea');
 			this.preview = this.main.find('.column.preview iframe');
 			this.diff = this.main.find('.column.diff .content');

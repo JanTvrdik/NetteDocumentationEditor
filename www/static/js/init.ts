@@ -3,12 +3,15 @@
 module LiveTexyEditor
 {
 	declare var processUrl: string;
+	declare var searchUrl: string;
 
 	$(() => {
 		var container = $('.live-texy-editor');
 		var diffRenderer = new DiffRenderer(300, 4);
 		var model = new Model(diffRenderer, processUrl);
-		var view = new EditorView(container, model);
+		var searchModel = new SearchModel(searchUrl);
+		var searchView = new SearchView(container, searchModel);
+		var view = new EditorView(container, model, searchView);
 
 		var backupAlert = localStorage.getItem('backupAlert');
 		if (!backupAlert) {

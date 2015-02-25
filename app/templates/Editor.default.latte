@@ -1,7 +1,10 @@
 <title n:inner-block="title">{if $page}{$page->path} ({$page->branch}) – {/if}{include #parent}</title>
 
 <div n:block="content" class="live-texy-editor">
-	<script>var processUrl = {link renderPreview!};</script>
+	<script>
+		var processUrl = {link renderPreview!};
+		var searchUrl = {link search!};
+	</script>
 	{form $form}
 		<div class="header">
 			<div class="controls">
@@ -46,4 +49,15 @@
 			<div class="column diff"><div class="content"></div></div>
 		</div>
 	{/form}
+
+	<div class="search">
+		<div class="header">
+			<input type="text" placeholder="Search">
+		</div>
+		<ul>
+			{foreach $branches as $branch}
+				<li class="branch">{$branch}</li>
+			{/foreach}
+		</ul>
+	</div>
 </div>
